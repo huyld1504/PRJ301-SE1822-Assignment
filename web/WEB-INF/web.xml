@@ -4,9 +4,17 @@
         <servlet-name>MainServlet</servlet-name>
         <servlet-class>controllers.MainServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginCustomerServlet</servlet-name>
+        <servlet-class>controllers.LoginCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginCustomerServlet</servlet-name>
+        <url-pattern>/LoginCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,9 +1,10 @@
+package controllers;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Asus
  */
-public class MainServlet extends HttpServlet {
+public class LoginCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,30 +32,10 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
+            String customer_name = request.getParameter("customer_name");
+            String phone = request.getParameter("customer_phone");
             
-            if(request.getParameter("action") != null) {
-                action = request.getParameter("action");
-            }
-            
-            switch (action) {
-                case "home": 
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer": 
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                default: 
-                    base_url = "index.html";
-                    break;
-            }
-            
-            request.getRequestDispatcher(base_url).forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
         }
     }
 
