@@ -5,14 +5,14 @@
  */
 package models;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Asus
  */
-public class ServiceTicket {
+public class ServiceTicket implements Serializable{
     private String serviceTicketID;
     private Date dateReceived;
     private Date dateReaturned;

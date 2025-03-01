@@ -5,13 +5,14 @@
  */
 package models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author Asus
  */
-public class SalesInvoice {
+public class SalesInvoice implements Serializable{
     private int invoiceID;
     private Date invoiceDate;
     private String saleID;

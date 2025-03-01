@@ -5,11 +5,13 @@
  */
 package models;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Asus
  */
-public class Service {
+public class Service implements Serializable{
     private String serviceID;
     private String serviceName;
     private Double hourlyRate;

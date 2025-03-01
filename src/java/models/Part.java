@@ -5,11 +5,13 @@
  */
 package models;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Asus
  */
-public class Part {
+public class Part implements Serializable{
     private String partID;
     private String partName;
     private Double purchasePrice;
