@@ -4,6 +4,7 @@
     Author     : Asus
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -41,14 +42,20 @@
                     </label>
                     <input id="customer_phone" name="customer_phone" class="form-control border-info border-2" placeholder="Enter here" value="${param.customer_phone}"/>
                 </div>
-                <div>
-                    <p class="text-danger fs-5 text-align-center">${requestScope.ERROR}</p>
-                </div>
+                <c:if test="${requestScope.ERROR != null}">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        ${requestScope.ERROR}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+
                 <input type="hidden" name="action" value="login-customer"/>
                 <div class="d-grid gap-2 col-6 mx-auto">
                     <button type="submit" class="btn btn-info fw-bold border-2 mt-3 fs-4 text-light">LOGIN</button>
                 </div>
             </form>
         </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>
