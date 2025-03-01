@@ -1,22 +1,25 @@
+package controllers;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controllers;
-
+import dao.CustomerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.Customer;
 
 /**
  *
  * @author Asus
  */
-public class MainServlet extends HttpServlet {
+public class LoginCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,35 +32,39 @@ public class MainServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
-            
-            if(request.getParameter("action") != null) {
-                action = request.getParameter("action");
+            String customer_name = request.getParameter("customer_name");
+            String phone = request.getParameter("customer_phone");
+
+            if (customer_name.trim().equals("")) {
+                request.setAttribute("ERROR", "username can not be empty.");
+                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
             }
-            
-            switch (action) {
-                case "home": 
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer": 
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "logout":
-                    base_url="LogoutServlet";
-                    break;
-                default: 
-                    base_url = "index.html";
-                    break;
+
+            if (phone.trim().equals("")) {
+                request.setAttribute("ERROR", "phone can not be empty.");
+                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
             }
-            
-            request.getRequestDispatcher(base_url).forward(request, response);
+
+            if (!phone.matches("^\\d+$")) {
+                request.setAttribute("ERROR", "phone is invalid format");
+                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
+            }
+
+            CustomerDAO c = new CustomerDAO();
+            Customer customer = c.login(customer_name, phone);
+
+            if (customer != null) {
+                HttpSession s = request.getSession(true);
+                s.setAttribute("CUSTOMER", customer);
+                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+            } else {
+                request.setAttribute("ERROR", "Customer not found.");
+                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
+            }
         }
     }
 

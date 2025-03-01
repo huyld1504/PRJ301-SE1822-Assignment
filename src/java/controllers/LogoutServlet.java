@@ -11,12 +11,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Asus
  */
-public class MainServlet extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,33 +32,9 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
-            
-            if(request.getParameter("action") != null) {
-                action = request.getParameter("action");
-            }
-            
-            switch (action) {
-                case "home": 
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer": 
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "logout":
-                    base_url="LogoutServlet";
-                    break;
-                default: 
-                    base_url = "index.html";
-                    break;
-            }
-            
-            request.getRequestDispatcher(base_url).forward(request, response);
+            HttpSession s = request.getSession();
+            s.invalidate();
+            response.sendRedirect("MainServlet?action=home");
         }
     }
 
