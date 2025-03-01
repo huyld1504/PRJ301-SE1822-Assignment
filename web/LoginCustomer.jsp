@@ -16,31 +16,44 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     </head>
     <body>
-        <p class="text-light fw-bold d-flex justify-content-center algin-items-center bg-info py-3" style="font-size: 50px;">Login Customer</p>
+        <!--<p class="text-light fw-bold d-flex justify-content-center algin-items-center bg-info py-3" style="font-size: 50px;">Login Customer</p>-->
         <div style="
              box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);
              -webkit-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);
              -moz-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);"
-             class="w-50 h-100 border border-2 border-light-subtle container-fluid mt-5"
+             class="w-50 h-100 border border-2 border-light-subtle container-fluid bg-light bg-gradient mt-5"
              >
             <form 
                 accept-charset="UTF-8"
-                class="bg-light bg-gradient py-5"
                 action="MainServlet"
+                style="height: 60vh;"
+                class="d-flex flex-column justify-content-center"
                 method="get"
                 >
-                <div class="mb-3 ml-3">
-                    <label class="form-label fs-5 fw-bold" for="customer_name">
-                        Enter username:
-                    </label>
-                    <input type="text" id="customer_name" name="customer_name" class="form-control border-info border-2" placeholder="Enter here" value="${param.customer_name}"/>
+                <p class="text-center fs-1">Login Customer Form</p>
+                <hr/>
+                <div class="input-group mb-3">
+                    <span class="input-group-text fw-bold bg-info text-light" id="inputGroup-sizing-default">Username</span>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        aria-label="Sizing example input" 
+                        aria-describedby="inputGroup-sizing-default"
+                        name="customer_name"
+                        value="${param.customer_name}"
+                    >
                 </div>
 
-                <div class="mb-3 ml-3">
-                    <label class="form-label fs-5 fw-bold" for="customer_name">
-                        Enter phone number:
-                    </label>
-                    <input id="customer_phone" name="customer_phone" class="form-control border-info border-2" placeholder="Enter here" value="${param.customer_phone}"/>
+                <div class="input-group mb-3">
+                    <span class="input-group-text fw-bold bg-info text-light" id="inputGroup-sizing-default">Phone</span>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        aria-label="Sizing example input" 
+                        aria-describedby="inputGroup-sizing-default"
+                        name="customer_phone"
+                        value="${param.customer_phone}"
+                    >
                 </div>
                 <c:if test="${requestScope.ERROR != null}">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -51,7 +64,7 @@
 
                 <input type="hidden" name="action" value="login-customer"/>
                 <div class="d-grid gap-2 col-6 mx-auto">
-                    <button type="submit" class="btn btn-info fw-bold border-2 mt-3 fs-4 text-light">LOGIN</button>
+                    <button type="submit" class="btn btn-info btn-lg fw-bold border-2 mt-3 text-light">LOGIN</button>
                 </div>
             </form>
         </div>
