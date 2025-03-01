@@ -5,11 +5,13 @@
  */
 package models;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Asus
  */
-public class Customer {
+public class Customer implements Serializable{
     private String custID;
     private String custName;
     private String phone;

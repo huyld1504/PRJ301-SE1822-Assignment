@@ -5,11 +5,13 @@
  */
 package models;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Asus
  */
-public class Mechanic {
+public class Mechanic implements Serializable{
     private String mechanicID;
     private String mechanicName;
 
