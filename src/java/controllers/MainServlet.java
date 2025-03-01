@@ -31,17 +31,17 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = request.getParameter("action");
+            String action = "home";
             String base_url;
             
-            if(action.trim().equals("") && action.isEmpty()) {
-                action = "home";
+            if(request.getParameter("action") != null) {
+                action = request.getParameter("action");
             }
             
             switch (action) {
                 case "home": 
                     //Write the page that you want to view
-                    base_url = "";
+                    base_url = "LoginCustomer.jsp";
                     break;
                 default: 
                     base_url = "index.html";
