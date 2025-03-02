@@ -5,18 +5,21 @@
  */
 package controllers;
 
+import dao.CustomerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.Customer;
 
 /**
  *
  * @author Asus
  */
-public class MainServlet extends HttpServlet {
+public class UpdateCustomerProfileServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,40 +34,38 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            /* TODO output your page here. You may use following sample code. */
+            String customerID = request.getParameter("customer_id");
+            String customerName = request.getParameter("customer_name");
+            String customerPhone = request.getParameter("customer_phone");
+            String customerSex = request.getParameter("customer_sex");
+            String customerAddress = request.getParameter("customer_address");
             
-            if(request.getParameter("action") != null) {
-                action = request.getParameter("action");
+            if(checkEmptyString(customerID) || checkEmptyString(customerAddress) || checkEmptyString(customerName) || checkEmptyString(customerSex) || checkEmptyString(customerPhone)) {
+                request.setAttribute("ERROR", "All fields are not be empty!");
+                request.getRequestDispatcher("MainServlet?action=customer-profile").forward(request, response);
             }
-            
-            switch (action) {
-                case "home": 
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer": 
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "logout":
-                    base_url="LogoutServlet";
-                    break;
-                case "customer-profile":
-                    base_url = "CustomerProfile.jsp";
-                    break;
-                case "update-customer-profile":
-                    base_url = "UpdateCustomerProfileServlet";
-                    break;
-                default: 
-                    base_url = "index.html";
-                    break;
+
+            Customer newProfile = new Customer(customerID, customerName, customerPhone, customerAddress, customerSex);
+            CustomerDAO c = new CustomerDAO();
+            boolean isUpdated = c.update(customerID, newProfile);
+
+            if (isUpdated) {
+                HttpSession s = request.getSession(true);
+                s.setAttribute("CUSTOMER", newProfile);
+                request.setAttribute("MESSAGE", "Updated successfully!");
+            } else {
+                request.setAttribute("ERROR", "Failed to update!");
             }
-            
-            request.getRequestDispatcher(base_url).forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=customer-profile").forward(request, response);
         }
+    }
+    
+    private boolean checkEmptyString(String str) {
+        boolean isEmpty = str.trim().equals("");
+        return isEmpty;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

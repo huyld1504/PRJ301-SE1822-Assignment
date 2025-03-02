@@ -1,10 +1,9 @@
 <%-- 
-    Document   : CustomerDashboard
-    Created on : Mar 1, 2025, 10:14:20 AM
+    Document   : CustomerProfile
+    Created on : Mar 1, 2025, 8:17:32 PM
     Author     : Asus
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -19,9 +18,9 @@
         <!--Font awesome-->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>    
     </head>
-    <body>
+    <body class="position-relative">
         <c:if test="${sessionScope.CUSTOMER != null}">
-            <jsp:useBean scope="session" class="models.Customer" id="CUSTOMER"/>
+            <jsp:useBean id="CUSTOMER" scope="session" class="models.Customer"/>
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
                 <div class="container-fluid bg-info" style="height: 10vh;">
                     <a class="navbar-brand fs-2" href="#">
@@ -33,7 +32,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-50 fs-5 d-flex justify-content-around align-items-center">
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="MainServlet?action=customer-dashboard">
+                                <a class="nav-link active" aria-current="page" href="MainServlet?action=customer-dashboard">
                                     <i class="fa-solid fa-house"></i>
                                     Home
                                 </a>
@@ -72,6 +71,75 @@
                     </div>
                 </div>
             </nav>
+            <div 
+                style="box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);
+                -webkit-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);
+                -moz-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);
+                height: 65vh"
+                class="w-50 my-5 mx-auto my-5 rounded-3">
+                <p class="fs-3 text-dark fw-bold text-center pt-3">Profile</p>
+                <form action="MainServlet" accept-charset="UTF-8">
+                    <input type="hidden" name="action" value="update-customer-profile"/>
+                    <table class="table mx-auto" style="width: 80%">
+                        <tr class="">
+                            <td class="fw-bold">
+                                <p class="w-100 text-end">Customer ID:</p>
+                            </td>
+                            <td class="">
+                                <input class="w-100" style="border: none" type="text" name="customer_id" value="${CUSTOMER.custID}" readonly/>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="fw-bold">
+                                <p class="w-100 text-end">Customer name:</p>
+                            </td>
+                            <td class="">
+                                <input class="w-100" style="border: none" type="text" name="customer_name" value="${CUSTOMER.custName}"/>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="fw-bold">
+                                <p class="w-100 text-end">Customer phone:</p>
+                            </td>
+                            <td class="">
+                                <input class="w-100" style="border: none" type="text" name="customer_phone" value="${CUSTOMER.phone}"/>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="fw-bold">
+                                <p class="w-100 text-end">Sex:</p>
+                            </td>
+                            <td class="">
+                                <input class="w-100" style="border: none" type="text" name="customer_sex" value="${CUSTOMER.sex}"/>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="fw-bold">
+                                <p class="w-100 text-end">Customer address:</p>
+                            </td>
+                            <td class="">
+                                <input class="w-100" style="border: none" type="text" name="customer_address" value="${CUSTOMER.cusAddress}"/>
+                            </td>
+                        </tr>
+                    </table> 
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="submit" class="btn btn-info btn-lg fw-bold mt-1 border-2 text-light">UPDATE</button>
+                    </div>
+                </form>
+            </div>
+            <c:if test="${requestScope.MESSAGE != null}">
+                <div class="alert alert-success alert-dismissible fade show w-25 z-3 position-absolute" role="alert">
+                    ${requestScope.MESSAGE}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+
+            <c:if test="${requestScope.ERROR != null}">
+                <div class="alert alert-danger alert-dismissible fade show w-25 z-3 position-absolute" role="alert">
+                    ${requestScope.ERROR}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
         </c:if>
 
         <c:if test="${sessionScope.CUSTOMER == null}">
