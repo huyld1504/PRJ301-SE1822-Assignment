@@ -8,6 +8,16 @@
         <filter-name>LoginCustomerFilter</filter-name>
         <filter-class>filters.LoginCustomerFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>LoginMechanicFilter</filter-name>
+        <filter-class>filters.LoginMechanicFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginMechanicFilter</filter-name>
+        <servlet-name>LoginMechanicServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>LoginCustomerFilter</filter-name>
         <servlet-name>LoginCustomerServlet</servlet-name>
@@ -36,6 +46,10 @@
         <servlet-name>UpdateCustomerProfileServlet</servlet-name>
         <servlet-class>controllers.UpdateCustomerProfileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginMechanicServlet</servlet-name>
+        <servlet-class>controllers.LoginMechanicServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -51,6 +65,10 @@
     <servlet-mapping>
         <servlet-name>UpdateCustomerProfileServlet</servlet-name>
         <url-pattern>/UpdateCustomerProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginMechanicServlet</servlet-name>
+        <url-pattern>/LoginMechanicServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
