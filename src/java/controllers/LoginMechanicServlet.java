@@ -5,18 +5,21 @@
  */
 package controllers;
 
+import dao.MechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.Mechanic;
 
 /**
  *
  * @author Asus
  */
-public class MainServlet extends HttpServlet {
+public class LoginMechanicServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,50 +32,23 @@ public class MainServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
-
-            if(request.getParameter("action") != null) {
-                action = request.getParameter("action");
+            /* TODO output your page here. You may use following sample code. */
+            String mechanicName = request.getParameter("mechanic_name");
+            MechanicDAO m = new MechanicDAO();
+            Mechanic mechanic = m.login(mechanicName);
+            
+            if (mechanic == null) {
+                request.setAttribute("ERROR", "Mechanic not found");
+                request.getRequestDispatcher("MainServlet?action=mechanic-login-page&mechanic_name=" + mechanicName).forward(request, response);
+            } else {
+                HttpSession s = request.getSession(true);
+                s.setAttribute("MECHANIC", mechanic);
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
             }
-
-            switch (action) {
-                case "home":
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer":
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "logout":
-                    base_url="LogoutServlet";
-                    break;
-                case "customer-profile":
-                    base_url = "CustomerProfile.jsp";
-                    break;
-                case "update-customer-profile":
-                    base_url = "UpdateCustomerProfileServlet";
-                    break;
-                case "mechanic-login-page":
-                    base_url = "LoginMechanic.jsp";
-                    break;
-                case "mechanic-login": 
-                    base_url = "LoginMechanicServlet";
-                    break;
-                case "mechanic-dashboard":
-                    base_url = "MechanicDashboard.jsp";
-                    break;
-                default:
-                    base_url = "index.html";
-                    break;
-            }
-
-            request.getRequestDispatcher(base_url).forward(request, response);
         }
     }
 

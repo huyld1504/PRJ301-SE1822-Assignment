@@ -1,17 +1,17 @@
 <%-- 
-    Document   : LoginCustomer
-    Created on : Feb 26, 2025, 7:14:47 PM
+    Document   : LoginMechanic
+    Created on : Mar 6, 2025, 3:48:01 PM
     Author     : Asus
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-
+        
         <!--CSS Bootstrap link-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     </head>
@@ -27,10 +27,11 @@
                     accept-charset="UTF-8"
                     action="MainServlet"
                     style="height: 350px;"
-                    class="d-flex flex-column justify-content-center"
+                    class="d-flex flex-column justify-content-center my-5"
                     method="get"
                     >
-                    <p class="text-center fs-1 mb-0">Login Customer Form</p>
+                    <input type="hidden" name="action" value="mechanic-login"/>
+                    <p class="text-center fs-1 mb-0">Login Mechanic Form</p>
                     <hr/>
                     <div class="input-group my-3 mx-auto w-75">
                         <span class="input-group-text fw-bold bg-info text-light w-25" id="inputGroup-sizing-default">Username</span>
@@ -39,22 +40,11 @@
                             class="form-control" 
                             aria-label="Sizing example input" 
                             aria-describedby="inputGroup-sizing-default"
-                            name="customer_name"
-                            value="${param.customer_name}"
+                            name="mechanic_name"
+                            value="${param.mechanic_name}"
                             >
                     </div>
-
-                    <div class="input-group my-3 mx-auto w-75">
-                        <span class="input-group-text fw-bold bg-info text-light w-25" id="inputGroup-sizing-default">Phone</span>
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            aria-label="Sizing example input" 
-                            aria-describedby="inputGroup-sizing-default"
-                            name="customer_phone"
-                            value="${param.customer_phone}"
-                            >
-                    </div>
+                            
                     <c:if test="${requestScope.ERROR != null}">
                         <div class="toast align-items-center text-bg-danger border-0 fade show mx-auto w-75 my-3" role="alert" aria-live="assertive" aria-atomic="true">
                             <div class="d-flex">
@@ -65,13 +55,12 @@
                             </div>
                         </div>
                     </c:if>
-                    <input type="hidden" name="action" value="login-customer"/>
                     <div class="d-grid gap-2 col-6 mx-auto mb-5">
                         <button type="submit" class="btn btn-info btn-lg fw-bold border-2 mt-3 text-light">LOGIN</button>
                     </div>
                 </form>
                 <div class=" my-5 mx-auto w-100 rounded-3 d-flex justify-content-around align-items-center" style="height: 50px;">
-                    <p class="fs-5">Click <a href="MainServlet?action=mechanic-login-page">here</a> if you are Mechanic</p>
+                    <p class="fs-5">Click <a href="MainServlet?action=home">here</a> if you are Customer</p>
                     <p class="fs-5">Click <a href="#">here</a> if you are Sale</p>
                 </div>
             </div>
