@@ -42,11 +42,6 @@ public class UpdateCustomerProfileServlet extends HttpServlet {
             String customerPhone = request.getParameter("customer_phone");
             String customerSex = request.getParameter("customer_sex");
             String customerAddress = request.getParameter("customer_address");
-            
-            if(checkEmptyString(customerID) || checkEmptyString(customerAddress) || checkEmptyString(customerName) || checkEmptyString(customerSex) || checkEmptyString(customerPhone)) {
-                request.setAttribute("ERROR", "All fields are not be empty!");
-                request.getRequestDispatcher("MainServlet?action=customer-profile").forward(request, response);
-            }
 
             Customer newProfile = new Customer(customerID, customerName, customerPhone, customerAddress, customerSex);
             CustomerDAO c = new CustomerDAO();
@@ -62,13 +57,8 @@ public class UpdateCustomerProfileServlet extends HttpServlet {
             request.getRequestDispatcher("MainServlet?action=customer-profile").forward(request, response);
         }
     }
-    
-    private boolean checkEmptyString(String str) {
-        boolean isEmpty = str.trim().equals("");
-        return isEmpty;
-    }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
