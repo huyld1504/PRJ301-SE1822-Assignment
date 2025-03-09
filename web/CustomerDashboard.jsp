@@ -56,7 +56,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item mb-2" href="MainServlet?action=logout">
+                                        <a class="dropdown-item mb-2" href="MainServlet?action=customer-logout">
                                             <i class="fa-solid fa-right-from-bracket"></i>
                                             Logout
                                         </a>

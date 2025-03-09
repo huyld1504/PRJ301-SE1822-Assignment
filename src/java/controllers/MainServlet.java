@@ -87,6 +87,7 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "update-ticket-detail":
                     base_url = "UpdateServiceTicketServlet";
+                    break;
                 case "logout-sale":
                     base_url = "LogoutSalesServlet";
                     break;

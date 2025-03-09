@@ -19,7 +19,7 @@
             <p><input type="submit" value="login"/></p>
             
             <p>
-                <a href="index.html" class="back-to-home-button">
+                <a href="MainServlet?action=home" class="back-to-home-button">
                 <input type="button" value="Back to Home" />
                 </a>
             </p>

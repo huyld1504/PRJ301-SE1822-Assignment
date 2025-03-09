@@ -65,10 +65,6 @@
         <servlet-class>controllers.InvoiceServlet_Sale</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>controllers.LogoutServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>LoginMechanicServlet</servlet-name>
         <servlet-class>controllers.LoginMechanicServlet</servlet-class>
     </servlet>
@@ -88,10 +84,14 @@
         <servlet-name>LogoutSalesServlet</servlet-name>
         <servlet-class>controllers.LogoutSalesServlet</servlet-class>
     </servlet>
-  <servlet>
+    <servlet>
         <servlet-name>UpdateServiceTicketServlet</servlet-name>
         <servlet-class>controllers.UpdateServiceTicketServlet</servlet-class>
-  </servlet>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutCustomerServlet</servlet-name>
+        <servlet-class>controllers.LogoutCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -107,10 +107,6 @@
     <servlet-mapping>
         <servlet-name>InvoiceServlet_Sale</servlet-name>
         <url-pattern>/InvoiceServlet_Sale</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginMechanicServlet</servlet-name>
@@ -132,13 +128,17 @@
         <servlet-name>UpdateServiceTicketServlet</servlet-name>
         <url-pattern>/UpdateServiceTicketServlet</url-pattern>
     </servlet-mapping>
-<servlet-mapping>
-       <servlet-name>LoginSaleServlet</servlet-name>
-       <url-pattern>/LoginSaleServlet</url-pattern>
-</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginSaleServlet</servlet-name>
+        <url-pattern>/LoginSaleServlet</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LogoutSalesServlet</servlet-name>
         <url-pattern>/LogoutSalesServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutCustomerServlet</servlet-name>
+        <url-pattern>/LogoutCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
