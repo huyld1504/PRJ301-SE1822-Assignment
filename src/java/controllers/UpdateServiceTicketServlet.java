@@ -1,25 +1,23 @@
-package controllers;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import dao.CustomerDAO;
+package controllers;
+
+import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import models.Customer;
 
 /**
  *
  * @author Asus
  */
-public class LoginCustomerServlet extends HttpServlet {
+public class UpdateServiceTicketServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,19 +34,21 @@ public class LoginCustomerServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String customer_name = request.getParameter("customer_name");
-            String phone = request.getParameter("customer_phone");
+            /* TODO output your page here. You may use following sample code. */
+            String serviceTicketID = request.getParameter("serviceTicketID");
+            String mechanicID = request.getParameter("mechanicID");
+            String comment = request.getParameter("comment");
+            String serviceID = request.getParameter("serviceID");
+            int hours = (int) request.getAttribute("parsedHours");
+            double rate = (double) request.getAttribute("parsedRate");
 
-            CustomerDAO c = new CustomerDAO();
-            Customer customer = c.login(customer_name, phone);
-
-            if (customer != null) {
-                HttpSession s = request.getSession(true);
-                s.setAttribute("CUSTOMER", customer);
-                response.sendRedirect("MainServlet?action=customer-dashboard");
+            ServiceMechanicDAO sm = new ServiceMechanicDAO();
+            boolean result = sm.updateServiceTicketDetail(serviceTicketID, mechanicID, serviceID, comment, hours, rate);
+            if (result) {
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
             } else {
-                request.setAttribute("ERROR", "Customer not found.");
-                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
+                request.setAttribute("ERROR", "Failed to update. Please check again.");
+                request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID).forward(request, response);
             }
         }
     }

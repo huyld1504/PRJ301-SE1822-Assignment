@@ -1,25 +1,26 @@
-package controllers;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import dao.CustomerDAO;
+package controllers;
+
+import dao.ServiceTicketDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Customer;
+import models.ServiceTicket;
 
 /**
  *
  * @author Asus
  */
-public class LoginCustomerServlet extends HttpServlet {
+public class ServiceTicketListServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,23 +33,23 @@ public class LoginCustomerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String customer_name = request.getParameter("customer_name");
-            String phone = request.getParameter("customer_phone");
-
-            CustomerDAO c = new CustomerDAO();
-            Customer customer = c.login(customer_name, phone);
-
-            if (customer != null) {
-                HttpSession s = request.getSession(true);
-                s.setAttribute("CUSTOMER", customer);
-                response.sendRedirect("MainServlet?action=customer-dashboard");
+            /* TODO output your page here. You may use following sample code. */
+            String mechanicID = request.getParameter("mechanicID");
+            
+            ServiceTicketDAO ser = new ServiceTicketDAO();
+            ArrayList<ServiceTicket> list = ser.getServiceTicketByMechanicID(mechanicID);
+            HttpSession s = request.getSession();
+            
+            if(list != null && !list.isEmpty()) {
+                s.setAttribute("SERVICE_TICKET_LIST", list);
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
             } else {
-                request.setAttribute("ERROR", "Customer not found.");
-                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
+                request.setAttribute("LIST_NOT_FOUND", "There are no service tickets.");
+                request.getRequestDispatcher("MainServlet?action=mechanic-dashboard").forward(request, response);
             }
         }
     }
