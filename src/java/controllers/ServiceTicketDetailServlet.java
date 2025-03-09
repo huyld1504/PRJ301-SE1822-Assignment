@@ -5,18 +5,22 @@
  */
 package controllers;
 
+import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.ServiceMeChanic;
 
 /**
  *
  * @author Asus
  */
-public class MainServlet extends HttpServlet {
+public class ServiceTicketDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,63 +35,19 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
-
-            if (request.getParameter("action") != null) {
-                action = request.getParameter("action");
+            String serviceTicketID = request.getParameter("serviceTicketID");
+            
+            ServiceMechanicDAO s = new ServiceMechanicDAO();
+            ArrayList<ServiceMeChanic> list = s.getServiceMechanicByServiceTicketID(serviceTicketID);
+            
+            if(list != null && !list.isEmpty()) {
+                HttpSession session = request.getSession();
+                session.setAttribute("SERVICE_MECHANIC_LIST", list);
+                response.sendRedirect("MainServlet?action=ticket-detail-page&serviceTicketID="+serviceTicketID);
+            } else {
+                request.setAttribute("MESSAGE", "The ticket ID = "+serviceTicketID+" are no services here");
+                request.getRequestDispatcher("MainServlet?action=mechanic-dashboard").forward(request, response);
             }
-
-            switch (action) {
-                case "home":
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer":
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "customer-logout":
-                    base_url = "LogoutCustomerServlet";
-                    break;
-                case "customer-profile":
-                    base_url = "CustomerProfile.jsp";
-                    break;
-                case "update-customer-profile":
-                    base_url = "UpdateCustomerProfileServlet";
-                    break;
-                case "mechanic-login-page":
-                    base_url = "LoginMechanic.jsp";
-                    break;
-                case "mechanic-login":
-                    base_url = "LoginMechanicServlet";
-                    break;
-                case "mechanic-dashboard":
-                    base_url = "MechanicDashboard.jsp";
-                    break;
-                case "mechanic-logout":
-                    base_url = "LogoutMechanic";
-                    break;
-                case "service-ticket":
-                    base_url = "ServiceTicketListServlet";
-                    break;
-                case "ticket-detail":
-                    base_url = "ServiceTicketDetailServlet";
-                    break;
-                case "ticket-detail-page":
-                    base_url = "ServiceTicketDetail.jsp";
-                    break;
-                case "update-ticket-detail":
-                    base_url = "UpdateServiceTicketServlet";
-                    break;
-                default:
-                    base_url = "index.html";
-                    break;
-            }
-
-            request.getRequestDispatcher(base_url).forward(request, response);
         }
     }
 

@@ -1,6 +1,6 @@
 <%-- 
-    Document   : MechanicDashboard
-    Created on : Mar 6, 2025, 4:34:15 PM
+    Document   : ServiceTicketDetail.jsp
+    Created on : Mar 8, 2025, 7:47:42 PM
     Author     : Asus
 --%>
 
@@ -16,7 +16,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
         <!--Font awesome-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/> 
     </head>
     <body>
         <c:if test="${sessionScope.MECHANIC != null}">
@@ -32,7 +32,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-50 fs-5 d-flex justify-content-around align-items-center">
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="MainServlet?action=mechanic-dashboard">
+                                <a class="nav-link" aria-current="page" href="#">
                                     <i class="fa-solid fa-house"></i>
                                     Home
                                 </a>
@@ -74,32 +74,47 @@
             <c:if test="${sessionScope.SERVICE_TICKET_LIST != null}">
                 <table class="table table-striped w-75 mx-auto mt-5">
                     <tr class="fw-bold">
-                        <td>Service Ticket ID</td>
-                        <td>Date Received</td>
-                        <td>Date Returned</td>
+                        <td>Service ID</td>
+                        <td>Hours</td>              
+                        <td>Rate</td>
+                        <td>Comment</td>
                         <td>Tools</td>
                     </tr>
-                    <c:forEach items="${sessionScope.SERVICE_TICKET_LIST}" var="ticket">
-                        <tr>
-                            <td>${ticket.serviceTicketID}</td>
-                            <td>${ticket.dateReceived.toString()}</td>
-                            <td>${ticket.dateReaturned.toString()}</td>
-                            <td>
-                                <a href="MainServlet?action=ticket-detail&serviceTicketID=${ticket.serviceTicketID}"><i class="fa-solid fa-circle-info fs-4"></i></a>
-                            </td>
-                        </tr>
+                    <c:forEach items="${sessionScope.SERVICE_MECHANIC_LIST}" var="ticket">
+                        <form action="MainServlet" accept-charset="UTF-8">
+                            <input value="update-ticket-detail" name="action" type="hidden"/>
+                            <input value="${ticket.serviceTicketID}" name="serviceTicketID" type="hidden"/>
+                            <input value="${ticket.mechanicID}" name="mechanicID" type="hidden"/>
+                            <input value="${ticket.serviceID}" name="serviceID" type="hidden"/>
+                            <tr>
+                                <td>
+                                    <a class="text-decoration-none text-dark" href="MainServlet?action=">${ticket.serviceID}</a>
+                                </td>
+                                <td>
+                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.hour}" name="hours"/>
+                                </td>
+                                <td>
+                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.rate}" name="rate"/>
+                                </td>
+                                <td>
+                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.comment}" placeholder="Add comment" name="comment"/>
+                                </td>
+                                <td>
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fa-solid fa-pen-to-square fs-5"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </form>
                     </c:forEach>
                 </table>
-                <c:if test="${requestScope.MESSAGE != null}">
-                    <div class="alert alert-danger w-75" role="alert">
-                        ${requestScope.MESSAGE}
+
+                <c:if test="${requestScope.ERROR != null}">
+                    <div class="alert alert-danger alert-dismissible fade show w-75 mx-auto z-3" role="alert">
+                        ${requestScope.ERROR}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
-            </c:if>
-            <c:if test="${sessionScope.SERVICE_TICKET_LIST.isEmpty() and sessionScope.SERVICE_TICKET_LIST == null}">
-                <div class="alert alert-danger" role="alert">
-                    ${requestScope.LIST_NOT_FOUND}
-                </div>
             </c:if>
         </c:if>
 
@@ -110,6 +125,5 @@
         </c:if>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
     </body>
 </html>

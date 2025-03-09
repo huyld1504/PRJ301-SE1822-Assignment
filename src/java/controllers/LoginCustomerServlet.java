@@ -45,7 +45,7 @@ public class LoginCustomerServlet extends HttpServlet {
             if (customer != null) {
                 HttpSession s = request.getSession(true);
                 s.setAttribute("CUSTOMER", customer);
-                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+                response.sendRedirect("MainServlet?action=customer-dashboard");
             } else {
                 request.setAttribute("ERROR", "Customer not found.");
                 request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);

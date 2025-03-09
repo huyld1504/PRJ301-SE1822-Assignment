@@ -5,18 +5,22 @@
  */
 package controllers;
 
+import dao.ServiceTicketDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.ServiceTicket;
 
 /**
  *
  * @author Asus
  */
-public class MainServlet extends HttpServlet {
+public class ServiceTicketListServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,64 +34,23 @@ public class MainServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
-
-            if (request.getParameter("action") != null) {
-                action = request.getParameter("action");
+            /* TODO output your page here. You may use following sample code. */
+            String mechanicID = request.getParameter("mechanicID");
+            
+            ServiceTicketDAO ser = new ServiceTicketDAO();
+            ArrayList<ServiceTicket> list = ser.getServiceTicketByMechanicID(mechanicID);
+            HttpSession s = request.getSession();
+            
+            if(list != null && !list.isEmpty()) {
+                s.setAttribute("SERVICE_TICKET_LIST", list);
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
+            } else {
+                request.setAttribute("LIST_NOT_FOUND", "There are no service tickets.");
+                request.getRequestDispatcher("MainServlet?action=mechanic-dashboard").forward(request, response);
             }
-
-            switch (action) {
-                case "home":
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer":
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "customer-logout":
-                    base_url = "LogoutCustomerServlet";
-                    break;
-                case "customer-profile":
-                    base_url = "CustomerProfile.jsp";
-                    break;
-                case "update-customer-profile":
-                    base_url = "UpdateCustomerProfileServlet";
-                    break;
-                case "mechanic-login-page":
-                    base_url = "LoginMechanic.jsp";
-                    break;
-                case "mechanic-login":
-                    base_url = "LoginMechanicServlet";
-                    break;
-                case "mechanic-dashboard":
-                    base_url = "MechanicDashboard.jsp";
-                    break;
-                case "mechanic-logout":
-                    base_url = "LogoutMechanic";
-                    break;
-                case "service-ticket":
-                    base_url = "ServiceTicketListServlet";
-                    break;
-                case "ticket-detail":
-                    base_url = "ServiceTicketDetailServlet";
-                    break;
-                case "ticket-detail-page":
-                    base_url = "ServiceTicketDetail.jsp";
-                    break;
-                case "update-ticket-detail":
-                    base_url = "UpdateServiceTicketServlet";
-                    break;
-                default:
-                    base_url = "index.html";
-                    break;
-            }
-
-            request.getRequestDispatcher(base_url).forward(request, response);
         }
     }
 

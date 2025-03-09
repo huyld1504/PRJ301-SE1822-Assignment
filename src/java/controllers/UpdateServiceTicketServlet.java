@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Asus
  */
-public class MainServlet extends HttpServlet {
+public class UpdateServiceTicketServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,65 +30,26 @@ public class MainServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
+            /* TODO output your page here. You may use following sample code. */
+            String serviceTicketID = request.getParameter("serviceTicketID");
+            String mechanicID = request.getParameter("mechanicID");
+            String comment = request.getParameter("comment");
+            String serviceID = request.getParameter("serviceID");
+            int hours = (int) request.getAttribute("parsedHours");
+            double rate = (double) request.getAttribute("parsedRate");
 
-            if (request.getParameter("action") != null) {
-                action = request.getParameter("action");
+            ServiceMechanicDAO sm = new ServiceMechanicDAO();
+            boolean result = sm.updateServiceTicketDetail(serviceTicketID, mechanicID, serviceID, comment, hours, rate);
+            if (result) {
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
+            } else {
+                request.setAttribute("ERROR", "Failed to update. Please check again.");
+                request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID).forward(request, response);
             }
-
-            switch (action) {
-                case "home":
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer":
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "customer-logout":
-                    base_url = "LogoutCustomerServlet";
-                    break;
-                case "customer-profile":
-                    base_url = "CustomerProfile.jsp";
-                    break;
-                case "update-customer-profile":
-                    base_url = "UpdateCustomerProfileServlet";
-                    break;
-                case "mechanic-login-page":
-                    base_url = "LoginMechanic.jsp";
-                    break;
-                case "mechanic-login":
-                    base_url = "LoginMechanicServlet";
-                    break;
-                case "mechanic-dashboard":
-                    base_url = "MechanicDashboard.jsp";
-                    break;
-                case "mechanic-logout":
-                    base_url = "LogoutMechanic";
-                    break;
-                case "service-ticket":
-                    base_url = "ServiceTicketListServlet";
-                    break;
-                case "ticket-detail":
-                    base_url = "ServiceTicketDetailServlet";
-                    break;
-                case "ticket-detail-page":
-                    base_url = "ServiceTicketDetail.jsp";
-                    break;
-                case "update-ticket-detail":
-                    base_url = "UpdateServiceTicketServlet";
-                    break;
-                default:
-                    base_url = "index.html";
-                    break;
-            }
-
-            request.getRequestDispatcher(base_url).forward(request, response);
         }
     }
 
