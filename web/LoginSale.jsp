@@ -13,7 +13,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <form action="loginSaleServlet" accept-charset="utf-8">
+        <form action="MainServlet" accept-charset="utf-8">
+            <input type="hidden" name="action" value="sale-login"/>
             <p><input type="text" name="txtname" required="">*</p>
             <p><input type="submit" value="login"/></p>
             

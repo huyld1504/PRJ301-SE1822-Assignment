@@ -24,7 +24,7 @@
             else{
             %>
             <h1>welcome <%= kq.getSalesName() %></h1>
-            <h2><a href="MainServlet?action=logout">Logout</a></h2>
+            <h2><a href="MainServlet?action=logout-sale">Logout</a></h2>
             <h1>DASHBOARD</h1>                   
         <%
             }

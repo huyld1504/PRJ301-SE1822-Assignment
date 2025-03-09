@@ -20,7 +20,7 @@ import models.SalesPerson;
  *
  * @author Thanh Vinh
  */
-public class loginSaleServlet extends HttpServlet {
+public class LoginSaleServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,7 +46,7 @@ public class loginSaleServlet extends HttpServlet {
                 if (sale != null) {
                     HttpSession s = request.getSession(true);
                     s.setAttribute("sale", sale);
-                    response.sendRedirect("MainServlet?action=sale-dashboarde");
+                    response.sendRedirect("MainServlet?action=sale-dashboard");
                 } else {
 
                     // response.sendRedirect("error2.html");

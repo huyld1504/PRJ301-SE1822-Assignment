@@ -47,8 +47,8 @@
         <servlet-class>controllers.UpdateCustomerProfileServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>loginSaleServlet</servlet-name>
-        <servlet-class>controllers.loginSaleServlet</servlet-class>
+        <servlet-name>LoginSaleServlet</servlet-name>
+        <servlet-class>controllers.LoginSaleServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>InvoiceServlet_Sale</servlet-name>
@@ -61,6 +61,10 @@
     <servlet>
         <servlet-name>LoginMechanicServlet</servlet-name>
         <servlet-class>controllers.LoginMechanicServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutSalesServlet</servlet-name>
+        <servlet-class>controllers.LogoutSalesServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
@@ -75,10 +79,6 @@
         <url-pattern>/UpdateCustomerProfileServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>loginSaleServlet</servlet-name>
-        <url-pattern>/loginSaleServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>InvoiceServlet_Sale</servlet-name>
         <url-pattern>/InvoiceServlet_Sale</url-pattern>
     </servlet-mapping>
@@ -89,6 +89,14 @@
     <servlet-mapping>
         <servlet-name>LoginMechanicServlet</servlet-name>
         <url-pattern>/LoginMechanicServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginSaleServlet</servlet-name>
+        <url-pattern>/LoginSaleServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutSalesServlet</servlet-name>
+        <url-pattern>/LogoutSalesServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
