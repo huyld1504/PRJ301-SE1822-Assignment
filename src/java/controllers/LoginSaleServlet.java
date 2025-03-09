@@ -35,29 +35,21 @@ public class LoginSaleServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+
             
-            String name = request.getParameter("txtname");
             
-            if (name != null) {
-                SalePersonDAO d = new SalePersonDAO();
-                SalesPerson sale = d.checkLogin(name);
+            String sale_name = request.getParameter("sale_name");
 
-                if (sale != null) {
-                    HttpSession s = request.getSession(true);
-                    s.setAttribute("sale", sale);
-                    response.sendRedirect("MainServlet?action=sale-dashboard");
-                } else {
+            SalePersonDAO sp = new SalePersonDAO();
+            SalesPerson sale = sp.checkLogin(sale_name);
 
-                    // response.sendRedirect("error2.html");
-                    request.setAttribute("ERROR", "Tên đăng nhập không đúng. Vui lòng thử lại!");
-                    request.getRequestDispatcher("MainServlet?action=login-sale").forward(request, response);
-
-                }
-
+            if (sale != null) {
+                HttpSession s = request.getSession(true);
+                s.setAttribute("SALE", sale);
+                response.sendRedirect("MainServlet?action=sale-dashboard");
             } else {
-                request.setAttribute("ERROR", "Tên đăng nhập không đúng. Vui lòng thử lại!");
-                request.getRequestDispatcher("MainServlet?action=login-sale").forward(request, response);
+                request.setAttribute("ERROR", "Sale not found");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page&sale_name" + sale_name).forward(request, response);
             }
 
         }

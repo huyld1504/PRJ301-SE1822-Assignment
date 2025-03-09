@@ -33,12 +33,14 @@ public class LogoutSalesServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             
-            HttpSession s = request.getSession();
-            
-            s.invalidate();
+            HttpSession s = request.getSession(false);
 
-            response.sendRedirect("MainServlet?action=login-sale");
-            
+            if (s != null) {
+                s.invalidate(); // Xóa session hoàn toàn
+            }
+
+            response.sendRedirect("MainServlet?action=login-sale-page");
+
         }
     }
 
