@@ -5,18 +5,22 @@
  */
 package controllers;
 
+import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.Mechanic;
+import models.SalesPerson;
 
 /**
  *
- * @author Asus
+ * @author Thanh Vinh
  */
-public class MainServlet extends HttpServlet {
+public class LoginSaleServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,60 +35,31 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
+            /* TODO output your page here. You may use following sample code. */
+            
+            String name = request.getParameter("txtname");
+            
+            if (name != null) {
+                SalePersonDAO d = new SalePersonDAO();
+                SalesPerson sale = d.checkLogin(name);
 
-            if (request.getParameter("action") != null) {
-                action = request.getParameter("action");
+                if (sale != null) {
+                    HttpSession s = request.getSession(true);
+                    s.setAttribute("sale", sale);
+                    response.sendRedirect("MainServlet?action=sale-dashboard");
+                } else {
+
+                    // response.sendRedirect("error2.html");
+                    request.setAttribute("ERROR", "Tên đăng nhập không đúng. Vui lòng thử lại!");
+                    request.getRequestDispatcher("MainServlet?action=login-sale").forward(request, response);
+
+                }
+
+            } else {
+                request.setAttribute("ERROR", "Tên đăng nhập không đúng. Vui lòng thử lại!");
+                request.getRequestDispatcher("MainServlet?action=login-sale").forward(request, response);
             }
 
-            switch (action) {
-                case "home":
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer":
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "logout":
-                    base_url = "LogoutServlet";
-                    break;
-                case "customer-profile":
-                    base_url = "CustomerProfile.jsp";
-                    break;
-                case "update-customer-profile":
-                    base_url = "UpdateCustomerProfileServlet";
-                    break;               
-                case "login-sale":
-                    base_url = "LoginSale.jsp";
-                    break;
-                case "sale-dashboard":
-                    base_url = "SaleDashboard.jsp";
-                    break;
-                case "mechanic-login-page":
-                    base_url = "LoginMechanic.jsp";
-                    break;
-                case "mechanic-login":
-                    base_url = "LoginMechanicServlet";
-                    break;
-                case "mechanic-dashboard":
-                    base_url = "MechanicDashboard.jsp";
-                    break;
-                case "logout-sale":
-                    base_url = "LogoutSalesServlet";
-                    break;
-                case "sale-login":
-                    base_url = "LoginSaleServlet";
-                    break;
-                default:
-                    base_url = "index.html";
-                    break;
-            }
-
-            request.getRequestDispatcher(base_url).forward(request, response);
         }
     }
 

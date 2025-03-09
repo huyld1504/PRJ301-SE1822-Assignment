@@ -5,18 +5,23 @@
  */
 package controllers;
 
+import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.SalesInvoice;
+import models.SalesPerson;
 
 /**
  *
- * @author Asus
+ * @author Thanh Vinh
  */
-public class MainServlet extends HttpServlet {
+public class InvoiceServlet_Sale extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,60 +36,25 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
+            /* TODO output your page here. You may use following sample code. */
+            
+            HttpSession s = request.getSession();
+       
+            if (s.getAttribute("sale") == null) {
+                request.setAttribute("ERROR", "Chưa Login ba ơi ba");
+                request.getRequestDispatcher("MainServlet?action=login-sale").forward(request, response);
+            } 
+            
+            else {
+                SalesPerson us = (SalesPerson) s.getAttribute("sale");
+                String saleid = "" + us.getSalesID();
 
-            if (request.getParameter("action") != null) {
-                action = request.getParameter("action");
+                InvoiceDAO d = new InvoiceDAO();
+                ArrayList<SalesInvoice> kq = d.getInvoices(saleid, 2);
+                request.setAttribute("LIST_INVOICE", kq);
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
             }
-
-            switch (action) {
-                case "home":
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer":
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "logout":
-                    base_url = "LogoutServlet";
-                    break;
-                case "customer-profile":
-                    base_url = "CustomerProfile.jsp";
-                    break;
-                case "update-customer-profile":
-                    base_url = "UpdateCustomerProfileServlet";
-                    break;               
-                case "login-sale":
-                    base_url = "LoginSale.jsp";
-                    break;
-                case "sale-dashboard":
-                    base_url = "SaleDashboard.jsp";
-                    break;
-                case "mechanic-login-page":
-                    base_url = "LoginMechanic.jsp";
-                    break;
-                case "mechanic-login":
-                    base_url = "LoginMechanicServlet";
-                    break;
-                case "mechanic-dashboard":
-                    base_url = "MechanicDashboard.jsp";
-                    break;
-                case "logout-sale":
-                    base_url = "LogoutSalesServlet";
-                    break;
-                case "sale-login":
-                    base_url = "LoginSaleServlet";
-                    break;
-                default:
-                    base_url = "index.html";
-                    break;
-            }
-
-            request.getRequestDispatcher(base_url).forward(request, response);
+            
         }
     }
 

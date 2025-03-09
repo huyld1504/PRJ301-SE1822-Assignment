@@ -72,7 +72,7 @@
                 </form>
                 <div class=" my-5 mx-auto w-100 rounded-3 d-flex justify-content-around align-items-center" style="height: 50px;">
                     <p class="fs-5">Click <a href="MainServlet?action=mechanic-login-page">here</a> if you are Mechanic</p>
-                    <p class="fs-5">Click <a href="#">here</a> if you are Sale</p>
+                    <p class="fs-5">Click <a href="MainServlet?action=login-sale">here</a> if you are Sale</p>
                 </div>
             </div>
         </div>
