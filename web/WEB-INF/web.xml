@@ -92,6 +92,10 @@
         <servlet-name>LogoutCustomerServlet</servlet-name>
         <servlet-class>controllers.LogoutCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServicesListServlet</servlet-name>
+        <servlet-class>controllers.ServicesListServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -139,6 +143,10 @@
     <servlet-mapping>
         <servlet-name>LogoutCustomerServlet</servlet-name>
         <url-pattern>/LogoutCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicesListServlet</servlet-name>
+        <url-pattern>/ServicesListServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
