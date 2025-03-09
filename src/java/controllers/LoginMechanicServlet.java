@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.MechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,12 +13,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Mechanic;
 
 /**
  *
  * @author Asus
  */
-public class LogoutServlet extends HttpServlet {
+public class LoginMechanicServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,11 +32,23 @@ public class LogoutServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            HttpSession s = request.getSession();
-            s.invalidate();
-            response.sendRedirect("MainServlet?action=home");
+            /* TODO output your page here. You may use following sample code. */
+            String mechanicName = request.getParameter("mechanic_name");
+            MechanicDAO m = new MechanicDAO();
+            Mechanic mechanic = m.login(mechanicName);
+            
+            if (mechanic == null) {
+                request.setAttribute("ERROR", "Mechanic not found");
+                request.getRequestDispatcher("MainServlet?action=mechanic-login-page&mechanic_name=" + mechanicName).forward(request, response);
+            } else {
+                HttpSession s = request.getSession(true);
+                s.setAttribute("MECHANIC", mechanic);
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
+            }
         }
     }
 
