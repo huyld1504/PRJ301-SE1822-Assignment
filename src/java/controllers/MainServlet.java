@@ -49,8 +49,8 @@ public class MainServlet extends HttpServlet {
                 case "customer-dashboard":
                     base_url = "CustomerDashboard.jsp";
                     break;
-                case "logout":
-                    base_url = "LogoutServlet";
+                case "customer-logout":
+                    base_url = "LogoutCustomerServlet";
                     break;
                 case "customer-profile":
                     base_url = "CustomerProfile.jsp";
@@ -72,6 +72,21 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "mechanic-dashboard":
                     base_url = "MechanicDashboard.jsp";
+                    break;
+                case "mechanic-logout":
+                    base_url = "LogoutMechanic";
+                    break;
+                case "service-ticket":
+                    base_url = "ServiceTicketListServlet";
+                    break;
+                case "ticket-detail":
+                    base_url = "ServiceTicketDetailServlet";
+                    break;
+                case "ticket-detail-page":
+                    base_url = "ServiceTicketDetail.jsp";
+                    break;
+                case "update-ticket-detail":
+                    base_url = "UpdateServiceTicketServlet";
                     break;
                 case "logout-sale":
                     base_url = "LogoutSalesServlet";

@@ -16,6 +16,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     </head>
     <body>
+
         <div class="w-100 h-100 my-5">
             <div style="box-shadow: 10px 10px 20px 0px rgba(122,122,122,1); -webkit-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1); -moz-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);"
                  class="w-50 border bg-light bg-gradient rounded-3 pt-5 mx-auto">
@@ -71,6 +72,27 @@
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+        <form action="MainServlet" accept-charset="utf-8">
+            <input type="hidden" name="action" value="sale-login"/>
+            <p><input type="text" name="txtname" required="">*</p>
+            <p><input type="submit" value="login"/></p>
+            
+            <p>
+                <a href="MainServlet?action=home" class="back-to-home-button">
+                <input type="button" value="Back to Home" />
+                </a>
+            </p>
+            
+            <p>
+                <%
+                    if(request.getAttribute("ERROR") != null){
+                        out.print(request.getAttribute("ERROR"));
+                    }
+                %>
+            </p>
+        </form>
+
     </body>
 </html>
 

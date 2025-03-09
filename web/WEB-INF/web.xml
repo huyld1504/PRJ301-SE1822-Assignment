@@ -12,6 +12,16 @@
         <filter-name>LoginMechanicFilter</filter-name>
         <filter-class>filters.LoginMechanicFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>UpdateTicketDetailFilter</filter-name>
+        <filter-class>filters.UpdateTicketDetailFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UpdateTicketDetailFilter</filter-name>
+        <servlet-name>UpdateServiceTicketServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>LoginMechanicFilter</filter-name>
         <servlet-name>LoginMechanicServlet</servlet-name>
@@ -55,16 +65,32 @@
         <servlet-class>controllers.InvoiceServlet_Sale</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>controllers.LogoutServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>LoginMechanicServlet</servlet-name>
         <servlet-class>controllers.LoginMechanicServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>LogoutMechanic</servlet-name>
+        <servlet-class>controllers.LogoutMechanic</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServiceTicketListServlet</servlet-name>
+        <servlet-class>controllers.ServiceTicketListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServiceTicketDetailServlet</servlet-name>
+        <servlet-class>controllers.ServiceTicketDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LogoutSalesServlet</servlet-name>
         <servlet-class>controllers.LogoutSalesServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateServiceTicketServlet</servlet-name>
+        <servlet-class>controllers.UpdateServiceTicketServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutCustomerServlet</servlet-name>
+        <servlet-class>controllers.LogoutCustomerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
@@ -83,12 +109,24 @@
         <url-pattern>/InvoiceServlet_Sale</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/LogoutServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>LoginMechanicServlet</servlet-name>
         <url-pattern>/LoginMechanicServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutMechanic</servlet-name>
+        <url-pattern>/LogoutMechanic</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServiceTicketListServlet</servlet-name>
+        <url-pattern>/ServiceTicketListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServiceTicketDetailServlet</servlet-name>
+        <url-pattern>/ServiceTicketDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateServiceTicketServlet</servlet-name>
+        <url-pattern>/UpdateServiceTicketServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginSaleServlet</servlet-name>
@@ -97,6 +135,10 @@
     <servlet-mapping>
         <servlet-name>LogoutSalesServlet</servlet-name>
         <url-pattern>/LogoutSalesServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutCustomerServlet</servlet-name>
+        <url-pattern>/LogoutCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
