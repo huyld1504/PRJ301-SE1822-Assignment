@@ -49,10 +49,6 @@
         <servlet-class>controllers.LoginCustomerServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>controllers.LogoutCustomerServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>UpdateCustomerProfileServlet</servlet-name>
         <servlet-class>controllers.UpdateCustomerProfileServlet</servlet-class>
     </servlet>
@@ -153,7 +149,6 @@
         <url-pattern>/LogoutCustomerServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-
         <servlet-name>ServicesListServlet</servlet-name>
         <url-pattern>/ServicesListServlet</url-pattern>
     </servlet-mapping>
