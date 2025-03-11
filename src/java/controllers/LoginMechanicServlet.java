@@ -5,7 +5,7 @@
  */
 package controllers;
 
-import dao.CustomerDAO;
+import dao.MechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Customer;
+import models.Mechanic;
 
 /**
  *
  * @author Asus
  */
-public class UpdateCustomerProfileServlet extends HttpServlet {
+public class LoginMechanicServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,33 +32,27 @@ public class UpdateCustomerProfileServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            request.setCharacterEncoding("UTF-8");
-            response.setCharacterEncoding("UTF-8");
             /* TODO output your page here. You may use following sample code. */
-            String customerID = request.getParameter("customer_id");
-            String customerName = request.getParameter("customer_name");
-            String customerPhone = request.getParameter("customer_phone");
-            String customerSex = request.getParameter("customer_sex");
-            String customerAddress = request.getParameter("customer_address");
-
-            Customer newProfile = new Customer(customerID, customerName, customerPhone, customerAddress, customerSex);
-            CustomerDAO c = new CustomerDAO();
-            boolean isUpdated = c.update(customerID, newProfile);
-
-            if (isUpdated) {
-                HttpSession s = request.getSession(true);
-                s.setAttribute("CUSTOMER", newProfile);
-                request.setAttribute("MESSAGE", "Updated successfully!");
+            String mechanicName = request.getParameter("mechanic_name");
+            MechanicDAO m = new MechanicDAO();
+            Mechanic mechanic = m.login(mechanicName);
+            
+            if (mechanic == null) {
+                request.setAttribute("ERROR", "Mechanic not found");
+                request.getRequestDispatcher("MainServlet?action=mechanic-login-page&mechanic_name=" + mechanicName).forward(request, response);
             } else {
-                request.setAttribute("ERROR", "Failed to update!");
+                HttpSession s = request.getSession(true);
+                s.setAttribute("MECHANIC", mechanic);
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
             }
-            request.getRequestDispatcher("MainServlet?action=customer-profile").forward(request, response);
         }
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

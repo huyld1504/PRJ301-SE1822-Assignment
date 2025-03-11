@@ -5,21 +5,23 @@
  */
 package controllers;
 
-import dao.CustomerDAO;
+import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Customer;
+import models.SalesInvoice;
+import models.SalesPerson;
 
 /**
  *
- * @author Asus
+ * @author Thanh Vinh
  */
-public class UpdateCustomerProfileServlet extends HttpServlet {
+public class InvoiceServlet_Sale extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,31 +36,29 @@ public class UpdateCustomerProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            request.setCharacterEncoding("UTF-8");
-            response.setCharacterEncoding("UTF-8");
             /* TODO output your page here. You may use following sample code. */
-            String customerID = request.getParameter("customer_id");
-            String customerName = request.getParameter("customer_name");
-            String customerPhone = request.getParameter("customer_phone");
-            String customerSex = request.getParameter("customer_sex");
-            String customerAddress = request.getParameter("customer_address");
+            
+            HttpSession s = request.getSession();
+       
+            if (s.getAttribute("sale") == null) {
+                request.setAttribute("ERROR", "Chưa Login ba ơi ba");
+                request.getRequestDispatcher("MainServlet?action=login-sale").forward(request, response);
+            } 
+            
+            else {
+                SalesPerson us = (SalesPerson) s.getAttribute("sale");
+                String saleid = "" + us.getSalesID();
 
-            Customer newProfile = new Customer(customerID, customerName, customerPhone, customerAddress, customerSex);
-            CustomerDAO c = new CustomerDAO();
-            boolean isUpdated = c.update(customerID, newProfile);
-
-            if (isUpdated) {
-                HttpSession s = request.getSession(true);
-                s.setAttribute("CUSTOMER", newProfile);
-                request.setAttribute("MESSAGE", "Updated successfully!");
-            } else {
-                request.setAttribute("ERROR", "Failed to update!");
+                InvoiceDAO d = new InvoiceDAO();
+                ArrayList<SalesInvoice> kq = d.getInvoices(saleid, 2);
+                request.setAttribute("LIST_INVOICE", kq);
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
             }
-            request.getRequestDispatcher("MainServlet?action=customer-profile").forward(request, response);
+            
         }
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

@@ -5,21 +5,22 @@
  */
 package controllers;
 
-import dao.CustomerDAO;
+import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Customer;
+import models.ServiceMeChanic;
 
 /**
  *
  * @author Asus
  */
-public class UpdateCustomerProfileServlet extends HttpServlet {
+public class ServiceTicketDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,31 +35,23 @@ public class UpdateCustomerProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            request.setCharacterEncoding("UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            /* TODO output your page here. You may use following sample code. */
-            String customerID = request.getParameter("customer_id");
-            String customerName = request.getParameter("customer_name");
-            String customerPhone = request.getParameter("customer_phone");
-            String customerSex = request.getParameter("customer_sex");
-            String customerAddress = request.getParameter("customer_address");
-
-            Customer newProfile = new Customer(customerID, customerName, customerPhone, customerAddress, customerSex);
-            CustomerDAO c = new CustomerDAO();
-            boolean isUpdated = c.update(customerID, newProfile);
-
-            if (isUpdated) {
-                HttpSession s = request.getSession(true);
-                s.setAttribute("CUSTOMER", newProfile);
-                request.setAttribute("MESSAGE", "Updated successfully!");
+            String serviceTicketID = request.getParameter("serviceTicketID");
+            
+            ServiceMechanicDAO s = new ServiceMechanicDAO();
+            ArrayList<ServiceMeChanic> list = s.getServiceMechanicByServiceTicketID(serviceTicketID);
+            
+            if(list != null && !list.isEmpty()) {
+                HttpSession session = request.getSession();
+                session.setAttribute("SERVICE_MECHANIC_LIST", list);
+                response.sendRedirect("MainServlet?action=ticket-detail-page&serviceTicketID="+serviceTicketID);
             } else {
-                request.setAttribute("ERROR", "Failed to update!");
+                request.setAttribute("MESSAGE", "The ticket ID = "+serviceTicketID+" are no services here");
+                request.getRequestDispatcher("MainServlet?action=mechanic-dashboard").forward(request, response);
             }
-            request.getRequestDispatcher("MainServlet?action=customer-profile").forward(request, response);
         }
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

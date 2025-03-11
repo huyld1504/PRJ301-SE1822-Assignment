@@ -39,28 +39,13 @@ public class LoginCustomerServlet extends HttpServlet {
             String customer_name = request.getParameter("customer_name");
             String phone = request.getParameter("customer_phone");
 
-            if (customer_name.trim().equals("")) {
-                request.setAttribute("ERROR", "username can not be empty.");
-                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
-            }
-
-            if (phone.trim().equals("")) {
-                request.setAttribute("ERROR", "phone can not be empty.");
-                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
-            }
-
-            if (!phone.matches("^\\d+$")) {
-                request.setAttribute("ERROR", "phone is invalid format");
-                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
-            }
-
             CustomerDAO c = new CustomerDAO();
             Customer customer = c.login(customer_name, phone);
 
             if (customer != null) {
                 HttpSession s = request.getSession(true);
                 s.setAttribute("CUSTOMER", customer);
-                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+                response.sendRedirect("MainServlet?action=customer-dashboard");
             } else {
                 request.setAttribute("ERROR", "Customer not found.");
                 request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);

@@ -5,19 +5,22 @@
  */
 package controllers;
 
+import dao.ServiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Service;
 
 /**
  *
  * @author Asus
  */
-public class LogoutServlet extends HttpServlet {
+public class ServicesListServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,9 +35,19 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
             HttpSession s = request.getSession();
-            s.invalidate();
-            response.sendRedirect("MainServlet?action=home");
+            
+            ServiceDAO dao = new ServiceDAO();
+            ArrayList<Service> list = dao.getAllServices();
+            
+            if(list != null && !list.isEmpty()) {
+                s.setAttribute("SERVICE_LIST", list);
+                response.sendRedirect("MainServlet?action=service-page");
+            } else {
+                request.setAttribute("MESSAGE", "Opps, something went wrong! Please try again");
+                request.getRequestDispatcher("MainServlet?action=service-page").forward(request, response);
+            }
         }
     }
 

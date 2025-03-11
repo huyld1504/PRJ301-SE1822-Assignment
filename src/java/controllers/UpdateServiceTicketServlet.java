@@ -5,21 +5,19 @@
  */
 package controllers;
 
-import dao.CustomerDAO;
+import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import models.Customer;
 
 /**
  *
  * @author Asus
  */
-public class UpdateCustomerProfileServlet extends HttpServlet {
+public class UpdateServiceTicketServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,33 +30,30 @@ public class UpdateCustomerProfileServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            request.setCharacterEncoding("UTF-8");
-            response.setCharacterEncoding("UTF-8");
             /* TODO output your page here. You may use following sample code. */
-            String customerID = request.getParameter("customer_id");
-            String customerName = request.getParameter("customer_name");
-            String customerPhone = request.getParameter("customer_phone");
-            String customerSex = request.getParameter("customer_sex");
-            String customerAddress = request.getParameter("customer_address");
+            String serviceTicketID = request.getParameter("serviceTicketID");
+            String mechanicID = request.getParameter("mechanicID");
+            String comment = request.getParameter("comment");
+            String serviceID = request.getParameter("serviceID");
+            int hours = (int) request.getAttribute("parsedHours");
+            double rate = (double) request.getAttribute("parsedRate");
 
-            Customer newProfile = new Customer(customerID, customerName, customerPhone, customerAddress, customerSex);
-            CustomerDAO c = new CustomerDAO();
-            boolean isUpdated = c.update(customerID, newProfile);
-
-            if (isUpdated) {
-                HttpSession s = request.getSession(true);
-                s.setAttribute("CUSTOMER", newProfile);
-                request.setAttribute("MESSAGE", "Updated successfully!");
+            ServiceMechanicDAO sm = new ServiceMechanicDAO();
+            boolean result = sm.updateServiceTicketDetail(serviceTicketID, mechanicID, serviceID, comment, hours, rate);
+            if (result) {
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
             } else {
-                request.setAttribute("ERROR", "Failed to update!");
+                request.setAttribute("ERROR", "Failed to update. Please check again.");
+                request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID).forward(request, response);
             }
-            request.getRequestDispatcher("MainServlet?action=customer-profile").forward(request, response);
         }
     }
 
-// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
