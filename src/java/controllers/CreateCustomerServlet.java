@@ -5,7 +5,7 @@
  */
 package controllers;
 
-import dao.InvoiceDAO;
+import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -14,14 +14,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.SalesInvoice;
+import models.Customer;
 import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class InvoiceServlet_Sale extends HttpServlet {
+public class CreateCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,26 +36,49 @@ public class InvoiceServlet_Sale extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             
-/*            HttpSession s = request.getSession();
-       
-            if (s.getAttribute("sale") == null) {
-                request.setAttribute("ERROR", "Chưa Login ba ơi ba");
-                request.getRequestDispatcher("MainServlet?action=login-sale").forward(request, response);
-            } 
-            
-            else {
-                SalesPerson us = (SalesPerson) s.getAttribute("sale");
-                String saleid = "" + us.getSalesID();
+            // Lấy thông tin SalesPerson từ session
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
-                InvoiceDAO d = new InvoiceDAO();
-                ArrayList<SalesInvoice> kq = d.getInvoices(saleid, 2);
-                request.setAttribute("LIST_INVOICE", kq);
-                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+            if (salesPerson == null) {
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
             }
-*/            
+
+            // Lấy thông tin từ form
+            String custName = request.getParameter("custName");
+            String phone = request.getParameter("phone");
+            String sex = request.getParameter("sex");
+            String cusAddress = request.getParameter("cusAddress");
+
+            // Tạo đối tượng Customer
+            Customer newCustomer = new Customer(null, custName, phone, cusAddress, sex);
+
+            // Gọi DAO để thêm khách hàng
+            SalePersonDAO saleDAO = new SalePersonDAO();
+            boolean isAdded = saleDAO.addCustomer(newCustomer);
+
+            if (isAdded) {
+                request.setAttribute("SUCCESS", "Customer created successfully!");
+            } else {
+                request.setAttribute("ERROR", "Customer creation failed. Please try again!");
+            }
+
+            // Cập nhật danh sách khách hàng và quay lại SaleDashboard.jsp
+            ArrayList<Customer> customers = saleDAO.getCustomersBySalesID(salesPerson.getSalesID());
+            request.setAttribute("CUSTOMER_LIST", customers);
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "System error. Please try again!");
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard&ERROR").forward(request, response);
         }
+
+
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
