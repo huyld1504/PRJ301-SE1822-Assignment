@@ -171,19 +171,17 @@ public class ServiceMechanicDAO {
             if (conn != null) {
                 conn.setAutoCommit(false);
                 String sql = "DELETE FROM [dbo].[ServiceMechanic]\n"
-                        + "      WHERE serviceID = ?";
+                        + "      WHERE [serviceID] = ?";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, serviceID);
                 rows = ps.executeUpdate();
                 
-                System.out.println("rows in service mechanic: " +rows);
-
-                if (rows > 0) {
-                    isDeleted = true;
+                if(rows > 0) {
                     conn.commit();
                 } else {
                     conn.rollback();
                 }
+                isDeleted = true;
             }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();

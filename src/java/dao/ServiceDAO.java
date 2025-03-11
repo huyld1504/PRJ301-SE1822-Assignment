@@ -78,8 +78,6 @@ public class ServiceDAO {
                     String serviceID = table.getString("serviceID");
                     String serviceName = table.getString("serviceName");
                     double hourlyRate = table.getDouble("hourlyRate");
-                    String formattedRate = String.format("%.0f", hourlyRate);
-                    System.out.println(formattedRate);
                     Service s = new Service(serviceID, serviceName, hourlyRate);
                     list.add(s);
                 }
@@ -152,20 +150,18 @@ public class ServiceDAO {
                 conn = DBUtils.getConnection();
                 if (conn != null) {
                     conn.setAutoCommit(false);
-                    String sql = "DELETE FROM [dbo].[ServiceMechanic]\n"
+                    String sql = "DELETE FROM [dbo].[Service]\n"
                             + "      WHERE [serviceID] = ?";
                     PreparedStatement ps = conn.prepareStatement(sql);
                     ps.setString(1, serviceID);
                     int rows = ps.executeUpdate();
-                    
-                    System.out.println("rows in service: " +rows);
 
                     if (rows > 0) {
-                        isDeleted = true;
                         conn.commit();
                     } else {
                         conn.rollback();
                     }
+                    isDeleted = true;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
