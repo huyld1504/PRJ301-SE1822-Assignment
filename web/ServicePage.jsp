@@ -78,7 +78,7 @@
                 <div class="row gap-5">
                     <form action="MainServlet" accept-charset="utf-8" class="col-4">
                         <input type="hidden" name="action" value="service-create-page"/>
-                        <button class="btn btn-primary btn-lg mx-5 my-3 mr-5">
+                        <button class="btn btn-primary btn-sm mx-5 my-3 mr-5">
                             <i class="fa-solid fa-square-plus"></i>
                             Create
                         </button>
@@ -113,16 +113,18 @@
                                 <td>
                                     <input style="border: none" type="text" class="rounded-2 my-auto" value="<fmt:formatNumber value="${service.hourlyRate}" pattern="#,###" />" name="hourlyRate"/>
                                 </td>
-                                <td class="row">
-                                    <button type="submit" class="btn btn-primary btn-sm col-3">
+                                <td class="d-flex justify-content-start gap-2">
+                                    <button type="submit" class="btn btn-primary btn-sm">
                                         <i class="fa-solid fa-pen-to-square fs-5"></i>
+                                        Edit
                                     </button>
                             </form>
-                                <form action="MainServlet" class="col-9">
+                            <form action="MainServlet">
                                 <input type="hidden" name="action" value="delete-service-mechanic"/>
                                 <input type="hidden" name="serviceID" value="${service.serviceID}"/>
                                 <button type="submit" class="btn btn-danger btn-sm">
                                     <i class="fa-solid fa-trash fs-5"></i>
+                                    Delete
                                 </button>
                             </form>
                             </td>
