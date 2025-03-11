@@ -9,7 +9,7 @@
 
 <%
     if (session.getAttribute("SALE") == null) {
-        request.setAttribute("ERROR", "Truy cập không được cho phép!");
+        request.setAttribute("ERROR", "Access not allowed!");
         request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
         return;
     }
@@ -53,9 +53,7 @@
                     </button>
                     <ul class="dropdown-menu w-100">
                         <li><a class="dropdown-item fs-5" href="MainServlet?action=create-customer"><i class="fa-solid fa-plus"></i> Create</a></li>
-                        <li><a class="dropdown-item fs-5" href="MainServlet?action=read-customer"><i class="fa-solid fa-eye"></i> Read</a></li>
-                        <li><a class="dropdown-item fs-5" href="MainServlet?action=update-customer"><i class="fa-solid fa-pen"></i> Update</a></li>
-                        <li><a class="dropdown-item fs-5" href="MainServlet?action=delete-customer"><i class="fa-solid fa-trash"></i> Delete</a></li>
+                        <li><a class="dropdown-item fs-5" href="MainServlet?action=read-customer"><i class="fa-solid fa-eye"></i> Read</a></li>                        
                         <li><a class="dropdown-item fs-5" href="MainServlet?action=search-customer"><i class="fa-solid fa-search"></i> Search by Name</a></li>
                     </ul>
                 </div>
@@ -113,6 +111,52 @@
 
         </div>
     </div>
+
+    <!-- Bảng danh sách khách hàng - Chỉ hiển thị nếu có dữ liệu -->
+    <c:if test="${not empty CUSTOMER_LIST}">
+        <div class="container mt-5">
+            <h2 class="text-center text-primary fw-bold">Customer List</h2>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered text-center align-middle">
+                    <thead class="table-info">
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Sex</th>
+                            <th>Address</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="customer" items="${CUSTOMER_LIST}">
+                            <tr>
+                                <td>${customer.custID}</td>
+                                <td>${customer.custName}</td>
+                                <td>${customer.phone}</td>
+                                <td>
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <c:choose>
+                                        <c:when test="${customer.sex == 'M'}"> Male </c:when>
+                                        <c:otherwise> Female </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>${customer.cusAddress}</td>
+                                <td>
+                                    <a href="MainServlet?action=update-customer&id=${customer.custID}" class="btn btn-warning btn-sm">
+                                        <i class="fa-solid fa-pen"></i> Edit
+                                    </a>
+                                    <a href="MainServlet?action=delete-customer&id=${customer.custID}" class="btn btn-danger btn-sm">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </c:if>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

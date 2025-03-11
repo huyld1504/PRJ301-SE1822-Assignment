@@ -96,6 +96,14 @@
         <servlet-name>ServicesListServlet</servlet-name>
         <servlet-class>controllers.ServicesListServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReadCustomerServlet</servlet-name>
+        <servlet-class>controllers.ReadCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateCustomerServlet</servlet-name>
+        <servlet-class>controllers.CreateCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -145,8 +153,17 @@
         <url-pattern>/LogoutCustomerServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+
         <servlet-name>ServicesListServlet</servlet-name>
         <url-pattern>/ServicesListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadCustomerServlet</servlet-name>
+        <url-pattern>/ReadCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateCustomerServlet</servlet-name>
+        <url-pattern>/CreateCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
