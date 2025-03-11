@@ -16,6 +16,22 @@
         <servlet-name>UpdateCustomerProfileServlet</servlet-name>
         <servlet-class>controllers.UpdateCustomerProfileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PartListServlet</servlet-name>
+        <servlet-class>controllers.PartListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdatePartServlet</servlet-name>
+        <servlet-class>controllers.UpdatePartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddPart</servlet-name>
+        <servlet-class>controllers.AddPart</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddPartServlet</servlet-name>
+        <servlet-class>controllers.AddPartServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -31,6 +47,22 @@
     <servlet-mapping>
         <servlet-name>UpdateCustomerProfileServlet</servlet-name>
         <url-pattern>/UpdateCustomerProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PartListServlet</servlet-name>
+        <url-pattern>/part</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePartServlet</servlet-name>
+        <url-pattern>/UpdatePartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddPart</servlet-name>
+        <url-pattern>/AddPart</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddPartServlet</servlet-name>
+        <url-pattern>/AddPartServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
