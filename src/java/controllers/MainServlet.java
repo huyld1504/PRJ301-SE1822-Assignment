@@ -69,6 +69,7 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "update-part":
                     base_url = "UpdatePartServlet";
+                    break;
                 case "sale-dashboard":
                     base_url = "SaleDashboard.jsp";
                     break;

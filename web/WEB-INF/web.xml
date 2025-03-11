@@ -65,10 +65,6 @@
         <servlet-class>controllers.UpdatePartServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>AddPart</servlet-name>
-        <servlet-class>controllers.AddPart</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>AddPartServlet</servlet-name>
         <servlet-class>controllers.AddPartServlet</servlet-class>
     </servlet>
@@ -131,10 +127,6 @@
     <servlet-mapping>
         <servlet-name>UpdatePartServlet</servlet-name>
         <url-pattern>/UpdatePartServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AddPart</servlet-name>
-        <url-pattern>/AddPart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddPartServlet</servlet-name>
