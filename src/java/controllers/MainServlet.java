@@ -100,6 +100,15 @@ public class MainServlet extends HttpServlet {
                 case "get-service-list":
                     base_url = "ServicesListServlet";
                     break;
+                case "update-service":
+                    base_url = "UpdateServiceServlet";
+                    break;
+                case "delete-service":
+                    base_url = "ServiceDeleteServlet";
+                    break;
+                case "delete-service-mechanic":
+                    base_url = "ServiceMechanicDeleteServlet";
+                    break;
                 default:
                     base_url = "index.html";
                     break;

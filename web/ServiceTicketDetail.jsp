@@ -50,7 +50,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item my-2" href="#">
+                                        <a class="dropdown-item my-2" href="MainServlet?action=service-page">
                                             <i class="fa-solid fa-border-all"></i>
                                             View all services
                                         </a>
@@ -96,7 +96,7 @@
                                 <td>
                                     <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.rate}" name="rate"/>
                                 </td>
-                                <td>
+                                <td class="w-50">
                                     <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.comment}" placeholder="Add comment" name="comment"/>
                                 </td>
                                 <td>
