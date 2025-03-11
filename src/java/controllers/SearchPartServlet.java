@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.PartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -14,65 +15,20 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Asus
+ * @author ADMIN
  */
-public class MainServlet extends HttpServlet {
+public class SearchPartServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+   
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String action = "home";
-            String base_url;
+            /* TODO output your page here. You may use following sample code. */
+            String search=(String)request.getAttribute("query");
             
-            if(request.getParameter("action") != null) {
-                action = request.getParameter("action");
-            }
+            PartDAO pd=new PartDAO();
             
-            switch (action) {
-                case "home": 
-                    //Write the page that you want to view
-                    base_url = "LoginCustomer.jsp";
-                    break;
-                case "login-customer": 
-                    base_url = "LoginCustomerServlet";
-                    break;
-                case "customer-dashboard":
-                    base_url = "CustomerDashboard.jsp";
-                    break;
-                case "logout":
-                    base_url="LogoutServlet";
-                    break;
-                case "customer-profile":
-                    base_url = "CustomerProfile.jsp";
-                    break;
-                case "update-customer-profile":
-                    base_url = "UpdateCustomerProfileServlet";
-                    break;
-                case "get-all-parts-list":
-                    base_url = "PartListServlet";
-                    break;
-                case "add-part":
-                    base_url ="AddPartServlet";
-                    break;
-                case "update-part":
-                    base_url = "UpdatePartServlet";
-                    break;
-                default:
-                    base_url = "index.html";
-                    break;
-            }
-                 
-            request.getRequestDispatcher(base_url).forward(request, response);
         }
     }
 

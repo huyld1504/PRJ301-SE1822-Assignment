@@ -41,7 +41,8 @@ public class PartDAO {
     }
 
     // create Part
-    public void creatPart(Part part) {
+    public boolean creatPart(Part part) {
+        boolean isAdded=false;
         try {
             Connection cn = DBUtils.getConnection();
             String query = "INSERT INTO [dbo].[Parts]\n"
@@ -56,13 +57,17 @@ public class PartDAO {
                 ps.setString(2, part.getPartName());
                 ps.setDouble(3, part.getPurchasePrice());
                 ps.setDouble(4, part.getRetailPrice());
-                ps.executeUpdate();
+                int rowEffected= ps.executeUpdate();
+                isAdded = rowEffected>0;
+                ps.close();
+                cn.close();
             } else {
-                System.out.println("ERROR");
+                System.out.println("ERROR!! database connection failed");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return isAdded;
     }
 
     //update
@@ -159,10 +164,11 @@ public class PartDAO {
                         + "  FROM [dbo].[Parts]\n"
                         + "  WHERE [partID] like ?";
                 ps = cn.prepareStatement(query);
-                System.out.println(ps);
+                ps.setInt(1, partID);
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     part = new Part(
+                            //Tách ra từng field
                             rs.getString("partID"),
                             rs.getString("partName"),
                             rs.getDouble("purchasePrice"),

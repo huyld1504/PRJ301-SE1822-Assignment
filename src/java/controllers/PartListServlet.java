@@ -24,12 +24,11 @@ public class PartListServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             response.setCharacterEncoding("UTF-8");
-             PartDAO dao = new PartDAO();
-        ArrayList<Part> list = dao.getAllPart();
-
-        request.setAttribute("partList", list); // Gửi dữ liệu đến JSP
-        request.getRequestDispatcher("PartList.jsp").forward(request, response);
-            
+            PartDAO dao = new PartDAO();
+            ArrayList<Part> list = dao.getAllPart();
+//            HttpSession session = request.getSession();
+            request.setAttribute("partList", list); 
+            request.getRequestDispatcher("PartList.jsp").forward(request, response);      
         }
     }
 

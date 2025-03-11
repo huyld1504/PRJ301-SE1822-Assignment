@@ -36,7 +36,7 @@ public class UpdatePartServlet extends HttpServlet {
             
             if(checkEmptyStr(partID) || checkEmptyStr(partName)||checkEmptyStr(purchasePriceStr) || checkEmptyStr(retailPriceStr)){
                 request.setAttribute("ERROR", "All fields are not be empty");
-                request.getRequestDispatcher("Mainservlet?action=saler-profile").forward(request, response);
+                request.getRequestDispatcher("MainsPartServlet?action=saler-profile").forward(request, response);
             }
             //change
             double purchasePrice = Double.parseDouble(purchasePriceStr);

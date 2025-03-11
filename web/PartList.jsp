@@ -50,11 +50,9 @@
         <%-- the part list --%>
         <div class="container-mt3">
             <%
-                PartDAO dao = new PartDAO();
-                ArrayList<Part> list = dao.getAllPart();
-                if (list == null) {
-                    list = new ArrayList<Part>();
-                }
+                //PartDAO dao = new PartDAO();
+                ArrayList<Part> list = (ArrayList<Part>)request.getAttribute("partList");
+                //ArrayList<Part> list = dao.getAllPart();
             %>
             <table class="table table-bordered table-striped">
                 <thead class="table-info">
@@ -67,7 +65,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% if (list.size() == 0) { %>
+                    <% if (list== null) { %>
                     <tr>
                         <td colspan="5" class="text-center text-danger">No part to print!</td>
                     </tr>

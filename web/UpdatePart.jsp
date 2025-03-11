@@ -29,7 +29,7 @@
                     <%
                         Part part = (Part) session.getAttribute("part");
                         if (part == null) {
-                            response.sendRedirect("MainServlet?action=manage-parts"); // Redirect nếu không có part
+                            response.sendRedirect("MainServlet?action=manage-parts"); 
                             return;
                         }
                     %>
