@@ -108,6 +108,7 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "delete-service-mechanic":
                     base_url = "ServiceMechanicDeleteServlet";
+                    break;
                 case "read-customer":
                     base_url = "ReadCustomerServlet";
                     break;
