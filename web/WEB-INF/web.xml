@@ -59,10 +59,6 @@
         <servlet-class>controllers.LoginCustomerServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>controllers.LogoutCustomerServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>UpdateCustomerProfileServlet</servlet-name>
         <servlet-class>controllers.UpdateCustomerProfileServlet</servlet-class>
     </servlet>
@@ -117,6 +113,14 @@
     <servlet>
         <servlet-name>ServiceMechanicDeleteServlet</servlet-name>
         <servlet-class>controllers.ServiceMechanicDeleteServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ReadCustomerServlet</servlet-name>
+        <servlet-class>controllers.ReadCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateCustomerServlet</servlet-name>
+        <servlet-class>controllers.CreateCustomerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
@@ -181,6 +185,14 @@
     <servlet-mapping>
         <servlet-name>ServiceMechanicDeleteServlet</servlet-name>
         <url-pattern>/ServiceMechanicDeleteServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadCustomerServlet</servlet-name>
+        <url-pattern>/ReadCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateCustomerServlet</servlet-name>
+        <url-pattern>/CreateCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

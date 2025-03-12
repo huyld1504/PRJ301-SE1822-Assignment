@@ -108,6 +108,14 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "delete-service-mechanic":
                     base_url = "ServiceMechanicDeleteServlet";
+                case "read-customer":
+                    base_url = "ReadCustomerServlet";
+                    break;
+                case "read-customer-page":
+                    base_url = "ReadCustomer.jsp";
+                    break;
+                case "create-customer-page":
+                    base_url = "CreateCustomer.jsp";
                     break;
                 default:
                     base_url = "index.html";
