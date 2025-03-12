@@ -16,6 +16,16 @@
         <filter-name>UpdateTicketDetailFilter</filter-name>
         <filter-class>filters.UpdateTicketDetailFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>UpdateServiceFilter</filter-name>
+        <filter-class>filters.UpdateServiceFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UpdateServiceFilter</filter-name>
+        <servlet-name>UpdateServiceServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>UpdateTicketDetailFilter</filter-name>
         <servlet-name>UpdateServiceTicketServlet</servlet-name>
@@ -93,6 +103,18 @@
         <servlet-class>controllers.ServicesListServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>UpdateServiceServlet</servlet-name>
+        <servlet-class>controllers.UpdateServiceServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServiceDeleteServlet</servlet-name>
+        <servlet-class>controllers.ServiceDeleteServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServiceMechanicDeleteServlet</servlet-name>
+        <servlet-class>controllers.ServiceMechanicDeleteServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ReadCustomerServlet</servlet-name>
         <servlet-class>controllers.ReadCustomerServlet</servlet-class>
     </servlet>
@@ -151,6 +173,18 @@
     <servlet-mapping>
         <servlet-name>ServicesListServlet</servlet-name>
         <url-pattern>/ServicesListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateServiceServlet</servlet-name>
+        <url-pattern>/UpdateServiceServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServiceDeleteServlet</servlet-name>
+        <url-pattern>/ServiceDeleteServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServiceMechanicDeleteServlet</servlet-name>
+        <url-pattern>/ServiceMechanicDeleteServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ReadCustomerServlet</servlet-name>

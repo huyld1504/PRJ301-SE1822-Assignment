@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -74,49 +75,60 @@
             <%--End nav bar--%>
             <%--Start service list table--%>
             <c:if test="${sessionScope.SERVICE_LIST != null and !sessionScope.SERVICE_LIST.isEmpty()}">
-                <form action="MainServlet">
-                    <input type="hidden" name="action" value="service-create-page"/>
-                    <button class="btn btn-primary btn-sm mx-5 my-3 mr-5">
-                        <i class="fa-solid fa-square-plus"></i>
-                        Create
-                    </button>
-                </form>
+                <div class="row gap-5">
+                    <form action="MainServlet" accept-charset="utf-8" class="col-4">
+                        <input type="hidden" name="action" value="service-create-page"/>
+                        <button class="btn btn-primary btn-sm mx-5 my-3 mr-5">
+                            <i class="fa-solid fa-square-plus"></i>
+                            Create
+                        </button>
+                    </form> 
+
+                    <c:if test="${requestScope.MESSAGE != null}">
+                        <div class="alert alert-sm alert-danger w-50 col-8 d-flex justify-content-between" role="alert">
+                            ${requestScope.MESSAGE}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
+                </div>
                 <div class="w-100">
                     <table class="table table-striped mx-5 fw-bold" style="max-width: 90%;">
                         <tr>
                             <td>Service ID</td>
-                            <td>Service name</td>
-                            <td>Hourly rate</td>
+                            <td class="w-50">Service name</td>
+                            <td>Hourly rate(VND)</td>
                             <td>Tools</td>
                         </tr>
                         <c:forEach items="${sessionScope.SERVICE_LIST}" var="service">
+                            <tr>
                             <form action="MainServlet" accept-charset="UTF-8">
                                 <input value="update-service" name="action" type="hidden"/>
                                 <input value="${service.serviceID}" name="serviceID" type="hidden"/>
-                                <tr>
-                                    <td>
-                                        <a class="text-decoration-none text-dark" href="MainServlet?action=">${service.serviceID}</a>
-                                    </td>
-                                    <td>
-                                        <input style="border: none" type="text" class="rounded-2 my-auto" value="${service.serviceName}" name="serviceName"/>
-                                    </td>
-                                    <td>
-                                        <input style="border: none" type="text" class="rounded-2 my-auto" value="${service.hourlyRate}" name="hourlyRate"/>
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fa-solid fa-pen-to-square fs-5"></i>
-                                        </button>
-                                        <form>
-                                            <input type="hidden" name="action" value="service-delete"/>
-                                            <input type="hidden" name="serviceID" value="${service.serviceID}"/>
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fa-solid fa-trash fs-5"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
+                                <td>
+                                    <a class="text-decoration-none text-dark" href="MainServlet?action=">${service.serviceID}</a>
+                                </td>
+                                <td>
+                                    <input style="border: none" type="text" class="rounded-2 my-auto w-100" value="${service.serviceName}" name="serviceName"/>
+                                </td>
+                                <td>
+                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="<fmt:formatNumber value="${service.hourlyRate}" pattern="#,###" />" name="hourlyRate"/>
+                                </td>
+                                <td class="d-flex justify-content-start gap-2">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fa-solid fa-pen-to-square fs-5"></i>
+                                        Edit
+                                    </button>
                             </form>
+                            <form action="MainServlet">
+                                <input type="hidden" name="action" value="delete-service-mechanic"/>
+                                <input type="hidden" name="serviceID" value="${service.serviceID}"/>
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fa-solid fa-trash fs-5"></i>
+                                    Delete
+                                </button>
+                            </form>
+                            </td>
+                            </tr>
                         </c:forEach>
                     </table>
                 </div>
