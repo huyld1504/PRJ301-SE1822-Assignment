@@ -159,4 +159,41 @@ public class ServiceMechanicDAO {
 
         return isUpdated;
     }
+
+    public boolean deleteServiceMechanicByServiceID(String serviceID) {
+        boolean isDeleted = false;
+        Connection conn = null;
+        PreparedStatement ps;
+        int rows;
+
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                conn.setAutoCommit(false);
+                String sql = "DELETE FROM [dbo].[ServiceMechanic]\n"
+                        + "      WHERE [serviceID] = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, serviceID);
+                rows = ps.executeUpdate();
+                
+                if(rows > 0) {
+                    conn.commit();
+                } else {
+                    conn.rollback();
+                }
+                isDeleted = true;
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isDeleted;
+    }
 }

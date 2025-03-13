@@ -100,6 +100,15 @@ public class MainServlet extends HttpServlet {
                 case "get-service-list":
                     base_url = "ServicesListServlet";
                     break;
+                case "update-service":
+                    base_url = "UpdateServiceServlet";
+                    break;
+                case "delete-service":
+                    base_url = "ServiceDeleteServlet";
+                    break;
+                case "delete-service-mechanic":
+                    base_url = "ServiceMechanicDeleteServlet";
+                    break;
                 case "read-customer":
                     base_url = "ReadCustomerServlet";
                     break;
@@ -130,7 +139,12 @@ public class MainServlet extends HttpServlet {
                 case "up-edit-customer":
                     base_url = "UpEditCustomerServlet"; // Chuyển hướng đến servlet tìm kiếm
                     break;
-        
+                case "create-service-page":
+                    base_url = "CreateServicePage.jsp";
+                    break;
+                case "create-service":
+                    base_url = "ServiceCreateServlet";
+                    break;
                 default:
                     base_url = "index.html";
                     break;
