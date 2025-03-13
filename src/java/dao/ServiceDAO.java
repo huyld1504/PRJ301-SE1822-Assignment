@@ -57,6 +57,44 @@ public class ServiceDAO {
         return result;
     }
 
+    public Service getServiceByName(String serviceName) {
+        Service result = null;
+        Connection conn = null;
+        PreparedStatement ps;
+        ResultSet table;
+
+        try {
+            conn = DBUtils.getConnection();
+
+            if (conn != null) {
+                String sql = "SELECT [serviceID]\n"
+                        + "      ,[serviceName]\n"
+                        + "      ,[hourlyRate]\n"
+                        + "  FROM [dbo].[Service]\n"
+                        + " WHERE [serviceName] = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, "%"+serviceName+"%");
+                table = ps.executeQuery();
+
+                while (table.next()) {
+                    String serviceID = table.getString("serviceID");
+                    double hourlyRate = table.getDouble("hourlyRate");
+                    result = new Service(serviceID, serviceName, hourlyRate);
+                }
+            }
+        } catch (Exception e) {
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+
+        return result;
+    }
+
     public ArrayList<Service> getAllServices() {
         ArrayList<Service> list = new ArrayList<>();
         Connection conn = null;
@@ -184,8 +222,9 @@ public class ServiceDAO {
         PreparedStatement ps;
         int rows;
 
-        Service existedService = this.getServiceByID(serviceID);
-        if (existedService != null && (existedService.getServiceID().equals(serviceID) || existedService.getServiceName().equalsIgnoreCase(serviceName))) {
+        Service existedServiceName = this.getServiceByName(serviceName);
+        Service existedServiceID = this.getServiceByID(serviceID);
+        if (existedServiceName != null || existedServiceID != null) {
             return isCreated;
         }
         try {

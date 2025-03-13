@@ -54,4 +54,40 @@ public class MechanicDAO {
 
         return m;
     }
+    
+    public Mechanic getMechanicByID(String id) {
+        Mechanic m = null;
+        Connection conn = null;
+        PreparedStatement p;
+        ResultSet table;
+
+        try {
+            conn = DBUtils.getConnection();
+
+            if (conn != null) {
+                String sql = "SELECT [mechanicID]\n"
+                        + "      ,[mechanicName]\n"
+                        + "  FROM [dbo].[Mechanic]\n"
+                        + "  WHERE [mechanicID] = ?";
+                p = conn.prepareStatement(sql);
+                p.setString(1, id);
+                table = p.executeQuery();
+                
+                while(table.next()) {
+                    String mechanicName = table.getString("mechanicName");
+                    m = new Mechanic(id, mechanicName);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return m;
+    }
 }
