@@ -1,12 +1,11 @@
 <%-- 
-    Document   : ServicePage
-    Created on : Mar 9, 2025, 4:01:01 PM
+    Document   : CreateServicePage
+    Created on : Mar 12, 2025, 10:25:18 AM
     Author     : Asus
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -73,79 +72,61 @@
                 </div>
             </nav>
             <%--End nav bar--%>
-            <%--Start service list table--%>
-            <c:if test="${sessionScope.SERVICE_LIST != null and !sessionScope.SERVICE_LIST.isEmpty()}">
-                <div class="row gap-5">
-                    <form action="MainServlet" accept-charset="utf-8" class="col-4">
-                        <input type="hidden" name="action" value="create-service-page"/>
-                        <button class="btn btn-primary btn-sm mx-5 my-3 mr-5">
-                            <i class="fa-solid fa-square-plus"></i>
-                            Create
-                        </button>
-                    </form> 
 
-                    <c:if test="${requestScope.MESSAGE != null}">
-                        <div class="alert alert-sm alert-danger w-50 col-8 d-flex justify-content-between" role="alert">
-                            ${requestScope.MESSAGE}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </c:if>
-                </div>
-                <div class="w-100">
-                    <table class="table table-striped mx-5 fw-bold" style="max-width: 90%;">
-                        <tr>
-                            <td>Service ID</td>
-                            <td class="w-50">Service name</td>
-                            <td>Hourly rate(VND)</td>
-                            <td>Tools</td>
-                        </tr>
-                        <c:forEach items="${sessionScope.SERVICE_LIST}" var="service">
-                            <tr>
-                            <form action="MainServlet" accept-charset="UTF-8">
-                                <input value="update-service" name="action" type="hidden"/>
-                                <input value="${service.serviceID}" name="serviceID" type="hidden"/>
-                                <td>
-                                    <a class="text-decoration-none text-dark" href="MainServlet?action=">${service.serviceID}</a>
-                                </td>
-                                <td>
-                                    <input style="border: none" type="text" class="rounded-2 my-auto w-100" value="${service.serviceName}" name="serviceName"/>
-                                </td>
-                                <td>
-                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="<fmt:formatNumber value="${service.hourlyRate}" pattern="#,###" />" name="hourlyRate"/>
-                                </td>
-                                <td class="d-flex justify-content-start gap-2">
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        <i class="fa-solid fa-pen-to-square fs-5"></i>
-                                        Edit
-                                    </button>
-                            </form>
-                            <form action="MainServlet">
-                                <input type="hidden" name="action" value="delete-service-mechanic"/>
-                                <input type="hidden" name="serviceID" value="${service.serviceID}"/>
-                                <button type="submit" class="btn btn-danger btn-sm">
-                                    <i class="fa-solid fa-trash fs-5"></i>
-                                    Delete
-                                </button>
-                            </form>
+            <%--Create form--%>
+            <div 
+                style="box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);
+                -webkit-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);
+                -moz-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);
+                height: 65vh"
+                class="w-50 my-5 mx-auto my-5 rounded-3">
+                <p class="fs-3 text-dark fw-bold text-center py-5">Service Form</p>
+                <form action="MainServlet" accept-charset="UTF-8">
+                    <input type="hidden" name="action" value="create-service"/>
+                    <table class="table mx-auto mt-3" style="width: 80%">
+                        <tr class="">
+                            <td class="fw-bold">
+                                <p class="w-100 text-end">Service ID: </p>
                             </td>
-                            </tr>
-                        </c:forEach>
-                    </table>
-                </div>
-            </c:if>
-
-            <c:if test="${sessionScope.SERVICE_LIST == null and sessionScope.SERVICE_LIST.isEmpty()}">
-                <div class="alert alert-danger" role="alert">
+                            <td class="">
+                                <input class="w-100" style="border: none" type="text" name="service_id" required="" value="${param.service_id}"/>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="fw-bold">
+                                <p class="w-100 text-end">Service name: </p>
+                            </td>
+                            <td class="">
+                                <input class="w-100" style="border: none" type="text" name="service_name" required="" value="${param.service_name}"/>
+                            </td>
+                        </tr>
+                        <tr class="">
+                            <td class="fw-bold">
+                                <p class="w-100 text-end">Hourly rate:</p>
+                            </td>
+                            <td class="">
+                                <input class="w-100" style="border: none" type="text" name="hourly_rate" required="" value="${param.hourly_rate}"/>
+                            </td>
+                        </tr>
+                    </table> 
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button type="submit" class="btn btn-info btn-lg fw-bold mt-1 border-2 text-light">CREATE</button>
+                    </div>
+                </form>
+            </div>
+            <c:if test="${requestScope.MESSAGE != null}">
+                <div class="alert alert-sm alert-danger w-50 col-8 d-flex justify-content-between" role="alert">
                     ${requestScope.MESSAGE}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </c:if>
         </c:if>
-
         <c:if test="${sessionScope.MECHANIC == null}">
             <div class="alert alert-danger" role="alert">
                 You don't have any permission to access this resource. Please <a href="MainServlet?action=mechanic-login-page" class="alert-link fw-bold">login here</a>!
             </div>
         </c:if>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>

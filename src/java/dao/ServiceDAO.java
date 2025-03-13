@@ -177,4 +177,54 @@ public class ServiceDAO {
 
         return isDeleted;
     }
+
+    public boolean createService(String serviceID, String serviceName, double hourlyRate) {
+        boolean isCreated = false;
+        Connection conn = null;
+        PreparedStatement ps;
+        int rows;
+
+        Service existedService = this.getServiceByID(serviceID);
+        if (existedService != null && (existedService.getServiceID().equals(serviceID) || existedService.getServiceName().equalsIgnoreCase(serviceName))) {
+            return isCreated;
+        }
+        try {
+            conn = DBUtils.getConnection();
+
+            if (conn != null) {
+                String sql = "INSERT INTO [dbo].[Service]\n"
+                        + "           ([serviceID]\n"
+                        + "           ,[serviceName]\n"
+                        + "           ,[hourlyRate])\n"
+                        + "     VALUES\n"
+                        + "           (?\n"
+                        + "           ,?\n"
+                        + "           ,?)";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, serviceID);
+                ps.setString(2, serviceName);
+                ps.setDouble(3, hourlyRate);
+
+                rows = ps.executeUpdate();
+                if (rows > 0) {
+                    isCreated = true;
+                    conn.commit();
+                } else {
+                    conn.rollback();
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return isCreated;
+    }
 }
