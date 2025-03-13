@@ -34,9 +34,14 @@ public class ReadCustomerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        response.setCharacterEncoding("UTF-8");
         
+
+        try (PrintWriter out = response.getWriter()) {
+
             // Lấy SalesPerson từ session
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
@@ -51,18 +56,17 @@ public class ReadCustomerServlet extends HttpServlet {
             // Lấy danh sách khách hàng theo salesID
             String salesID = salesPerson.getSalesID();
             SalePersonDAO saleDAO = new SalePersonDAO();
-            ArrayList<Customer> customers = saleDAO.getCustomersBySalesID(salesID);
+            ArrayList<Customer> customers = saleDAO.getAllCustomers();
 
             // Gửi danh sách khách hàng sang trang JSP
             request.setAttribute("CUSTOMER_LIST", customers);
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("ERROR", "Error loading customer list!");
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard&ERROR").forward(request, response);
+            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
         }
-
 
     }
 

@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,12 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Customer;
+import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class LogoutSalesServlet extends HttpServlet {
+public class EditCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,23 +33,58 @@ public class LogoutSalesServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        
-        try (PrintWriter out = response.getWriter()) {
-            
-            HttpSession s = request.getSession(false);
 
-            if (s != null) {
-                s.invalidate(); // Xóa session hoàn toàn
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+
+        try (PrintWriter out = response.getWriter()) {
+
+            // Kiểm tra session và lấy thông tin SalesPerson
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
+
+            if (salesPerson == null) {
+                // Nếu không có session, thông báo lỗi và quay về login
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
             }
 
-            response.sendRedirect("MainServlet?action=login-sale-page");
+            // Lấy customerId từ URL
+        String customerId = request.getParameter("id");
 
+        // Kiểm tra nếu customerId là hợp lệ
+        if (customerId == null || customerId.isEmpty()) {
+            request.setAttribute("ERROR", "Customer ID is missing.");
+            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
+            return;
         }
+
+        // Gọi DAO để lấy thông tin khách hàng
+        SalePersonDAO salePersonDAO = new SalePersonDAO();
+        Customer customer = salePersonDAO.getCustomerById(customerId);
+
+        // Kiểm tra nếu không tìm thấy khách hàng
+        if (customer == null) {
+            request.setAttribute("ERROR", "Customer not found.");
+            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
+            return;
+        }
+
+        // Truyền đối tượng customer vào request
+        request.setAttribute("customer", customer);
+
+        // Chuyển hướng tới trang EditCustomer.jsp để hiển thị dữ liệu
+        request.getRequestDispatcher("EditCustomer.jsp").forward(request, response);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("ERROR", "System error. Please try again.");
+        request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
     }
+}
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

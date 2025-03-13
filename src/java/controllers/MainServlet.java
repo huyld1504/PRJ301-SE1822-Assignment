@@ -109,8 +109,28 @@ public class MainServlet extends HttpServlet {
                 case "create-customer-page":
                     base_url = "CreateCustomer.jsp";
                     break;
-
-
+                case "create-customer":
+                    base_url = "CreateCustomerServlet";
+                    break;
+                case "edit-customer-page":
+                    base_url = "EditCustomer.jsp";
+                    break;
+                case "edit-customer":
+                    base_url = "EditCustomerServlet";
+                    break;
+                case "delete-customer":
+                    base_url = "DeleteCustomerServlet";
+                    break;
+                case "search-customer-page":
+                    base_url = "SearchCustomer.jsp"; // Chuyển hướng đến servlet tìm kiếm
+                    break;
+                case "search-customer":
+                    base_url = "SearchCustomerServlet"; // Chuyển hướng đến servlet tìm kiếm
+                    break;
+                case "up-edit-customer":
+                    base_url = "UpEditCustomerServlet"; // Chuyển hướng đến servlet tìm kiếm
+                    break;
+        
                 default:
                     base_url = "index.html";
                     break;

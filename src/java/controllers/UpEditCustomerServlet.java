@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,12 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Customer;
+import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class LogoutSalesServlet extends HttpServlet {
+public class UpEditCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,21 +33,53 @@ public class LogoutSalesServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        
-        try (PrintWriter out = response.getWriter()) {
-            
-            HttpSession s = request.getSession(false);
+        response.setContentType("text/html;charset=UTF-8");
 
-            if (s != null) {
-                s.invalidate(); // Xóa session hoàn toàn
+        try (PrintWriter out = response.getWriter()) {
+
+            // Kiểm tra session và lấy thông tin SalesPerson
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
+
+            if (salesPerson == null) {
+                // Nếu không có session, thông báo lỗi và quay về login
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
             }
 
-            response.sendRedirect("MainServlet?action=login-sale-page");
+            String customerId = request.getParameter("customer_id");
+            String customerName = request.getParameter("customer_name");
+            String customerPhone = request.getParameter("customer_phone");
+            String customerSex = request.getParameter("customer_sex");
+            String customerAddress = request.getParameter("customer_address");
 
+// Kiểm tra nếu customerId rỗng
+            if (customerId == null || customerId.isEmpty()) {
+                request.setAttribute("ERROR", "Customer ID cannot be empty.");
+                request.getRequestDispatcher("EditCustomer.jsp").forward(request, response);
+                return;
+            }
+
+// Tạo đối tượng Customer mới để cập nhật
+            Customer updatedCustomer = new Customer(customerId, customerName, customerPhone, customerAddress, customerSex);
+            SalePersonDAO salePersonDAO = new SalePersonDAO();
+            boolean isUpdated = salePersonDAO.updateCustomer(customerId, updatedCustomer); // Gọi phương thức updateCustomer trong SalePersonDAO
+
+            if (isUpdated) {
+                request.setAttribute("MESSAGE", "Customer updated successfully!");
+            } else {
+                request.setAttribute("ERROR", "Error updating customer. Please try again.");
+            }
+
+            request.getRequestDispatcher("EditCustomer.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "System error, please try again.");
+            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
         }
     }
 

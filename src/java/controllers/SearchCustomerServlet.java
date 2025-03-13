@@ -5,19 +5,21 @@
  */
 package controllers;
 
+import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import models.Customer;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class LogoutSalesServlet extends HttpServlet {
+public class SearchCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,19 +34,34 @@ public class LogoutSalesServlet extends HttpServlet {
             throws ServletException, IOException {
         
         request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        
+        response.setContentType("text/html;charset=UTF-8");
+
         try (PrintWriter out = response.getWriter()) {
             
-            HttpSession s = request.getSession(false);
+            // Lấy thông tin tìm kiếm từ form
+            String searchName = request.getParameter("search_name");
 
-            if (s != null) {
-                s.invalidate(); // Xóa session hoàn toàn
+            // Nếu không nhập tên tìm kiếm, lấy tất cả khách hàng
+            SalePersonDAO salePersonDAO = new SalePersonDAO();
+            ArrayList<Customer> customerList;
+
+            if (searchName == null || searchName.trim().isEmpty()) {
+                customerList = salePersonDAO.getAllCustomers();  // Lấy tất cả khách hàng nếu không có tên tìm kiếm
+            } else {
+                customerList = salePersonDAO.searchCustomerByName(searchName);  // Tìm khách hàng theo tên
             }
 
-            response.sendRedirect("MainServlet?action=login-sale-page");
+            // Đưa danh sách khách hàng vào request
+            request.setAttribute("CUSTOMER_LIST", customerList);
 
+            // Chuyển hướng đến trang SearchCustomer.jsp để hiển thị kết quả
+            request.getRequestDispatcher("SearchCustomer.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "Error during customer search.");
+            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
         }
     }
 

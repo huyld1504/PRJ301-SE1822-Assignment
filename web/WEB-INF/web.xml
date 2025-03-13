@@ -16,6 +16,14 @@
         <filter-name>UpdateTicketDetailFilter</filter-name>
         <filter-class>filters.UpdateTicketDetailFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>filters.EncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>UpdateTicketDetailFilter</filter-name>
         <servlet-name>UpdateServiceTicketServlet</servlet-name>
@@ -104,6 +112,22 @@
         <servlet-name>CreateCustomerServlet</servlet-name>
         <servlet-class>controllers.CreateCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditCustomerServlet</servlet-name>
+        <servlet-class>controllers.EditCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <servlet-class>controllers.DeleteCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchCustomerServlet</servlet-name>
+        <servlet-class>controllers.SearchCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpEditCustomerServlet</servlet-name>
+        <servlet-class>controllers.UpEditCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -153,7 +177,6 @@
         <url-pattern>/LogoutCustomerServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-
         <servlet-name>ServicesListServlet</servlet-name>
         <url-pattern>/ServicesListServlet</url-pattern>
     </servlet-mapping>
@@ -164,6 +187,22 @@
     <servlet-mapping>
         <servlet-name>CreateCustomerServlet</servlet-name>
         <url-pattern>/CreateCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditCustomerServlet</servlet-name>
+        <url-pattern>/EditCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <url-pattern>/DeleteCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCustomerServlet</servlet-name>
+        <url-pattern>/SearchCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpEditCustomerServlet</servlet-name>
+        <url-pattern>/UpEditCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

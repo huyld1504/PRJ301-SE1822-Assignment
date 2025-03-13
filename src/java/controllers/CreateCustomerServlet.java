@@ -34,11 +34,30 @@ public class CreateCustomerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         try (PrintWriter out = response.getWriter()) {
-            
+
+
+            // Lấy thông tin từ form
+            String custName = request.getParameter("custName");
+            String phone = request.getParameter("phone");
+            String sex = request.getParameter("sex");
+            String cusAddress = request.getParameter("cusAddress");
+
+            // Kiểm tra nếu có trường nào bị null hoặc rỗng
+            if (custName == null || phone == null || sex == null || cusAddress == null
+                    || custName.isEmpty() || phone.isEmpty() || sex.isEmpty() || cusAddress.isEmpty()) {
+                request.setAttribute("ERROR", "All fields are required!");
+                request.getRequestDispatcher("CreateCustomer.jsp").forward(request, response);
+                return;
+            }
+
             // Lấy thông tin SalesPerson từ session
-            HttpSession session = request.getSession(false);
+            HttpSession session = request.getSession();
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
             if (salesPerson == null) {
@@ -47,12 +66,6 @@ public class CreateCustomerServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy thông tin từ form
-            String custName = request.getParameter("custName");
-            String phone = request.getParameter("phone");
-            String sex = request.getParameter("sex");
-            String cusAddress = request.getParameter("cusAddress");
-
             // Tạo đối tượng Customer
             Customer newCustomer = new Customer(null, custName, phone, cusAddress, sex);
 
@@ -60,28 +73,25 @@ public class CreateCustomerServlet extends HttpServlet {
             SalePersonDAO saleDAO = new SalePersonDAO();
             boolean isAdded = saleDAO.addCustomer(newCustomer);
 
+            // Kiểm tra kết quả từ DAO
             if (isAdded) {
                 request.setAttribute("SUCCESS", "Customer created successfully!");
             } else {
                 request.setAttribute("ERROR", "Customer creation failed. Please try again!");
             }
 
-            // Cập nhật danh sách khách hàng và quay lại SaleDashboard.jsp
-            ArrayList<Customer> customers = saleDAO.getCustomersBySalesID(salesPerson.getSalesID());
-            request.setAttribute("CUSTOMER_LIST", customers);
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+            // Quay lại trang CreateCustomer.jsp với thông báo thành công hoặc lỗi
+            request.getRequestDispatcher("CreateCustomer.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("ERROR", "System error. Please try again!");
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard&ERROR").forward(request, response);
+            request.getRequestDispatcher("CreateCustomer.jsp").forward(request, response);
         }
-
-
-        
     }
-
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
