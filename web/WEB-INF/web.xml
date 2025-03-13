@@ -20,6 +20,16 @@
         <filter-name>UpdateServiceFilter</filter-name>
         <filter-class>filters.UpdateServiceFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>CreateServiceFilter</filter-name>
+        <filter-class>filters.CreateServiceFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CreateServiceFilter</filter-name>
+        <servlet-name>ServiceCreateServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>UpdateServiceFilter</filter-name>
         <servlet-name>UpdateServiceServlet</servlet-name>
@@ -122,6 +132,10 @@
         <servlet-name>CreateCustomerServlet</servlet-name>
         <servlet-class>controllers.CreateCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServiceCreateServlet</servlet-name>
+        <servlet-class>controllers.ServiceCreateServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -193,6 +207,10 @@
     <servlet-mapping>
         <servlet-name>CreateCustomerServlet</servlet-name>
         <url-pattern>/CreateCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServiceCreateServlet</servlet-name>
+        <url-pattern>/ServiceCreateServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
