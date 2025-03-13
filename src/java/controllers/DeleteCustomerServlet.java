@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,12 +13,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class LogoutSalesServlet extends HttpServlet {
+public class DeleteCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,23 +32,48 @@ public class LogoutSalesServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        
         try (PrintWriter out = response.getWriter()) {
-            
-            HttpSession s = request.getSession(false);
 
-            if (s != null) {
-                s.invalidate(); // Xóa session hoàn toàn
+             // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
+
+            if (salesPerson == null) {
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
             }
 
-            response.sendRedirect("MainServlet?action=login-sale-page");
+            String custID = request.getParameter("id");
+            SalePersonDAO saleDAO = new SalePersonDAO();
 
+            // Lấy tên khách hàng từ cơ sở dữ liệu trước khi xóa
+            String customerName = saleDAO.getCustomerNameById(custID);
+
+            // Xóa khách hàng
+            boolean isDeleted = saleDAO.deleteCustomer(custID);
+
+            if (isDeleted) {
+                // Nếu xóa thành công, chuyển thông báo thành công với tên khách hàng
+                request.setAttribute("MESSAGE", "Customer " + customerName + " deleted successfully!");
+            } else {
+                // Nếu xóa thất bại, chuyển thông báo lỗi
+                request.setAttribute("ERROR", "Customer deletion failed. Please try again!");
+            }
+
+            // Trả lại danh sách khách hàng và thông báo đến trang SaleDashboard.jsp
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+        
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "An error occurred while deleting the customer. Please try again.");
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
     }
+
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

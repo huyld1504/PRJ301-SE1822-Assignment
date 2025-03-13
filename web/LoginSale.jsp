@@ -4,7 +4,7 @@
     Author     : Thanh Vinh
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
@@ -20,14 +20,16 @@
         <div class="w-100 h-100 my-5">
             <div style="box-shadow: 10px 10px 20px 0px rgba(122,122,122,1); -webkit-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1); -moz-box-shadow: 10px 10px 20px 0px rgba(122,122,122,1);"
                  class="w-50 border bg-light bg-gradient rounded-3 pt-5 mx-auto">
-                 
+
                 <form accept-charset="UTF-8"
                       action="MainServlet"
                       style="height: 280px;"
                       class="d-flex flex-column justify-content-center"
                       method="get"
                       >
-                    
+                    <!-- Trường ẩn để xác định action -->
+                    <input type="hidden" name="action" value="login-sale"/>
+
                     <p class="text-center fs-1 mb-0">Login Sale Form</p>
                     <hr/>
 
@@ -55,9 +57,6 @@
                         </div>
                     </c:if>
 
-                    <!-- Trường ẩn để xác định action -->
-                    <input type="hidden" name="action" value="login-sale"/>
-                    
                     <div class="d-grid gap-2 col-6 mx-auto mb-5">
                         <button type="submit" class="btn btn-info btn-lg fw-bold border-2 mt-3 text-light">LOGIN</button>
                     </div>
