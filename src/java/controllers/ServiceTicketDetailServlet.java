@@ -5,7 +5,9 @@
  */
 package controllers;
 
+import dao.CustomerDAO;
 import dao.ServiceMechanicDAO;
+import dao.ServiceTicketDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -14,7 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Customer;
 import models.ServiceMeChanic;
+import models.ServiceTicket;
 
 /**
  *
@@ -36,16 +40,32 @@ public class ServiceTicketDetailServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String serviceTicketID = request.getParameter("serviceTicketID");
-            
+
             ServiceMechanicDAO s = new ServiceMechanicDAO();
             ArrayList<ServiceMeChanic> list = s.getServiceMechanicByServiceTicketID(serviceTicketID);
-            
-            if(list != null && !list.isEmpty()) {
-                HttpSession session = request.getSession();
-                session.setAttribute("SERVICE_MECHANIC_LIST", list);
-                response.sendRedirect("MainServlet?action=ticket-detail-page&serviceTicketID="+serviceTicketID);
+
+            ServiceTicketDAO serviceTicketDao = new ServiceTicketDAO();
+            ServiceTicket ser = serviceTicketDao.getServiceTicketByID(serviceTicketID);
+            HttpSession session = request.getSession();
+            if (ser != null) {
+                CustomerDAO customerDao = new CustomerDAO();
+                Customer cus = customerDao.getCustomerById(ser.getCustID());
+                if (cus != null) {
+                    session.setAttribute("CUSTOMER_TICKET", cus);
+                } else {
+                    request.setAttribute("MESSAGE", "Customer not found.");
+                    request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID).forward(request, response);
+                }
             } else {
-                request.setAttribute("MESSAGE", "The ticket ID = "+serviceTicketID+" are no services here");
+                request.setAttribute("MESSAGE", "Service ticket not found.");
+                request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID).forward(request, response);
+            }
+
+            if (list != null && !list.isEmpty()) {
+                session.setAttribute("SERVICE_MECHANIC_LIST", list);
+                response.sendRedirect("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID);
+            } else {
+                request.setAttribute("MESSAGE", "The ticket ID = " + serviceTicketID + " are no services here");
                 request.getRequestDispatcher("MainServlet?action=mechanic-dashboard").forward(request, response);
             }
         }

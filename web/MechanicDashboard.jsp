@@ -91,7 +91,7 @@
                     </c:forEach>
                 </table>
                 <c:if test="${requestScope.MESSAGE != null}">
-                    <div class="alert alert-danger w-75" role="alert">
+                    <div class="alert alert-danger w-75 mx-auto" role="alert">
                         ${requestScope.MESSAGE}
                     </div>
                 </c:if>

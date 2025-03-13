@@ -62,6 +62,48 @@ public class ServiceTicketDAO {
 
         return result;
     }
+    
+    public ServiceTicket getServiceTicketByID(String id) {
+        ServiceTicket result = null;
+        Connection conn = null;
+        PreparedStatement ps;
+        ResultSet table;
+
+        try {
+            conn = DBUtils.getConnection();
+
+            if (conn != null) {
+                String sql = "SELECT [serviceTicketID]\n"
+                        + "      ,[dateReceived]\n"
+                        + "      ,[dateReturned]\n"
+                        + "      ,[custID]\n"
+                        + "      ,[carID]\n"
+                        + "  FROM [dbo].[ServiceTicket]\n"
+                        + "  WHERE [serviceTicketID] = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, id);
+                table = ps.executeQuery();
+                while (table.next()) {
+                    String serviceTicketID = table.getString("serviceTicketID");
+                    Date dateReceived = table.getDate("dateReceived");
+                    Date dateReturned = table.getDate("dateReturned");
+                    String cusID = table.getString("custID");
+                    String carID = table.getString("carID");
+                    result = new ServiceTicket(serviceTicketID, dateReceived, dateReturned, cusID, carID);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+
+        return result;
+    }
 
     public ArrayList<ServiceTicket> getServiceTicketByCustomerID(String customerID) {
         ArrayList<ServiceTicket> result = new ArrayList<>();

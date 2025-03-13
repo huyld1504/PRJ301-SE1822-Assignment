@@ -72,7 +72,7 @@
                 </div>
             </nav>
             <c:if test="${sessionScope.SERVICE_TICKET_LIST != null}">
-                <table class="table table-striped w-75 mx-auto mt-5">
+                <table class="table table-striped mt-5 w-75 mx-5">
                     <tr class="fw-bold">
                         <td>Service ID</td>
                         <td>Hours</td>              
@@ -109,9 +109,34 @@
                     </c:forEach>
                 </table>
 
+                <c:if test="${sessionScope.CUSTOMER_TICKET != null}">
+                    <div class="card mt-5 w-25 mx-5" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Customer Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${sessionScope.CUSTOMER_TICKET.custID}</li>
+                            <li class="list-group-item">Customer name: ${sessionScope.CUSTOMER_TICKET.custName}</li>
+                            <li class="list-group-item">Customer phone: ${sessionScope.CUSTOMER_TICKET.phone}</li>
+                        </ul>
+                    </div>
+                </c:if>
+                
+                 <c:if test="${sessionScope.CAR_TICKET != null}">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Car Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${sessionScope.CAR.custID}</li>
+                            <li class="list-group-item">Customer name: ${sessionScope.CAR.custName}</li>
+                        </ul>
+                    </div>
+                </c:if>
+
                 <c:if test="${requestScope.ERROR != null}">
-                    <div class="alert alert-danger alert-dismissible fade show w-75 mx-auto z-3" role="alert">
-                        ${requestScope.ERROR}
+                    <div class="alert alert-danger alert-dismissible fade show mx-auto z-3" role="alert">
+                        ${requestScope.MESSAGE}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
