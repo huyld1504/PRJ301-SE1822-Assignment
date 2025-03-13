@@ -71,14 +71,81 @@
                     </div>
                 </div>
             </nav>
-        </c:if>
 
-        <c:if test="${sessionScope.CUSTOMER == null}">
-            <div class="alert alert-danger" role="alert">
-                You don't have any permission to access this resource. Please <a href="MainServlet?action=home" class="alert-link fw-bold">login here</a>!
-            </div>
-        </c:if>
+            <c:if test="${sessionScope.CUSTOMER_SERVICE_TICKET_LIST != null and !sessionScope.CUSTOMER_SERVICE_TICKET_LIST.isEmpty()}">
+                <p class="fs-4 fw-bold w-100 text-center mt-5">Your Service ticket</p>
+                <table class="table table-striped w-75 mx-auto mt-3">
+                    <tr class="fw-bold">
+                        <td>Ticket ID</td>
+                        <td>Date Received</td>
+                        <td>Date Returned</td>
+                        <td>Detail</td>
+                    </tr>
+                    <c:forEach items="${sessionScope.CUSTOMER_SERVICE_TICKET_LIST}" var="ticket">
+                        <tr>
+                            <td>${ticket.serviceTicketID}</td>
+                            <td>${ticket.dateReceived.toString()}</td>
+                            <td>${ticket.dateReaturned.toString()}</td>
+                            <td>
+                                <form action="MainServlet" method="post">
+                                    <input type="hidden" name="action" value="get-customer-ticket-detail">
+                                    <input type="hidden" name="service_ticket_id" value="${ticket.serviceTicketID}">
+                                    <input type="hidden" name="car_id" value="${ticket.carID}">
+                                    <button type="sumit" class="btn btn-primary btn-sm">
+                                        Detail
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                <c:if test="${sessionScope.SERVICE_MECHANIC_CUS_LIST != null and !sessionScope.SERVICE_MECHANIC_CUS_LIST.isEmpty()}">
+                    <p class="fs-4 fw-bold w-100 text-center mt-5">Your Service ticket detail</p>
+                    <table class="table table-striped w-75 mx-auto mt-3">
+                        <tr class="fw-bold">
+                            <td>Ticket ID</td>
+                            <td>Service ID</td>
+                            <td>Mechanic ID</td>
+                            <td>Hour</td>
+                            <td>Rate</td>
+                            <td>Comment</td>
+                            <td>Detail</td>
+                        </tr>
+                        <c:forEach items="${sessionScope.SERVICE_MECHANIC_CUS_LIST}" var="ticket">
+                            <tr>
+                                <td>${ticket.serviceTicketID}</td>
+                                <td>${ticket.serviceID}</td>
+                                <td>${ticket.mechanicID}</td>
+                                <td>${ticket.hour}</td>
+                                <td>${ticket.rate}</td>
+                                <td>${ticket.comment}</td>
+                                <td>
+                                    <form action="MainServlet" method="post">    
+                                        <input type="hidden" name="action" value="get-customer-service-mechanic-detail">
+                                        <input type="hidden" name="serviceID" value="${ticket.serviceID}">
+                                        <input type="hidden" name="mechanicID" value="${ticket.mechanicID}">
+                                        <button type="sumit" class="btn btn-primary btn-sm">
+                                            Detail
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:if>
+                </c:if>
+                <c:if test="${requestScope.MESSAGE != null}">
+                    <div class="alert alert-danger w-75" role="alert">
+                        ${requestScope.MESSAGE}
+                    </div>
+                </c:if>
+            </c:if>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+            <c:if test="${sessionScope.CUSTOMER == null}">
+                <div class="alert alert-danger" role="alert">
+                    You don't have any permission to access this resource. Please <a href="MainServlet?action=home" class="alert-link fw-bold">login here</a>!
+                </div>
+            </c:if>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>

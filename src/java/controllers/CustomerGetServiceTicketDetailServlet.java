@@ -1,25 +1,28 @@
-package controllers;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import dao.CustomerDAO;
+package controllers;
+
+import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Customer;
+import models.ServiceMeChanic;
 
 /**
  *
  * @author Asus
  */
-public class LoginCustomerServlet extends HttpServlet {
+@WebServlet(name = "CustomerGetServiceTicketDetailServlet", urlPatterns = {"/CustomerGetServiceTicketDetailServlet"})
+public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,23 +35,24 @@ public class LoginCustomerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String customer_name = request.getParameter("customer_name");
-            String phone = request.getParameter("customer_phone");
-
-            CustomerDAO c = new CustomerDAO();
-            Customer customer = c.login(customer_name, phone);
-
-            if (customer != null) {
-                HttpSession s = request.getSession(true);
-                s.setAttribute("CUSTOMER", customer);
-                response.sendRedirect("MainServlet?action=get-customer-service-ticket&custID="+customer.getCustID());
+            /* TODO output your page here. You may use following sample code. */
+            String serviceTicketID = request.getParameter("service_ticket_id");
+            String carID = request.getParameter("car_id");
+            
+            ServiceMechanicDAO serviceMechanicDAO = new ServiceMechanicDAO();
+            ArrayList<ServiceMeChanic> serviceMechanicList = serviceMechanicDAO.getServiceMechanicByServiceTicketID(serviceTicketID);
+            
+            //when have car dao
+            
+            if(serviceMechanicList != null && !serviceMechanicList.isEmpty()) {
+                HttpSession s = request.getSession();
+                s.setAttribute("SERVICE_MECHANIC_CUS_LIST", serviceMechanicList);
+                response.sendRedirect("MainServlet?action=customer-dashboard");
             } else {
-                request.setAttribute("ERROR", "Customer not found.");
-                request.getRequestDispatcher("MainServlet?action=home&customer_name="+customer_name+"&customer_phone="+phone).forward(request, response);
+                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
+                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
             }
         }
     }
