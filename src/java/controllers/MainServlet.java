@@ -145,7 +145,6 @@ public class MainServlet extends HttpServlet {
                 case "create-service":
                     base_url = "ServiceCreateServlet";
                     break;
-<<<<<<< Updated upstream
                 case "get-customer-service-ticket":
                     base_url = "CustomerGetServiceTicketServlet";
                     break;
@@ -158,7 +157,6 @@ public class MainServlet extends HttpServlet {
                 case "get-customer-service-mechanic-detail":
                     base_url = "GetCustomerServiceMechanicDetailServlet";
                     break;
-=======
                 case "read-car-page":
                     base_url = "ReadCar.jsp";
                     break;
@@ -189,9 +187,6 @@ public class MainServlet extends HttpServlet {
                 case "search-car":
                     base_url = "SearchCarServlet";
                     break;
-                    
-                    
->>>>>>> Stashed changes
                 default:
                     base_url = "index.html";
                     break;
