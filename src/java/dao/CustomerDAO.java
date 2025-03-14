@@ -107,4 +107,40 @@ public class CustomerDAO {
         }
         return isUpdated;
     }
+    
+    public Customer getCustomerById(String custID) {
+        Customer customer = null;
+        Connection conn = null;
+
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                String sql = "SELECT custID, custName, phone, sex, cusAddress FROM dbo.Customer WHERE custID = ?";
+                PreparedStatement p = conn.prepareStatement(sql);
+                p.setString(1, custID); 
+
+                ResultSet rs = p.executeQuery();
+                if (rs.next()) {
+                    String custName = rs.getString("custName");
+                    String phone = rs.getString("phone");
+                    String sex = rs.getString("sex");
+                    String cusAddress = rs.getString("cusAddress");
+
+                    customer = new Customer(custID, custName, phone, cusAddress, sex);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return customer;
+    }
 }

@@ -57,7 +57,7 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "update-customer-profile":
                     base_url = "UpdateCustomerProfileServlet";
-                    break;               
+                    break;
                 case "login-sale-page":
                     base_url = "LoginSale.jsp";
                     break;
@@ -148,7 +148,7 @@ public class MainServlet extends HttpServlet {
                 case "get-customer-service-ticket":
                     base_url = "CustomerGetServiceTicketServlet";
                     break;
-                case "get-customer-ticket-detail": 
+                case "get-customer-ticket-detail":
                     base_url = "CustomerGetServiceTicketDetailServlet";
                     break;
                 case "customer-service-mechanic-detail-page":
@@ -186,6 +186,9 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "search-car":
                     base_url = "SearchCarServlet";
+                    break;
+                case "search-service-ticket":
+                    base_url = "SearchServiceTicketServlet";
                     break;
                 default:
                     base_url = "index.html";
