@@ -116,7 +116,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
-                
+
                 <!-- Customer List -->
                 <c:if test="${not empty CUSTOMER_LIST}">
                     <div class="container mt-5">
@@ -166,10 +166,20 @@
             <div class="alert alert-danger" role="alert">
                 You don't have any permission to access this resource. Please <a href="MainServlet?action=login-sale-page" class="alert-link fw-bold">login here</a>!
             </div>
-        </c:if>
 
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Row 2: The Part - Create an Invoice -->
+            <div class="row justify-content-center g-4 mt-3">
+
+                <!-- The Part -->
+                <div class="col-lg-5 col-md-6">
+                    <a href="MainServlet?action=get-part-page" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
+                        <i class="fa-solid fa-gears"></i> The Part
+                    </a>
+                </div>
+            </c:if>
+
+            <!-- Bootstrap JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     </body>
 </html>

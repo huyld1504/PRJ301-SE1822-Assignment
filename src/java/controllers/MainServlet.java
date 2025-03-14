@@ -57,7 +57,7 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "update-customer-profile":
                     base_url = "UpdateCustomerProfileServlet";
-                    break;               
+                    break;
                 case "login-sale-page":
                     base_url = "LoginSale.jsp";
                     break;
@@ -148,7 +148,7 @@ public class MainServlet extends HttpServlet {
                 case "get-customer-service-ticket":
                     base_url = "CustomerGetServiceTicketServlet";
                     break;
-                case "get-customer-ticket-detail": 
+                case "get-customer-ticket-detail":
                     base_url = "CustomerGetServiceTicketDetailServlet";
                     break;
                 case "customer-service-mechanic-detail-page":
@@ -156,6 +156,32 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "get-customer-service-mechanic-detail":
                     base_url = "GetCustomerServiceMechanicDetailServlet";
+                    break;
+                //getList
+                case "get-part-page":
+                    base_url = "PartListServlet";
+                    break;
+                case "get-all-listPart":
+                    base_url = "PartList.jsp";
+                    break;
+                //search
+                case "search-part":
+                    base_url = "SearchPartServlet";
+                    break;
+                //add part
+                case "add-part-page":
+                    base_url = "AddPartServlet";
+                    break;
+                //update-part
+                case "update-part":
+                    base_url = "UpdatePartServlet";
+                    break;
+                case "update-part-page":
+                    base_url = "UpdatePart.jsp";
+                    break;
+                //delete-part
+                case "delete-part":
+                    base_url = "DeletePartServlet";
                     break;
                 default:
                     base_url = "index.html";
