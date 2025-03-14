@@ -32,7 +32,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-50 fs-5 d-flex justify-content-around align-items-center">
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="#">
+                                <a class="nav-link" aria-current="page" href="MainServlet?action=mechanic-dashboard">
                                     <i class="fa-solid fa-house"></i>
                                     Home
                                 </a>
@@ -71,6 +71,25 @@
                     </div>
                 </div>
             </nav>
+            <form action="MainServlet" method="get" class="row g-3 p-4 mt-4 mx-5 border rounded shadow-lg bg-light">
+                <input type="hidden" name="action" value="search-service-ticket"/>
+                <input type="hidden" name="mechanicID" value="${MECHANIC.mechanicID}"/>
+                <div class="col-md-4">
+                    <label for="serialNumber" class="form-label fw-bold">Customer ID</label>
+                    <input type="text" class="form-control" name="customerID" placeholder="Enter customer ID" value="${param.custID}"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="model" class="form-label fw-bold">Car ID</label>
+                    <input type="text" class="form-control" name="carID" placeholder="Enter car ID" value="${param.carID}"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="year" class="form-label fw-bold">Date Received</label>
+                    <input type="date" class="form-control" name="dateReceived" value="${param.dateReceived}"/>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary fw-bold px-5 py-2">Search</button>
+                </div>
+            </form>
             <c:if test="${sessionScope.SERVICE_TICKET_LIST != null}">
                 <table class="table table-striped mt-5 w-75 mx-5">
                     <tr class="fw-bold">
@@ -123,7 +142,7 @@
                 </c:if>
 
                 <c:if test="${sessionScope.CAR_OF_CUSTOMER != null}">
-                    <div class="card mt-5 w-25 mx-5" style="width: 18rem;">
+                    <div class="card my-5 w-25 mx-5" style="width: 18rem;">
                         <div class="card-header fw-bold text-center">
                             Car Information
                         </div>

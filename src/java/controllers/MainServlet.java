@@ -187,6 +187,9 @@ public class MainServlet extends HttpServlet {
                 case "search-car":
                     base_url = "SearchCarServlet";
                     break;
+                case "search-service-ticket":
+                    base_url = "SearchServiceTicketServlet";
+                    break;
                 default:
                     base_url = "index.html";
                     break;
