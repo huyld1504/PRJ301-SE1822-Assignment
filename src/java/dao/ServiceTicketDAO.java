@@ -147,4 +147,90 @@ public class ServiceTicketDAO {
         }
         return result;
     }
+    
+    public ArrayList<ServiceTicket> getServiceTicketByCarID(String carID) {
+        ArrayList<ServiceTicket> result = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps;
+        ResultSet table;
+
+        try {
+            conn = DBUtils.getConnection();
+
+            if (conn != null) {
+                String sql = "SELECT [serviceTicketID]\n"
+                        + "      ,[dateReceived]\n"
+                        + "      ,[dateReturned]\n"
+                        + "      ,[custID]\n"
+                        + "      ,[carID]\n"
+                        + "  FROM [dbo].[ServiceTicket]\n"
+                        + "  where [carID] = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, carID);
+                table = ps.executeQuery();
+                
+                while(table.next()) {
+                    String serviceTicketID = table.getString("serviceTicketID");
+                    Date dateReceived = table.getDate("dateReceived");
+                    Date dateReturned = table.getDate("dateReturned");
+                    String custID = table.getString("custID");
+                    ServiceTicket s = new ServiceTicket(serviceTicketID, dateReceived, dateReturned, custID, carID);
+                    
+                    result.add(s);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+    
+    public ArrayList<ServiceTicket> getServiceTicketByDateReceived(Date dateReceived) {
+        ArrayList<ServiceTicket> result = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps;
+        ResultSet table;
+
+        try {
+            conn = DBUtils.getConnection();
+
+            if (conn != null) {
+                String sql = "SELECT [serviceTicketID]\n"
+                        + "      ,[dateReceived]\n"
+                        + "      ,[dateReturned]\n"
+                        + "      ,[custID]\n"
+                        + "      ,[carID]\n"
+                        + "  FROM [dbo].[ServiceTicket]\n"
+                        + "    WHERE dateReceived >= ?";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, dateReceived.toString());
+                table = ps.executeQuery();
+                
+                while(table.next()) {
+                    String serviceTicketID = table.getString("serviceTicketID");
+                    String custID = table.getString("custID");
+                    Date dateReturned = table.getDate("dateReturned");
+                    String carID = table.getString("carID");
+                    ServiceTicket s = new ServiceTicket(serviceTicketID, dateReceived, dateReturned, custID, carID);
+                    
+                    result.add(s);
+                }
+            }
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 }
