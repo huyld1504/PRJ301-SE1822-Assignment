@@ -121,15 +121,19 @@
                         </ul>
                     </div>
                 </c:if>
-                
-                 <c:if test="${sessionScope.CAR_TICKET != null}">
-                    <div class="card" style="width: 18rem;">
+
+                <c:if test="${sessionScope.CAR_OF_CUSTOMER != null}">
+                    <div class="card mt-5 w-25 mx-5" style="width: 18rem;">
                         <div class="card-header fw-bold text-center">
                             Car Information
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">ID: ${sessionScope.CAR.custID}</li>
-                            <li class="list-group-item">Customer name: ${sessionScope.CAR.custName}</li>
+                            <li class="list-group-item">ID: ${sessionScope.CAR_OF_CUSTOMER.carID}</li>
+                            <li class="list-group-item">Serial number: ${sessionScope.CAR_OF_CUSTOMER.serialNumber}</li>
+                            <li class="list-group-item">Model: ${sessionScope.CAR_OF_CUSTOMER.model}</li>
+                            <li class="list-group-item">Colour: ${sessionScope.CAR_OF_CUSTOMER.colour}</li>
+                            <li class="list-group-item">Year: ${sessionScope.CAR_OF_CUSTOMER.year}</li>
+                            <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.CAR_OF_CUSTOMER.price}" pattern="#,###" />VND</li>
                         </ul>
                     </div>
                 </c:if>

@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.CarDAO;
 import dao.CustomerDAO;
 import dao.ServiceMechanicDAO;
 import dao.ServiceTicketDAO;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Car;
 import models.Customer;
 import models.ServiceMeChanic;
 import models.ServiceTicket;
@@ -40,6 +42,7 @@ public class ServiceTicketDetailServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String serviceTicketID = request.getParameter("serviceTicketID");
+            String carID = request.getParameter("carID");
 
             ServiceMechanicDAO s = new ServiceMechanicDAO();
             ArrayList<ServiceMeChanic> list = s.getServiceMechanicByServiceTicketID(serviceTicketID);
@@ -50,8 +53,11 @@ public class ServiceTicketDetailServlet extends HttpServlet {
             if (ser != null) {
                 CustomerDAO customerDao = new CustomerDAO();
                 Customer cus = customerDao.getCustomerById(ser.getCustID());
+                CarDAO carDao = new CarDAO();
+                Car c = carDao.getCarById(carID);
                 if (cus != null) {
                     session.setAttribute("CUSTOMER_TICKET", cus);
+                    session.setAttribute("CAR_OF_CUSTOMER", c);
                 } else {
                     request.setAttribute("MESSAGE", "Customer not found.");
                     request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID).forward(request, response);

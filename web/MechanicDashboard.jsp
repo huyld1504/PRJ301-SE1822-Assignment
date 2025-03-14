@@ -85,7 +85,7 @@
                             <td>${ticket.dateReceived.toString()}</td>
                             <td>${ticket.dateReaturned.toString()}</td>
                             <td>
-                                <a href="MainServlet?action=ticket-detail&serviceTicketID=${ticket.serviceTicketID}"><i class="fa-solid fa-circle-info fs-4"></i></a>
+                                <a href="MainServlet?action=ticket-detail&serviceTicketID=${ticket.serviceTicketID}&carID=${ticket.carID}"><i class="fa-solid fa-circle-info fs-4"></i></a>
                             </td>
                         </tr>
                     </c:forEach>

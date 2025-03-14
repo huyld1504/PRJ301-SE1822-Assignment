@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.CarDAO;
 import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Car;
 import models.ServiceMeChanic;
 
 /**
@@ -40,14 +42,17 @@ public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             String serviceTicketID = request.getParameter("service_ticket_id");
             String carID = request.getParameter("car_id");
-            
+
             ServiceMechanicDAO serviceMechanicDAO = new ServiceMechanicDAO();
             ArrayList<ServiceMeChanic> serviceMechanicList = serviceMechanicDAO.getServiceMechanicByServiceTicketID(serviceTicketID);
-            
+
             //when have car dao
-            
-            if(serviceMechanicList != null && !serviceMechanicList.isEmpty()) {
+            CarDAO carDao = new CarDAO();
+            Car c = carDao.getCarById(carID);
+
+            if (serviceMechanicList != null && !serviceMechanicList.isEmpty()) {
                 HttpSession s = request.getSession();
+                s.setAttribute("car", c);
                 s.setAttribute("SERVICE_MECHANIC_CUS_LIST", serviceMechanicList);
                 response.sendRedirect("MainServlet?action=customer-dashboard");
             } else {
