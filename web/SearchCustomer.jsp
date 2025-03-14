@@ -28,8 +28,7 @@
             </nav>
 
             <div class="container py-5">
-                <form action="MainServlet" method="post">
-                    <input type="hidden" name="action" value="search-customer"/> <!-- Gửi action tìm kiếm tới MainServlet -->
+                <form action="MainServlet?action=search-customer" method="post">
                     <div class="mb-3">
                         <label for="search_name" class="form-label">Customer Name</label>
                         <input type="text" class="form-control" name="search_name" id="search_name" placeholder="Enter customer name to search" />
@@ -65,7 +64,9 @@
                                             <a href="MainServlet?action=edit-customer&id=${customer.custID}" class="btn btn-warning btn-sm">
                                                 <i class="fa-solid fa-pen"></i> Edit
                                             </a>
-                                            <a href="MainServlet?action=delete-customer&id=${customer.custID}" class="btn btn-danger btn-sm">
+                                            <a href="MainServlet?action=delete-customer&id=${customer.custID}" 
+                                               class="btn btn-danger btn-sm" 
+                                               onclick="return confirm('Are you sure you want to delete this customer?');">
                                                 <i class="fa-solid fa-trash"></i> Delete
                                             </a>
                                         </td>
@@ -77,13 +78,12 @@
                 </div>
             </c:if>
 
-            <c:if test="${requestScope.ERROR != null}">
-                <div class="alert alert-danger alert-dismissible fade show w-25 z-3 position-absolute" role="alert">
-                    ${requestScope.ERROR}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </c:if>
+        </c:if>
 
+        <c:if test="${sessionScope.SALE == null}">
+            <div class="alert alert-danger" role="alert">
+                You don't have any permission to access this resource. Please <a href="MainServlet?action=login-sale-page" class="alert-link fw-bold">login here</a>!
+            </div>
         </c:if>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

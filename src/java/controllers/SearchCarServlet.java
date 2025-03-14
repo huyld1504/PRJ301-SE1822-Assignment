@@ -6,21 +6,22 @@
 package controllers;
 
 import dao.CarDAO;
-import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Car;
 import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class DeleteCustomerServlet extends HttpServlet {
+public class SearchCarServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,7 +36,7 @@ public class DeleteCustomerServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
+            
             // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
@@ -46,34 +47,28 @@ public class DeleteCustomerServlet extends HttpServlet {
                 return;
             }
 
-            String custID = request.getParameter("id");
-            SalePersonDAO saleDAO = new SalePersonDAO();
+            // Lấy thông tin tìm kiếm từ form
+            String serialNumber = request.getParameter("serialNumber");
+            String model = request.getParameter("model");
+            String yearString = request.getParameter("year");
+            Integer year = (yearString != null && !yearString.isEmpty()) ? Integer.parseInt(yearString) : null;
 
-            // Lấy tên khách hàng từ cơ sở dữ liệu trước khi xóa
-            String customerName = saleDAO.getCustomerNameById(custID);
+            // Gọi DAO để tìm kiếm xe theo Serial Number, Model và Year
+            CarDAO carDAO = new CarDAO();
+            List<Car> carList = carDAO.searchCar(serialNumber, model, year);
 
-            // Xóa khách hàng
-            boolean isDeleted = saleDAO.deleteCustomer(custID);
+            // Truyền kết quả tìm kiếm vào request
+            request.setAttribute("carList", carList);
 
-            if (isDeleted) {
-                // Nếu xóa thành công, chuyển thông báo thành công với tên khách hàng
-                request.setAttribute("MESSAGE", "Customer " + customerName + " deleted successfully!");
-            } else {
-                // Nếu xóa thất bại, chuyển thông báo lỗi
-                request.setAttribute("ERROR", "Customer deletion failed. Please try again!");
-            }
+            // Chuyển hướng đến trang search-car.jsp để hiển thị kết quả
+            request.getRequestDispatcher("MainServlet?action=search-car-page").forward(request, response);
 
-            // Trả lại danh sách khách hàng và thông báo đến trang SaleDashboard.jsp
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
-        
-            
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("ERROR", "An error occurred while deleting the customer. Please try again.");
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+            request.setAttribute("ERROR", "System error occurred. Please try again.");
+            request.getRequestDispatcher("MainServlet?action=search-car-page").forward(request, response);
         }
     }
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

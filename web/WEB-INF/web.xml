@@ -160,6 +160,30 @@
         <servlet-name>ServiceCreateServlet</servlet-name>
         <servlet-class>controllers.ServiceCreateServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReadCarServlet</servlet-name>
+        <servlet-class>controllers.ReadCarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateCarServlet</servlet-name>
+        <servlet-class>controllers.CreateCarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCarServlet</servlet-name>
+        <servlet-class>controllers.UpdateCarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCarServlet</servlet-name>
+        <servlet-class>controllers.DeleteCarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpEditCarServlet</servlet-name>
+        <servlet-class>controllers.UpEditCarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchCarServlet</servlet-name>
+        <servlet-class>controllers.SearchCarServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -251,6 +275,30 @@
     <servlet-mapping>
         <servlet-name>ServiceCreateServlet</servlet-name>
         <url-pattern>/ServiceCreateServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadCarServlet</servlet-name>
+        <url-pattern>/ReadCarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateCarServlet</servlet-name>
+        <url-pattern>/CreateCarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCarServlet</servlet-name>
+        <url-pattern>/UpdateCarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCarServlet</servlet-name>
+        <url-pattern>/DeleteCarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpEditCarServlet</servlet-name>
+        <url-pattern>/UpEditCarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCarServlet</servlet-name>
+        <url-pattern>/SearchCarServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

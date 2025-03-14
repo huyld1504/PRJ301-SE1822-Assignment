@@ -52,39 +52,38 @@ public class EditCustomerServlet extends HttpServlet {
             }
 
             // Lấy customerId từ URL
-        String customerId = request.getParameter("id");
+            String customerId = request.getParameter("id");
 
-        // Kiểm tra nếu customerId là hợp lệ
-        if (customerId == null || customerId.isEmpty()) {
-            request.setAttribute("ERROR", "Customer ID is missing.");
-            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
-            return;
+            // Kiểm tra nếu customerId là hợp lệ
+            if (customerId == null || customerId.isEmpty()) {
+                request.setAttribute("ERROR", "Customer ID is missing.");
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+                return;
+            }
+
+            // Gọi DAO để lấy thông tin khách hàng
+            SalePersonDAO salePersonDAO = new SalePersonDAO();
+            Customer customer = salePersonDAO.getCustomerById(customerId);
+
+            // Kiểm tra nếu không tìm thấy khách hàng
+            if (customer == null) {
+                request.setAttribute("ERROR", "Customer not found.");
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+                return;
+            }
+
+            // Truyền đối tượng customer vào request
+            request.setAttribute("customer", customer);
+
+            // Chuyển hướng tới trang EditCustomer.jsp để hiển thị dữ liệu
+            request.getRequestDispatcher("MainServlet?action=edit-customer-page").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "System error. Please try again.");
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
-
-        // Gọi DAO để lấy thông tin khách hàng
-        SalePersonDAO salePersonDAO = new SalePersonDAO();
-        Customer customer = salePersonDAO.getCustomerById(customerId);
-
-        // Kiểm tra nếu không tìm thấy khách hàng
-        if (customer == null) {
-            request.setAttribute("ERROR", "Customer not found.");
-            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
-            return;
-        }
-
-        // Truyền đối tượng customer vào request
-        request.setAttribute("customer", customer);
-
-        // Chuyển hướng tới trang EditCustomer.jsp để hiển thị dữ liệu
-        request.getRequestDispatcher("EditCustomer.jsp").forward(request, response);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        request.setAttribute("ERROR", "System error. Please try again.");
-        request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
     }
-}
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

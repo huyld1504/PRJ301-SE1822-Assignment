@@ -6,7 +6,6 @@
 package controllers;
 
 import dao.CarDAO;
-import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -14,13 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Car;
 import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class DeleteCustomerServlet extends HttpServlet {
+public class UpdateCarServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,10 +33,14 @@ public class DeleteCustomerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
+        
         try (PrintWriter out = response.getWriter()) {
-
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            
+            // Kiểm tra session và lấy thông tin SalesPerson
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -46,30 +50,31 @@ public class DeleteCustomerServlet extends HttpServlet {
                 return;
             }
 
-            String custID = request.getParameter("id");
-            SalePersonDAO saleDAO = new SalePersonDAO();
+            // Lấy carID từ URL
+            String carId = request.getParameter("id");
 
-            // Lấy tên khách hàng từ cơ sở dữ liệu trước khi xóa
-            String customerName = saleDAO.getCustomerNameById(custID);
-
-            // Xóa khách hàng
-            boolean isDeleted = saleDAO.deleteCustomer(custID);
-
-            if (isDeleted) {
-                // Nếu xóa thành công, chuyển thông báo thành công với tên khách hàng
-                request.setAttribute("MESSAGE", "Customer " + customerName + " deleted successfully!");
-            } else {
-                // Nếu xóa thất bại, chuyển thông báo lỗi
-                request.setAttribute("ERROR", "Customer deletion failed. Please try again!");
+            if (carId == null || carId.isEmpty()) {
+                request.setAttribute("ERROR", "Car ID is missing.");
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+                return;
             }
 
-            // Trả lại danh sách khách hàng và thông báo đến trang SaleDashboard.jsp
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
-        
-            
+            // Gọi DAO để lấy thông tin xe
+            CarDAO carDAO = new CarDAO();
+            Car car = carDAO.getCarById(carId);
+
+            if (car == null) {
+                request.setAttribute("ERROR", "Car not found.");
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+                return;
+            }
+
+            request.setAttribute("car", car);
+            request.getRequestDispatcher("MainServlet?action=edit-car-page").forward(request, response);
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("ERROR", "An error occurred while deleting the customer. Please try again.");
+            request.setAttribute("ERROR", "System error. Please try again.");
             request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
     }
