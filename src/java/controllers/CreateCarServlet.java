@@ -6,7 +6,6 @@
 package controllers;
 
 import dao.CarDAO;
-import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -14,13 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Car;
 import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class DeleteCustomerServlet extends HttpServlet {
+public class CreateCarServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,10 +33,14 @@ public class DeleteCustomerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        
         try (PrintWriter out = response.getWriter()) {
-
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            
+            // Kiểm tra session để xác thực người bán đã đăng nhập chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -46,34 +50,41 @@ public class DeleteCustomerServlet extends HttpServlet {
                 return;
             }
 
-            String custID = request.getParameter("id");
-            SalePersonDAO saleDAO = new SalePersonDAO();
+            // Lấy dữ liệu từ form
+            String serialNumber = request.getParameter("serialNumber");
+            String model = request.getParameter("model");
+            String colour = request.getParameter("colour");
+            int year = Integer.parseInt(request.getParameter("year"));
+            double price = Double.parseDouble(request.getParameter("price"));  // Lấy giá trị price
 
-            // Lấy tên khách hàng từ cơ sở dữ liệu trước khi xóa
-            String customerName = saleDAO.getCustomerNameById(custID);
-
-            // Xóa khách hàng
-            boolean isDeleted = saleDAO.deleteCustomer(custID);
-
-            if (isDeleted) {
-                // Nếu xóa thành công, chuyển thông báo thành công với tên khách hàng
-                request.setAttribute("MESSAGE", "Customer " + customerName + " deleted successfully!");
-            } else {
-                // Nếu xóa thất bại, chuyển thông báo lỗi
-                request.setAttribute("ERROR", "Customer deletion failed. Please try again!");
+            // Kiểm tra nếu có trường nào bị null hoặc rỗng
+            if (serialNumber == null || model == null || colour == null || year == 0) {
+                session.setAttribute("ERROR", "All fields are required!");
+                response.sendRedirect("MainServlet?action=create-car-page");
+                return;
             }
 
-            // Trả lại danh sách khách hàng và thông báo đến trang SaleDashboard.jsp
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
-        
-            
+            // Tạo đối tượng Car và gọi DAO để thêm xe vào cơ sở dữ liệu
+            Car newCar = new Car(colour, serialNumber, model, colour, year, price);
+            CarDAO carDAO = new CarDAO();
+            boolean isCreated = carDAO.addCar(newCar);
+
+            // Kiểm tra kết quả từ DAO
+            if (isCreated) {
+                session.setAttribute("MESSAGE", "Car created successfully!");
+            } else {
+                session.setAttribute("ERROR", "Car creation failed. Please try again.");
+            }
+
+            // Chuyển hướng đến trang CreateCar.jsp để hiển thị thông báo
+            response.sendRedirect("MainServlet?action=create-car-page");
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("ERROR", "An error occurred while deleting the customer. Please try again.");
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+            request.setAttribute("ERROR", "System error. Please try again!");
+            response.sendRedirect("MainServlet?action=create-car-page");
         }
-    }
-
+}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

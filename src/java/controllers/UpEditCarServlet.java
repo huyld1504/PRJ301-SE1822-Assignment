@@ -6,7 +6,6 @@
 package controllers;
 
 import dao.CarDAO;
-import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -14,13 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.Car;
 import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class DeleteCustomerServlet extends HttpServlet {
+public class UpEditCarServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,10 +33,14 @@ public class DeleteCustomerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
+        
         try (PrintWriter out = response.getWriter()) {
-
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            
+            // Kiểm tra session và lấy thông tin SalesPerson
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -46,30 +50,36 @@ public class DeleteCustomerServlet extends HttpServlet {
                 return;
             }
 
-            String custID = request.getParameter("id");
-            SalePersonDAO saleDAO = new SalePersonDAO();
+            // Lấy carID và các tham số từ form
+            String carId = request.getParameter("carID");
+            String serialNumber = request.getParameter("serialNumber");
+            String model = request.getParameter("model");
+            String colour = request.getParameter("colour");
+            int year = Integer.parseInt(request.getParameter("year"));
+            double price = Double.parseDouble(request.getParameter("price"));  // Lấy giá trị price từ form
 
-            // Lấy tên khách hàng từ cơ sở dữ liệu trước khi xóa
-            String customerName = saleDAO.getCustomerNameById(custID);
-
-            // Xóa khách hàng
-            boolean isDeleted = saleDAO.deleteCustomer(custID);
-
-            if (isDeleted) {
-                // Nếu xóa thành công, chuyển thông báo thành công với tên khách hàng
-                request.setAttribute("MESSAGE", "Customer " + customerName + " deleted successfully!");
-            } else {
-                // Nếu xóa thất bại, chuyển thông báo lỗi
-                request.setAttribute("ERROR", "Customer deletion failed. Please try again!");
+            if (carId == null || carId.isEmpty()) {
+                request.setAttribute("ERROR", "Car ID cannot be empty.");
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+                return;
             }
 
-            // Trả lại danh sách khách hàng và thông báo đến trang SaleDashboard.jsp
+            // Tạo đối tượng Car mới để cập nhật
+            Car updatedCar = new Car(carId, serialNumber, model, colour, year, price);
+            CarDAO carDAO = new CarDAO();
+            boolean isUpdated = carDAO.updateCar(updatedCar);
+
+            if (isUpdated) {
+                request.setAttribute("MESSAGE", "Car updated successfully!");
+            } else {
+                request.setAttribute("ERROR", "Error updating car. Please try again.");
+            }
+
             request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
-        
-            
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("ERROR", "An error occurred while deleting the customer. Please try again.");
+            request.setAttribute("ERROR", "System error, please try again.");
             request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
     }
