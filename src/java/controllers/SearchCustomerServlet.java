@@ -13,7 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import models.Customer;
+import models.SalesPerson;
 
 /**
  *
@@ -39,6 +41,16 @@ public class SearchCustomerServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             
+            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
+
+            if (salesPerson == null) {
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
+            }
+            
             // Lấy thông tin tìm kiếm từ form
             String searchName = request.getParameter("search_name");
 
@@ -56,12 +68,12 @@ public class SearchCustomerServlet extends HttpServlet {
             request.setAttribute("CUSTOMER_LIST", customerList);
 
             // Chuyển hướng đến trang SearchCustomer.jsp để hiển thị kết quả
-            request.getRequestDispatcher("SearchCustomer.jsp").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=search-customer-page").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("ERROR", "Error during customer search.");
-            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
     }
 

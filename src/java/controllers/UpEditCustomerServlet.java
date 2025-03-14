@@ -56,14 +56,14 @@ public class UpEditCustomerServlet extends HttpServlet {
             String customerSex = request.getParameter("customer_sex");
             String customerAddress = request.getParameter("customer_address");
 
-// Kiểm tra nếu customerId rỗng
+            // Kiểm tra nếu customerId rỗng
             if (customerId == null || customerId.isEmpty()) {
                 request.setAttribute("ERROR", "Customer ID cannot be empty.");
-                request.getRequestDispatcher("EditCustomer.jsp").forward(request, response);
+                request.getRequestDispatcher("MainServlet?action=edit-customer-page").forward(request, response);
                 return;
             }
 
-// Tạo đối tượng Customer mới để cập nhật
+            // Tạo đối tượng Customer mới để cập nhật
             Customer updatedCustomer = new Customer(customerId, customerName, customerPhone, customerAddress, customerSex);
             SalePersonDAO salePersonDAO = new SalePersonDAO();
             boolean isUpdated = salePersonDAO.updateCustomer(customerId, updatedCustomer); // Gọi phương thức updateCustomer trong SalePersonDAO
@@ -74,12 +74,12 @@ public class UpEditCustomerServlet extends HttpServlet {
                 request.setAttribute("ERROR", "Error updating customer. Please try again.");
             }
 
-            request.getRequestDispatcher("EditCustomer.jsp").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=edit-customer-page").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("ERROR", "System error, please try again.");
-            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
     }
 
