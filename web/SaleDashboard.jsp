@@ -88,7 +88,7 @@
 
                     <!-- The Part -->
                     <div class="col-lg-5 col-md-6">
-                        <a href="MainServlet?action=the-part" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
+                        <a href="MainServlet?action=get-part-page" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
                             <i class="fa-solid fa-gears"></i> The Part
                         </a>
                     </div>

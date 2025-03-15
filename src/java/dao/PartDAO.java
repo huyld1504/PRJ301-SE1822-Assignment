@@ -25,10 +25,10 @@ public class PartDAO {
                     Double purchasePrice = rs.getDouble("purchasePrice");
                     Double retailPrice = rs.getDouble("retailPrice");
                     list.add(new Part(partID, partName, purchasePrice, retailPrice));
-                    System.out.println(partID);
-                    System.out.println(partName);
-                    System.out.println(purchasePrice);
-                    System.out.println(retailPrice);
+//                    System.out.println(partID);
+//                    System.out.println(partName);
+//                    System.out.println(purchasePrice);
+//                    System.out.println(retailPrice);
                 }
             } else {
                 System.out.println("ERROR");

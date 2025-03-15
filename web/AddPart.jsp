@@ -43,32 +43,32 @@
                         <label for="partID" class="form-label">Part ID</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa-solid fa-cogs"></i></span>
-                            <input type="text" class="form-control" id="part_id" name="part_id" placeholder="Enter the part id" required
-                                   value="${param.part_id}">
+                            <input type="text" class="form-control" id="partID" name="partID" placeholder="Enter the part id" required
+                                   value="${param.partID}">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="partName" class="form-label">Part Name</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa-solid fa-cogs"></i></span>
-                            <input type="text" class="form-control" id="part_name" name="part_name" placeholder="Enter the part name" required
-                                   value="${param.part_name}">
+                            <input type="text" class="form-control" id="partName" name="partName" placeholder="Enter the part name" required
+                                   value="${param.partName}">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="purchasePrice" class="form-label">Purchase Price</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa-solid fa-dollar-sign"></i></span>
-                            <input type="number" class="form-control" id="purchase_price" name="purchase_price" placeholder="Enter the purchase price" required
-                                   value="${param.purchase_price}">
+                            <input type="number" class="form-control" id="purchasePrice" name="purchasePrice" placeholder="Enter the purchase price" required
+                                   value="${param.purchasePrice}">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="retailPrice" class="form-label">Retail Price</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa-solid fa-tag"></i></span>
-                            <input type="number" class="form-control" id="retail_price" name="retail_price" placeholder="Enter the retail price" required
-                                   value="${param.retail_price}">
+                            <input type="number" class="form-control" id="retailPrice" name="retailPrice" placeholder="Enter the retail price" required
+                                   value="${param.retailPrice}">
                         </div>
                     </div>
                         <input type="hidden" name="action" value="add-part-page">

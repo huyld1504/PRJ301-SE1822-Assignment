@@ -38,7 +38,7 @@
                 </a>
 
                 <!-- Search Form -->
-                <form class="d-flex" action="MainServlet" method="post">
+                <form class="d-flex" action="MainServlet" method="get">
                     <input type="hidden" name="action" value="search-part"/>
                     <input class="form-control me-2" type="text" name="partName" 
                            placeholder="Enter the part name" 
@@ -58,7 +58,7 @@
             <table class="table table-bordered table-striped">
                 <thead class="table-info">
                     <tr>
-                        <th>Part ID</th>
+                        <th>Part ID</th>       
                         <th>Part Name</th>
                         <th>Purchase Price</th>
                         <th>Retail Price</th>
@@ -67,7 +67,7 @@
                 </thead>
                 <tbody>
                     <c:choose>
-                        <c:when test="${not empty requestScope.RESULT}">
+                        <c:when test="${param.partName != null && param.partName != '' && not empty requestScope.RESULT}">
                             <c:forEach var="part" items="${requestScope.RESULT}">
                                 <tr>
                                     <td>${part.partID}</td>
@@ -108,7 +108,7 @@
                         </c:when>
 
                      
-                        <c:when test="${not empty sessionScope.partList}">
+                        <c:when test="${(param.partName == null || param.partName == '') && not empty sessionScope.partList && empty requestScope.RESULT}">
                             <c:forEach var="part" items="${sessionScope.partList}">
                                 <tr>
                                     <td>${part.partID}</td>
