@@ -48,7 +48,7 @@
                             </button>
                             <ul class="dropdown-menu w-100">
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=create-customer-page"><i class="fa-solid fa-plus"></i> Create</a></li>
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=read-customer"><i class="fa-solid fa-eye"></i> Read</a></li>                        
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=read-customer"><i class="fa-solid fa-eye"></i> Read</a></li>
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=search-customer-page"><i class="fa-solid fa-search"></i> Search by Name</a></li>
                             </ul>
                         </div>
@@ -60,10 +60,10 @@
                             <button class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded dropdown-toggle" data-bs-toggle="dropdown">
                                 <i class="fa-solid fa-car"></i> Car
                             </button>
-                            <ul class="dropdown-menu w-100">
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=create-car"><i class="fa-solid fa-plus"></i> Create</a></li>
+                            <ul class="dropdown-menu w-100" style="min-width: 250px;">
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=create-car-page"><i class="fa-solid fa-plus"></i> Create</a></li>
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=read-car"><i class="fa-solid fa-eye"></i> Read</a></li>
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=search-car-serial-model-year"><i class="fa-solid fa-search"></i> Search by Serial - Model - Year</a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=search-car"><i class="fa-solid fa-search"></i> Search </a></li>
                             </ul>
                         </div>
                     </div>
@@ -100,8 +100,9 @@
                         </a>
                     </div>
 
-                </div>
+                </div>               
                 <br/>
+                
                 <!-- Display Success/Error Message -->
                 <c:if test="${requestScope.MESSAGE != null}">
                     <div class="alert alert-success alert-dismissible fade show w-25 z-3 position-absolute" role="alert">
@@ -147,7 +148,9 @@
                                                 <a href="MainServlet?action=edit-customer&id=${customer.custID}" class="btn btn-warning btn-sm">
                                                     <i class="fa-solid fa-pen"></i> Edit
                                                 </a>
-                                                <a href="MainServlet?action=delete-customer&id=${customer.custID}" class="btn btn-danger btn-sm">
+                                                <a href="MainServlet?action=delete-customer&id=${customer.custID}" 
+                                                   class="btn btn-danger btn-sm" 
+                                                   onclick="return confirm('Are you sure you want to delete this customer?');">
                                                     <i class="fa-solid fa-trash"></i> Delete
                                                 </a>
                                             </td>
@@ -158,6 +161,53 @@
                         </div>
                     </div>
                 </c:if>
+
+                <!-- Car List -->
+                <c:if test="${not empty CAR_LIST}">
+                    <div class="container mt-5">
+                        <h2 class="text-center text-primary fw-bold">Car List</h2>
+
+                        <!-- Car Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center align-middle">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th>Car ID</th>
+                                        <th>Serial Number</th>
+                                        <th>Model</th>
+                                        <th>Colour</th>
+                                        <th>Year</th>
+                                        <th>Price</th>  <!-- Cột giá -->
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="car" items="${CAR_LIST}">
+                                        <tr>
+                                            <td>${car.carID}</td>
+                                            <td>${car.serialNumber}</td>
+                                            <td>${car.model}</td>
+                                            <td>${car.colour}</td>
+                                            <td>${car.year}</td>
+                                            <td>${car.price}</td>  
+                                            <td>
+                                                <a href="MainServlet?action=edit-car&id=${car.carID}" class="btn btn-warning btn-sm">
+                                                    <i class="fa-solid fa-pen"></i> Edit
+                                                </a>
+                                                <a href="MainServlet?action=delete-car&id=${car.carID}" 
+                                                   class="btn btn-danger btn-sm" 
+                                                   onclick="return confirm('Are you sure you want to delete this car?');">
+                                                    <i class="fa-solid fa-trash"></i> Delete
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </c:if>
+
 
             </div>
         </c:if>

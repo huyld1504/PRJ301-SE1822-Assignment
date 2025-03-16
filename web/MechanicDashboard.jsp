@@ -71,6 +71,25 @@
                     </div>
                 </div>
             </nav>
+            <form action="MainServlet" method="get" class="row g-3 p-4 mt-4 mx-5 border rounded shadow-lg bg-light">
+                <input type="hidden" name="action" value="search-service-ticket"/>
+                <input type="hidden" name="mechanicID" value="${MECHANIC.mechanicID}"/>
+                <div class="col-md-4">
+                    <label for="serialNumber" class="form-label fw-bold">Customer ID</label>
+                    <input type="text" class="form-control" name="customerID" placeholder="Enter customer ID" value="${param.custID}"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="model" class="form-label fw-bold">Car ID</label>
+                    <input type="text" class="form-control" name="carID" placeholder="Enter car ID" value="${param.carID}"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="year" class="form-label fw-bold">Date Received</label>
+                    <input type="date" class="form-control" name="dateReceived" value="${param.dateReceived}"/>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary fw-bold px-5 py-2">Search</button>
+                </div>
+            </form>
             <c:if test="${sessionScope.SERVICE_TICKET_LIST != null}">
                 <table class="table table-striped w-75 mx-auto mt-5">
                     <tr class="fw-bold">
@@ -85,13 +104,13 @@
                             <td>${ticket.dateReceived.toString()}</td>
                             <td>${ticket.dateReaturned.toString()}</td>
                             <td>
-                                <a href="MainServlet?action=ticket-detail&serviceTicketID=${ticket.serviceTicketID}"><i class="fa-solid fa-circle-info fs-4"></i></a>
+                                <a href="MainServlet?action=ticket-detail&serviceTicketID=${ticket.serviceTicketID}&carID=${ticket.carID}"><i class="fa-solid fa-circle-info fs-4"></i></a>
                             </td>
                         </tr>
                     </c:forEach>
                 </table>
                 <c:if test="${requestScope.MESSAGE != null}">
-                    <div class="alert alert-danger w-75" role="alert">
+                    <div class="alert alert-danger w-75 mx-auto" role="alert">
                         ${requestScope.MESSAGE}
                     </div>
                 </c:if>

@@ -181,6 +181,38 @@ public class MainServlet extends HttpServlet {
                 //delete-part
                 case "delete-part":
                     base_url = "DeletePartServlet";
+                case "read-car-page":
+                    base_url = "ReadCar.jsp";
+                    break;
+                case "read-car":
+                    base_url = "ReadCarServlet";
+                    break;    
+                case "create-car-page":
+                    base_url = "CreateCar.jsp";
+                    break;    
+                case "create-car":
+                    base_url = "CreateCarServlet";
+                    break;
+                case "edit-car-page":
+                    base_url = "UpdateCar.jsp";
+                    break;    
+                case "edit-car":
+                    base_url = "UpdateCarServlet";
+                    break;    
+                case "up-edit-car":
+                    base_url = "UpEditCarServlet";
+                    break;    
+                case "delete-car":
+                    base_url = "DeleteCarServlet";
+                    break;
+                case "search-car-page":
+                    base_url = "SearchCar.jsp";
+                    break;
+                case "search-car":
+                    base_url = "SearchCarServlet";
+                    break;
+                case "search-service-ticket":
+                    base_url = "SearchServiceTicketServlet";
                     break;
                 default:
                     base_url = "index.html";

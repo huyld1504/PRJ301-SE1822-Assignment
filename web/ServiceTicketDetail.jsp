@@ -32,7 +32,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-50 fs-5 d-flex justify-content-around align-items-center">
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="#">
+                                <a class="nav-link" aria-current="page" href="MainServlet?action=mechanic-dashboard">
                                     <i class="fa-solid fa-house"></i>
                                     Home
                                 </a>
@@ -71,8 +71,27 @@
                     </div>
                 </div>
             </nav>
+            <form action="MainServlet" method="get" class="row g-3 p-4 mt-4 mx-5 border rounded shadow-lg bg-light">
+                <input type="hidden" name="action" value="search-service-ticket"/>
+                <input type="hidden" name="mechanicID" value="${MECHANIC.mechanicID}"/>
+                <div class="col-md-4">
+                    <label for="serialNumber" class="form-label fw-bold">Customer ID</label>
+                    <input type="text" class="form-control" name="customerID" placeholder="Enter customer ID" value="${param.custID}"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="model" class="form-label fw-bold">Car ID</label>
+                    <input type="text" class="form-control" name="carID" placeholder="Enter car ID" value="${param.carID}"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="year" class="form-label fw-bold">Date Received</label>
+                    <input type="date" class="form-control" name="dateReceived" value="${param.dateReceived}"/>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary fw-bold px-5 py-2">Search</button>
+                </div>
+            </form>
             <c:if test="${sessionScope.SERVICE_TICKET_LIST != null}">
-                <table class="table table-striped w-75 mx-auto mt-5">
+                <table class="table table-striped mt-5 w-75 mx-5">
                     <tr class="fw-bold">
                         <td>Service ID</td>
                         <td>Hours</td>              
@@ -109,9 +128,38 @@
                     </c:forEach>
                 </table>
 
+                <c:if test="${sessionScope.CUSTOMER_TICKET != null}">
+                    <div class="card mt-5 w-25 mx-5" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Customer Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${sessionScope.CUSTOMER_TICKET.custID}</li>
+                            <li class="list-group-item">Customer name: ${sessionScope.CUSTOMER_TICKET.custName}</li>
+                            <li class="list-group-item">Customer phone: ${sessionScope.CUSTOMER_TICKET.phone}</li>
+                        </ul>
+                    </div>
+                </c:if>
+
+                <c:if test="${sessionScope.CAR_OF_CUSTOMER != null}">
+                    <div class="card my-5 w-25 mx-5" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Car Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${sessionScope.CAR_OF_CUSTOMER.carID}</li>
+                            <li class="list-group-item">Serial number: ${sessionScope.CAR_OF_CUSTOMER.serialNumber}</li>
+                            <li class="list-group-item">Model: ${sessionScope.CAR_OF_CUSTOMER.model}</li>
+                            <li class="list-group-item">Colour: ${sessionScope.CAR_OF_CUSTOMER.colour}</li>
+                            <li class="list-group-item">Year: ${sessionScope.CAR_OF_CUSTOMER.year}</li>
+                            <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.CAR_OF_CUSTOMER.price}" pattern="#,###" />VND</li>
+                        </ul>
+                    </div>
+                </c:if>
+
                 <c:if test="${requestScope.ERROR != null}">
-                    <div class="alert alert-danger alert-dismissible fade show w-75 mx-auto z-3" role="alert">
-                        ${requestScope.ERROR}
+                    <div class="alert alert-danger alert-dismissible fade show mx-auto z-3" role="alert">
+                        ${requestScope.MESSAGE}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>

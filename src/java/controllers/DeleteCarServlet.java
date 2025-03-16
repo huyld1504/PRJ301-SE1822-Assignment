@@ -6,25 +6,20 @@
 package controllers;
 
 import dao.CarDAO;
-import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Car;
-import models.ServiceMeChanic;
+import models.SalesPerson;
 
 /**
  *
- * @author Asus
+ * @author Thanh Vinh
  */
-@WebServlet(name = "CustomerGetServiceTicketDetailServlet", urlPatterns = {"/CustomerGetServiceTicketDetailServlet"})
-public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
+public class DeleteCarServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,26 +34,41 @@ public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceTicketID = request.getParameter("service_ticket_id");
-            String carID = request.getParameter("car_id");
+            
+            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
-            ServiceMechanicDAO serviceMechanicDAO = new ServiceMechanicDAO();
-            ArrayList<ServiceMeChanic> serviceMechanicList = serviceMechanicDAO.getServiceMechanicByServiceTicketID(serviceTicketID);
-
-            //when have car dao
-            CarDAO carDao = new CarDAO();
-            Car c = carDao.getCarById(carID);
-
-            if (serviceMechanicList != null && !serviceMechanicList.isEmpty()) {
-                HttpSession s = request.getSession();
-                s.setAttribute("car", c);
-                s.setAttribute("SERVICE_MECHANIC_CUS_LIST", serviceMechanicList);
-                response.sendRedirect("MainServlet?action=customer-dashboard");
-            } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+            if (salesPerson == null) {
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
             }
+
+            String carID = request.getParameter("id");
+            CarDAO carDAO = new CarDAO();
+
+            // Lấy thông tin xe trước khi xóa (model và carID)
+            String carModel = carDAO.getCarModelById(carID);
+
+            // Xóa xe
+            boolean isDeleted = carDAO.deleteCar(carID);
+
+            if (isDeleted) {
+                // Nếu xóa thành công, chuyển thông báo thành công với model và carID của xe
+                request.setAttribute("MESSAGE", "Car with Model: " + carModel + " and Car ID: " + carID + " deleted successfully!");
+            } else {
+                // Nếu xóa thất bại, chuyển thông báo lỗi
+                request.setAttribute("ERROR", "Car deletion failed. Please try again!");
+            }
+
+            // Trả lại danh sách xe và thông báo đến trang đọc xe
+            request.getRequestDispatcher("MainServlet?action=read-car").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "An error occurred while deleting the car. Please try again.");
+            request.getRequestDispatcher("MainServlet?action=read-car").forward(request, response);
         }
     }
 

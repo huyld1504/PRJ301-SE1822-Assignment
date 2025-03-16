@@ -99,6 +99,23 @@
                         </tr>
                     </c:forEach>
                 </table>
+
+                <c:if test="${sessionScope.car != null}">
+                    <div class="card mx-auto mt-5 w-25" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Car Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${sessionScope.car.carID}</li>
+                            <li class="list-group-item">Serial number: ${sessionScope.car.serialNumber}</li>
+                            <li class="list-group-item">Model: ${sessionScope.car.model}</li>
+                            <li class="list-group-item">Colour: ${sessionScope.car.colour}</li>
+                            <li class="list-group-item">Year: ${sessionScope.car.year}</li>
+                            <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.car.price}" pattern="#,###" />VND</li>
+                        </ul>
+                    </div>
+                </c:if>
+
                 <c:if test="${sessionScope.SERVICE_MECHANIC_CUS_LIST != null and !sessionScope.SERVICE_MECHANIC_CUS_LIST.isEmpty()}">
                     <p class="fs-4 fw-bold w-100 text-center mt-5">Your Service ticket detail</p>
                     <table class="table table-striped w-75 mx-auto mt-3">
@@ -124,6 +141,7 @@
                                         <input type="hidden" name="action" value="get-customer-service-mechanic-detail">
                                         <input type="hidden" name="serviceID" value="${ticket.serviceID}">
                                         <input type="hidden" name="mechanicID" value="${ticket.mechanicID}">
+                                        <input type="hidden" name="carID" value="${param.carID}">
                                         <button type="sumit" class="btn btn-primary btn-sm">
                                             Detail
                                         </button>
@@ -131,21 +149,22 @@
                                 </td>
                             </tr>
                         </c:forEach>
-                    </c:if>
-                </c:if>
-                <c:if test="${requestScope.MESSAGE != null}">
-                    <div class="alert alert-danger w-75" role="alert">
-                        ${requestScope.MESSAGE}
-                    </div>
+                    </table>
                 </c:if>
             </c:if>
-
-            <c:if test="${sessionScope.CUSTOMER == null}">
-                <div class="alert alert-danger" role="alert">
-                    You don't have any permission to access this resource. Please <a href="MainServlet?action=home" class="alert-link fw-bold">login here</a>!
+            <c:if test="${requestScope.MESSAGE != null}">
+                <div class="alert alert-danger w-75" role="alert">
+                    ${requestScope.MESSAGE}
                 </div>
             </c:if>
+        </c:if>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <c:if test="${sessionScope.CUSTOMER == null}">
+            <div class="alert alert-danger" role="alert">
+                You don't have any permission to access this resource. Please <a href="MainServlet?action=home" class="alert-link fw-bold">login here</a>!
+            </div>
+        </c:if>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>

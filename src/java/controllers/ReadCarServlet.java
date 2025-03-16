@@ -6,25 +6,22 @@
 package controllers;
 
 import dao.CarDAO;
-import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import models.Car;
-import models.ServiceMeChanic;
+import models.SalesPerson;
 
 /**
  *
- * @author Asus
+ * @author Thanh Vinh
  */
-@WebServlet(name = "CustomerGetServiceTicketDetailServlet", urlPatterns = {"/CustomerGetServiceTicketDetailServlet"})
-public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
+public class ReadCarServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,26 +36,31 @@ public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceTicketID = request.getParameter("service_ticket_id");
-            String carID = request.getParameter("car_id");
+            
+            // Lấy SalesPerson từ session
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
-            ServiceMechanicDAO serviceMechanicDAO = new ServiceMechanicDAO();
-            ArrayList<ServiceMeChanic> serviceMechanicList = serviceMechanicDAO.getServiceMechanicByServiceTicketID(serviceTicketID);
-
-            //when have car dao
-            CarDAO carDao = new CarDAO();
-            Car c = carDao.getCarById(carID);
-
-            if (serviceMechanicList != null && !serviceMechanicList.isEmpty()) {
-                HttpSession s = request.getSession();
-                s.setAttribute("car", c);
-                s.setAttribute("SERVICE_MECHANIC_CUS_LIST", serviceMechanicList);
-                response.sendRedirect("MainServlet?action=customer-dashboard");
-            } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+            if (salesPerson == null) {
+                // Nếu không có session, báo lỗi và quay về login
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
             }
+
+            // Lấy danh sách xe theo salesID
+            String salesID = salesPerson.getSalesID();
+            CarDAO carDAO = new CarDAO();
+            ArrayList<Car> cars = carDAO.getAllCars(); // Gọi phương thức để lấy danh sách xe
+
+            // Gửi danh sách xe sang trang JSP
+            request.setAttribute("CAR_LIST", cars);
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "Error loading car list!");
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
     }
 

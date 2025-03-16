@@ -60,12 +60,12 @@ public class ReadCustomerServlet extends HttpServlet {
 
             // Gửi danh sách khách hàng sang trang JSP
             request.setAttribute("CUSTOMER_LIST", customers);
-            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("ERROR", "Error loading customer list!");
-            request.getRequestDispatcher("SaleDashboard.jsp").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
 
     }
