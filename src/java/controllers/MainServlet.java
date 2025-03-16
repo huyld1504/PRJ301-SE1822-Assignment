@@ -37,7 +37,6 @@ public class MainServlet extends HttpServlet {
             if (request.getParameter("action") != null) {
                 action = request.getParameter("action");
             }
-            System.out.println(action);
             switch (action) {
                 case "home":
                     //Write the page that you want to view
