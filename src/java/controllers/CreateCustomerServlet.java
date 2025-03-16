@@ -41,7 +41,16 @@ public class CreateCustomerServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
 
+            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
+            if (salesPerson == null) {
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
+            }
+            
             // Lấy thông tin từ form
             String custName = request.getParameter("custName");
             String phone = request.getParameter("phone");
@@ -52,17 +61,7 @@ public class CreateCustomerServlet extends HttpServlet {
             if (custName == null || phone == null || sex == null || cusAddress == null
                     || custName.isEmpty() || phone.isEmpty() || sex.isEmpty() || cusAddress.isEmpty()) {
                 request.setAttribute("ERROR", "All fields are required!");
-                request.getRequestDispatcher("CreateCustomer.jsp").forward(request, response);
-                return;
-            }
-
-            // Lấy thông tin SalesPerson từ session
-            HttpSession session = request.getSession();
-            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
-
-            if (salesPerson == null) {
-                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
-                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                request.getRequestDispatcher("MainServlet?action=create-customer-page").forward(request, response);
                 return;
             }
 
@@ -81,12 +80,12 @@ public class CreateCustomerServlet extends HttpServlet {
             }
 
             // Quay lại trang CreateCustomer.jsp với thông báo thành công hoặc lỗi
-            request.getRequestDispatcher("CreateCustomer.jsp").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=create-customer-page").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("ERROR", "System error. Please try again!");
-            request.getRequestDispatcher("CreateCustomer.jsp").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=create-customer-page").forward(request, response);
         }
     }
     

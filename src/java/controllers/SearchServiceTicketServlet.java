@@ -5,26 +5,27 @@
  */
 package controllers;
 
-import dao.CarDAO;
-import dao.ServiceMechanicDAO;
+import dao.ServiceTicketDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Car;
-import models.ServiceMeChanic;
+import models.ServiceTicket;
+import utils.StringUtils;
 
 /**
  *
  * @author Asus
  */
-@WebServlet(name = "CustomerGetServiceTicketDetailServlet", urlPatterns = {"/CustomerGetServiceTicketDetailServlet"})
-public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
+@WebServlet(name = "SearchServiceTicketServlet", urlPatterns = {"/SearchServiceTicketServlet"})
+public class SearchServiceTicketServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,25 +40,22 @@ public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceTicketID = request.getParameter("service_ticket_id");
-            String carID = request.getParameter("car_id");
+            String custID = request.getParameter("customerID");
+            String carID = request.getParameter("carID");
+            String mechanicID = request.getParameter("mechanicID");
 
-            ServiceMechanicDAO serviceMechanicDAO = new ServiceMechanicDAO();
-            ArrayList<ServiceMeChanic> serviceMechanicList = serviceMechanicDAO.getServiceMechanicByServiceTicketID(serviceTicketID);
+            String dateReceived = request.getParameter("dateReceived");
 
-            //when have car dao
-            CarDAO carDao = new CarDAO();
-            Car c = carDao.getCarById(carID);
+            ServiceTicketDAO ser = new ServiceTicketDAO();
+            ArrayList<ServiceTicket> list = ser.searchServiceTicket(custID, carID, dateReceived, mechanicID);
+            HttpSession s = request.getSession();
+            s.setAttribute("SERVICE_TICKET_LIST", list);
 
-            if (serviceMechanicList != null && !serviceMechanicList.isEmpty()) {
-                HttpSession s = request.getSession();
-                s.setAttribute("car", c);
-                s.setAttribute("SERVICE_MECHANIC_CUS_LIST", serviceMechanicList);
-                response.sendRedirect("MainServlet?action=customer-dashboard");
+            if (list != null && !list.isEmpty()) {
+                response.sendRedirect("MainServlet?action=mechanic-dashboard");
             } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+                request.setAttribute("MESSAGE", "Service tickets not found.");
+                request.getRequestDispatcher("MainServlet?action=mechanic-dashboard&custID" + custID + "&carID=" + carID + "&ateReceived=" + dateReceived).forward(request, response);
             }
         }
     }

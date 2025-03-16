@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.CarDAO;
 import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,7 +36,7 @@ public class DeleteCustomerServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-             // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -72,7 +73,6 @@ public class DeleteCustomerServlet extends HttpServlet {
             request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
     }
-
 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

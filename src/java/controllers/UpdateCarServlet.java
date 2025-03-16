@@ -6,25 +6,21 @@
 package controllers;
 
 import dao.CarDAO;
-import dao.ServiceMechanicDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import models.Car;
-import models.ServiceMeChanic;
+import models.SalesPerson;
 
 /**
  *
- * @author Asus
+ * @author Thanh Vinh
  */
-@WebServlet(name = "CustomerGetServiceTicketDetailServlet", urlPatterns = {"/CustomerGetServiceTicketDetailServlet"})
-public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
+public class UpdateCarServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,30 +33,52 @@ public class CustomerGetServiceTicketDetailServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
+        
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceTicketID = request.getParameter("service_ticket_id");
-            String carID = request.getParameter("car_id");
+            
+            // Kiểm tra session và lấy thông tin SalesPerson
+            HttpSession session = request.getSession(false);
+            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
-            ServiceMechanicDAO serviceMechanicDAO = new ServiceMechanicDAO();
-            ArrayList<ServiceMeChanic> serviceMechanicList = serviceMechanicDAO.getServiceMechanicByServiceTicketID(serviceTicketID);
-
-            //when have car dao
-            CarDAO carDao = new CarDAO();
-            Car c = carDao.getCarById(carID);
-
-            if (serviceMechanicList != null && !serviceMechanicList.isEmpty()) {
-                HttpSession s = request.getSession();
-                s.setAttribute("car", c);
-                s.setAttribute("SERVICE_MECHANIC_CUS_LIST", serviceMechanicList);
-                response.sendRedirect("MainServlet?action=customer-dashboard");
-            } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+            if (salesPerson == null) {
+                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
+                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+                return;
             }
+
+            // Lấy carID từ URL
+            String carId = request.getParameter("id");
+
+            if (carId == null || carId.isEmpty()) {
+                request.setAttribute("ERROR", "Car ID is missing.");
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+                return;
+            }
+
+            // Gọi DAO để lấy thông tin xe
+            CarDAO carDAO = new CarDAO();
+            Car car = carDAO.getCarById(carId);
+
+            if (car == null) {
+                request.setAttribute("ERROR", "Car not found.");
+                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+                return;
+            }
+
+            request.setAttribute("car", car);
+            request.getRequestDispatcher("MainServlet?action=edit-car-page").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "System error. Please try again.");
+            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         }
     }
+
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
