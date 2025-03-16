@@ -122,8 +122,14 @@ public class PartDAO {
         try {
             cn = DBUtils.getConnection();
             if (cn != null) {
-                String query = "DELETE FROM [dbo].[Parts] WHERE [partID] = ?";
-                ps = cn.prepareStatement(query);
+                String deletePartsUsedQuery = "DELETE FROM [dbo].[PartsUsed] WHERE [partID] = ?";
+                ps = cn.prepareStatement(deletePartsUsedQuery);
+                ps.setString(1, partID);
+                ps.executeUpdate();
+                ps.close();
+                
+                String deletePartQuery = "DELETE FROM [dbo].[Parts] WHERE [partID] = ?";
+                ps = cn.prepareStatement(deletePartQuery);
                 ps.setString(1, partID);
                 isDelete = ps.executeUpdate() > 0;
             }
