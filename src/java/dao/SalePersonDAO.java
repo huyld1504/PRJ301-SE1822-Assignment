@@ -463,8 +463,8 @@ public class SalePersonDAO {
             conn = DBUtils.getConnection();
             if (conn != null) {
                 String sql = "SELECT top 3 mechanicName, COUNT(serviceTicketID) AS RepairsHandled\n"
-                        + "FROM ServiceMehanic\n"
-                        + "JOIN Mechanic ON ServiceMehanic.mechanicID = Mechanic.mechanicID\n"
+                        + "FROM ServiceMechanic\n"
+                        + "JOIN Mechanic ON ServiceMechanic.mechanicID = Mechanic.mechanicID\n"
                         + "GROUP BY mechanicName\n"
                         + "ORDER BY RepairsHandled DESC";
                 PreparedStatement p = conn.prepareStatement(sql);

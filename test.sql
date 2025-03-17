@@ -1,4 +1,4 @@
-
+﻿
 select * 
 from SalesInvoice
 
@@ -21,7 +21,7 @@ ORDER BY Year DESC;
 select *
 from Cars
 
- -- L?y top 10 m?u xe b�n ch?y nh?t
+ -- Lấy top 10 mẫu xe bán chạy nhất
 SELECT top 10 model, COUNT(SalesInvoice.carID) AS TotalSold
 FROM SalesInvoice
 JOIN Cars ON SalesInvoice.carID = Cars.carID
@@ -29,7 +29,7 @@ GROUP BY model
 ORDER BY TotalSold DESC
 
 
--- L?y top 10 ph? t�ng ��?c s? d?ng nhi?u nh?t
+-- Lấy top 10 phụ tùng được sử dụng nhiều nhất
 SELECT top 10 partName, SUM(numberUsed) AS TotalUsed
 FROM PartsUsed
 JOIN Parts ON PartsUsed.partID = Parts.partID
@@ -37,17 +37,22 @@ GROUP BY partName
 ORDER BY TotalUsed DESC
 
 
-select mechanicID, COUNT(*) as total
-from ServiceMehanic
-group by mechanicID
-order by total desc
-
-
+select *
+from Mechanic
+-- top 3 thợ máy được giao sửa nhiều nhất
 SELECT top 3 mechanicName, COUNT(serviceTicketID) AS RepairsHandled
 FROM ServiceMehanic
 JOIN Mechanic ON ServiceMehanic.mechanicID = Mechanic.mechanicID
 GROUP BY mechanicName
 ORDER BY RepairsHandled DESC
+
+
+select * 
+from SalesPerson
+
+
+select * 
+from Cars
 
 
 
