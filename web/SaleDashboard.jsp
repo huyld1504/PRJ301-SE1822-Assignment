@@ -95,8 +95,8 @@
 
                     <!-- Create an Invoice -->
                     <div class="col-lg-5 col-md-6">
-                        <a href="MainServlet?action=create-invoice" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
-                            <i class="fa-solid fa-file-invoice"></i> Create an Invoice
+                        <a href="MainServlet?action=get-invoice-list" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
+                            <i class="fa-solid fa-file-invoice"></i> Invocie Customer
                         </a>
                     </div>
 

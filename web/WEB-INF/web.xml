@@ -204,6 +204,14 @@
         <servlet-name>SearchCarServlet</servlet-name>
         <servlet-class>controllers.SearchCarServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateInvoiceServlet</servlet-name>
+        <servlet-class>controllers.CreateInvoiceServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InvoiceListServlet</servlet-name>
+        <servlet-class>controllers.InvoiceListServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -339,6 +347,14 @@
     <servlet-mapping>
         <servlet-name>SearchCarServlet</servlet-name>
         <url-pattern>/SearchCarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateInvoiceServlet</servlet-name>
+        <url-pattern>/CreateInvoiceServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InvoiceListServlet</servlet-name>
+        <url-pattern>/InvoiceListServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
