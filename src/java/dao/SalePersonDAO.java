@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import models.Customer;
 import models.SalesPerson;
 import utils.DBUtils;
@@ -315,10 +317,225 @@ public class SalePersonDAO {
         return customerList;
     }
 
+    
+    // xe bán ra theo năm
+    public ArrayList<Map<String, Object>> getCarsSoldByYear() {
+        ArrayList<Map<String, Object>> report = new ArrayList<>();
+        Connection conn = null;
 
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                String sql = "SELECT YEAR(invoiceDate) AS year, COUNT(*) AS carsSold FROM dbo.SalesInvoice GROUP BY YEAR(invoiceDate)";
+                PreparedStatement p = conn.prepareStatement(sql);
+                ResultSet rs = p.executeQuery();
 
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("year", rs.getInt("year"));
+                    row.put("carsSold", rs.getInt("carsSold"));
+                    report.add(row);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return report;
+    }
+
+    // doanh thu bán xe theo năm
+    public ArrayList<Map<String, Object>> getCarSalesRevenueByYear() {
+        ArrayList<Map<String, Object>> report = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                String sql = "SELECT YEAR(invoiceDate) AS year, SUM(price) AS revenue FROM dbo.SalesInvoice JOIN dbo.Cars ON SalesInvoice.carID = Cars.carID GROUP BY YEAR(invoiceDate)";
+                PreparedStatement p = conn.prepareStatement(sql);
+                ResultSet rs = p.executeQuery();
+
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("year", rs.getInt("year"));
+                    row.put("revenue", rs.getDouble("revenue"));
+                    report.add(row);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return report;
+    }
+
+    // top 10 các mẫu xe bán chạy nhất
+    public ArrayList<Map<String, Object>> getBestSellingCarModels() {
+        ArrayList<Map<String, Object>> report = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                String sql = "SELECT top 10 model, COUNT(*) AS salesCount FROM dbo.SalesInvoice JOIN dbo.Cars ON SalesInvoice.carID = Cars.carID GROUP BY model ORDER BY salesCount DESC";
+                PreparedStatement p = conn.prepareStatement(sql);
+                ResultSet rs = p.executeQuery();
+
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("model", rs.getString("model"));
+                    row.put("salesCount", rs.getInt("salesCount"));
+                    report.add(row);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return report;
+    }
+
+    // top 10 các phụ tùng được sử dụng nhiều nhất
+    public ArrayList<Map<String, Object>> getBestUsedParts() {
+        ArrayList<Map<String, Object>> report = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                String sql = "SELECT top 10 partName, SUM(numberUsed) AS totalUsed FROM dbo.PartsUsed JOIN dbo.Parts ON PartsUsed.partID = Parts.partID GROUP BY partName ORDER BY totalUsed DESC";
+                PreparedStatement p = conn.prepareStatement(sql);
+                ResultSet rs = p.executeQuery();
+
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("partName", rs.getString("partName"));
+                    row.put("totalUsed", rs.getInt("totalUsed"));
+                    report.add(row);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return report;
+    }
+
+    // 3 thợ được giao sửa nhiều nhất
+    public ArrayList<Map<String, Object>> getTop3Mechanics() {
+        ArrayList<Map<String, Object>> report = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                String sql = "SELECT top 3 mechanicName, COUNT(serviceTicketID) AS RepairsHandled\n"
+                        + "FROM ServiceMechanic\n"
+                        + "JOIN Mechanic ON ServiceMechanic.mechanicID = Mechanic.mechanicID\n"
+                        + "GROUP BY mechanicName\n"
+                        + "ORDER BY RepairsHandled DESC";
+                PreparedStatement p = conn.prepareStatement(sql);
+                ResultSet rs = p.executeQuery();
+
+                while (rs.next()) {
+                    Map<String, Object> row = new HashMap<>();
+                    row.put("mechanicName", rs.getString("mechanicName"));
+                    row.put("repairsHandled", rs.getInt("repairsHandled"));
+                    report.add(row);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return report;
+    }
+
+    // cập nhật thông tin của sale
+    public boolean update(String salespersonID, SalesPerson newProfile) {
+        boolean isUpdated = false;
+        Connection conn = null;
+
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                // Cập nhật thông tin SalesPerson bao gồm cả ngày sinh
+                String sql = "UPDATE dbo.SalesPerson SET salesName=?, sex=?, salesAddress=?, birthday=? WHERE salesID=?";
+                PreparedStatement p = conn.prepareStatement(sql);
+
+                p.setString(1, newProfile.getSalesName());  // salesName
+                p.setString(2, newProfile.getSex());        // sex
+                p.setString(3, newProfile.getSalesAddress()); // salesAddress
+
+                // Chuyển đổi java.util.Date thành java.sql.Date
+                java.sql.Date sqlDate = new java.sql.Date(newProfile.getBirthday().getTime());
+                p.setDate(4, sqlDate);  // birthday
+
+                p.setString(5, salespersonID);              // salesID (để xác định bản ghi cần cập nhật)
+
+                int result = p.executeUpdate(); // Thực thi câu lệnh SQL
+                isUpdated = result > 0;  // Nếu có ít nhất một dòng bị ảnh hưởng, nghĩa là cập nhật thành công
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();  // Đóng kết nối sau khi thực thi
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isUpdated;
+    }
     
     
     
     
+    
+    
+    
+
 }
