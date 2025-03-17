@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import models.Car;
@@ -20,7 +21,7 @@ import utils.DBUtils;
  */
 public class CarDAO {
 
-    // Xem tất cả xe
+    // xem tất cả xe
     public ArrayList<Car> getAllCars() {
         ArrayList<Car> carList = new ArrayList<>();
         Connection conn = null;
@@ -41,7 +42,7 @@ public class CarDAO {
                     int year = rs.getInt("year");
                     double price = rs.getDouble("price");  // Lấy giá trị price (kiểu double)
 
-                    // Thêm đối tượng Car vào danh sách với đầy đủ thông tin
+                    // Thêm đối tượng Car vào danh sách với giá trị price là kiểu double
                     carList.add(new Car(carID, serialNumber, model, colour, year, price));
                 }
             }
@@ -58,6 +59,8 @@ public class CarDAO {
         }
         return carList;
     }
+
+
 
     // thêm car
     public boolean addCar(Car car) {
@@ -79,14 +82,15 @@ public class CarDAO {
                 }
 
                 // Chèn xe mới vào bảng
-                String sql = "INSERT INTO dbo.Cars (carID, serialNumber, model, colour, year) VALUES (?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO dbo.Cars (carID, serialNumber, model, colour, year, price) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement p = conn.prepareStatement(sql);
                 p.setInt(1, newCarID); // Gán carID tự động tạo
                 p.setString(2, car.getSerialNumber());
                 p.setString(3, car.getModel());
                 p.setString(4, car.getColour());
                 p.setInt(5, car.getYear());
-
+                p.setDouble(6, car.getPrice());
+                
                 int result = p.executeUpdate();  // Chèn xe mới vào bảng
                 isAdded = result > 0; // Kiểm tra việc thêm xe vào cơ sở dữ liệu
 

@@ -187,6 +187,29 @@ public class MainServlet extends HttpServlet {
                 case "search-car":
                     base_url = "SearchCarServlet";
                     break;
+                case "statistics-cars":
+                    base_url = "CarSalesReportByYearServlet";
+                    break;    
+                case "statistics-revenue":
+                    base_url = "CarSalesRevenueReportByYearServlet";
+                    break;
+                case "statistics-bestselling-models":
+                    base_url = "BestSellingCarModelsServlet";
+                    break;    
+                case "statistics-bestused-parts":
+                    base_url = "BestUsedPartsServlet";
+                    break;
+                case "statistics-top-mechanics":
+                    base_url = "TopMechanicsReportServlet";
+                    break;
+                case "sale-profile":
+                    base_url = "SaleProfile.jsp";
+                    break;
+
+                case "update-sale-profile":
+                    base_url = "UpdateSalesPersonProfileServlet";
+                    break;
+
                 default:
                     base_url = "index.html";
                     break;

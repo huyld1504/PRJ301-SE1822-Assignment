@@ -5,22 +5,22 @@
  */
 package controllers;
 
-import dao.CarDAO;
+import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Car;
 import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class UpEditCarServlet extends HttpServlet {
+public class UpdateSalesPersonProfileServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,14 +33,14 @@ public class UpEditCarServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        
+
         try (PrintWriter out = response.getWriter()) {
-            
-            // Kiểm tra session và lấy thông tin SalesPerson
+
+            // Kiểm tra session để xác thực người bán đã đăng nhập chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -49,41 +49,49 @@ public class UpEditCarServlet extends HttpServlet {
                 request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
                 return;
             }
+            
+            // Lấy thông tin mới từ form cập nhật
+            String salespersonID = request.getParameter("salesperson_id");
+            String salespersonName = request.getParameter("salesperson_name");
+            String salespersonSex = request.getParameter("salesperson_sex");
+            String salespersonAddress = request.getParameter("salesperson_address");
 
-            // Lấy carID và các tham số từ form
-            String carId = request.getParameter("carID");
-            String serialNumber = request.getParameter("serialNumber");
-            String model = request.getParameter("model");
-            String colour = request.getParameter("colour");
-            int year = Integer.parseInt(request.getParameter("year"));
-            double price = Double.parseDouble(request.getParameter("price"));  // Lấy giá trị price từ form
+            String salespersonBirthdayStr = request.getParameter("salesperson_birthday");
+            Date salespersonBirthday = null; // Khai báo biến trước khi kiểm tra
 
-            if (carId == null || carId.isEmpty()) {
-                request.setAttribute("ERROR", "Car ID cannot be empty.");
-                request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
-                return;
+            if (salespersonBirthdayStr != null && !salespersonBirthdayStr.isEmpty()) {
+                try {
+                    salespersonBirthday = Date.valueOf(salespersonBirthdayStr);  // Chuyển đổi từ String thành Date
+                } catch (IllegalArgumentException e) {
+                    request.setAttribute("ERROR", "Invalid date format. Please use yyyy-MM-dd.");
+                    request.getRequestDispatcher("MainServlet?action=sale-profile").forward(request, response);
+                    return; // Dừng lại nếu gặp lỗi
+                }
             }
 
-            // Tạo đối tượng Car mới để cập nhật
-            Car updatedCar = new Car(carId, serialNumber, model, colour, year, price);
-            CarDAO carDAO = new CarDAO();
-            boolean isUpdated = carDAO.updateCar(updatedCar);
+            // Tạo đối tượng SalesPerson mới với thông tin đã được cập nhật
+            SalesPerson newProfile = new SalesPerson(salespersonID, salespersonName, salespersonAddress, salespersonSex, salespersonBirthday);
 
+            System.out.println("Birthday: " + newProfile.getBirthday());
+
+            // Gọi DAO để cập nhật thông tin SalesPerson trong cơ sở dữ liệu
+            SalePersonDAO salesPersonDAO = new SalePersonDAO();
+            boolean isUpdated = salesPersonDAO.update(salespersonID, newProfile);
+
+            // Kiểm tra kết quả cập nhật
             if (isUpdated) {
-                request.setAttribute("MESSAGE", "Car updated successfully!");
+                // Cập nhật thông tin SalesPerson trong session
+                session = request.getSession(true);
+                session.setAttribute("SALE", newProfile);
+                request.setAttribute("MESSAGE", "Profile updated successfully!");
             } else {
-                request.setAttribute("ERROR", "Error updating car. Please try again.");
+                request.setAttribute("ERROR", "Failed to update profile!");
             }
 
-            request.getRequestDispatcher("MainServlet?action=read-car").forward(request, response);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("ERROR", "System error, please try again.");
-            request.getRequestDispatcher("MainServlet?action=read-car").forward(request, response);
+            // Chuyển hướng lại trang Profile
+            request.getRequestDispatcher("MainServlet?action=sale-profile").forward(request, response);
         }
     }
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
