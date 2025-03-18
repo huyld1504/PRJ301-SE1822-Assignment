@@ -5,8 +5,7 @@
  */
 package controllers;
 
-import dao.MechanicDAO;
-import dao.ServiceDAO;
+import dao.PartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -14,15 +13,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.Mechanic;
-import models.Service;
+import models.Part;
 
 /**
  *
  * @author Asus
  */
-@WebServlet(name = "GetCustomerServiceMechanicDetailServlet", urlPatterns = {"/GetCustomerServiceMechanicDetailServlet"})
-public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
+@WebServlet(name = "GetMechanicPartByIDServlet", urlPatterns = {"/GetMechanicPartByIDServlet"})
+public class GetMechanicPartByIDServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,27 +34,14 @@ public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceID = request.getParameter("serviceID");
-            String mechanicID = request.getParameter("mechanicID");
-
-            ServiceDAO serviceDAO = new ServiceDAO();
-            MechanicDAO mechanicDAO = new MechanicDAO();
-
-            Mechanic m = mechanicDAO.getMechanicByID(mechanicID);
-            Service s = serviceDAO.getServiceByID(serviceID);
-
-            if (s != null && m != null) {
-                request.setAttribute("mechanic", m);
-                request.setAttribute("service", s);
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
-            } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
-            }
+            String partID = request.getParameter("partID");
+            String serviceTicketID = request.getParameter("serviceTicketID");
+            
+            PartDAO partDAO = new PartDAO();
+            Part p = partDAO.getPartByID(partID);
+            request.setAttribute("part", p);
+            request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceticketID=" + serviceTicketID).forward(request, response);
         }
     }
 
