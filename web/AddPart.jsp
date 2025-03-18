@@ -28,7 +28,7 @@
         </style>
     </head>
     <body class="bg-fullscreen">
-         <div class="container form-container">
+        <div class="container form-container">
             <div class="card shadow-sm p-4 rounded-3">
                 <h3 class="text-center mb-4">ADD THE PARTS</h3>
 
@@ -71,7 +71,7 @@
                                    value="${param.retailPrice}">
                         </div>
                     </div>
-                        <input type="hidden" name="action" value="add-part-page">
+                    <input type="hidden" name="action" value="add-part-page">
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" onclick="window.history.back();">
                             <i class="fa-solid fa-arrow-left"></i> Cancel
@@ -81,7 +81,9 @@
                         </button>
                     </div>
                 </form>
-                
+                <c:if test="${not empty errorMessage}">
+                    <div style="color:red;">${errorMessage}</div>
+                </c:if>
             </div>
         </div>
     </body>

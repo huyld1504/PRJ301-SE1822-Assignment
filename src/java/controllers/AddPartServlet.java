@@ -33,35 +33,53 @@ public class AddPartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            response.setCharacterEncoding("UTF-8");
-            request.setCharacterEncoding("UTF-8");
-            String partID = request.getParameter("partID");
-            String partName = request.getParameter("partName");
-            String purchasePriceStr=request.getParameter("purchasePrice");
-            String retailPriceStr=request.getParameter("retailPrice");
-            
-            if (isEmpty(partID) || isEmpty(partName) || isEmpty(purchasePriceStr) || isEmpty(retailPriceStr)) {
-                request.setAttribute("errorMessage", "All fields are required!");
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+
+        String partID = request.getParameter("partID");
+        String partName = request.getParameter("partName");
+        String purchasePriceStr = request.getParameter("purchasePrice");
+        String retailPriceStr = request.getParameter("retailPrice");
+
+        if (isEmpty(partID) || isEmpty(partName) || isEmpty(purchasePriceStr) || isEmpty(retailPriceStr)) {
+            request.setAttribute("errorMessage", "All fields are required!");
+            request.getRequestDispatcher("AddPart.jsp").forward(request, response);
+            return;
+        }
+
+        PartDAO pd = new PartDAO();
+
+        // ✅ Kiểm tra trùng partID
+        if (pd.isDuplicatePartID(partID)) {
+            request.setAttribute("errorMessage", "Part ID already exists!");
+            request.getRequestDispatcher("AddPart.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            double purchasePrice = Double.parseDouble(purchasePriceStr);
+            double retailPrice = Double.parseDouble(retailPriceStr);
+
+            Part newPart = new Part(partID, partName, purchasePrice, retailPrice);
+
+            boolean isAdded = pd.creatPart(newPart);
+            if (isAdded) {
+                response.sendRedirect("MainServlet?action=get-part-page");
+            } else {
+                request.setAttribute("errorMessage", "Failed to add part");
                 request.getRequestDispatcher("AddPart.jsp").forward(request, response);
-                return;
             }
-            try {
-                double purchasePrice = Double.parseDouble(purchasePriceStr);
-                double retailPrice=Double.parseDouble(retailPriceStr);
-                Part newPart = new Part(partID, partName, purchasePrice, retailPrice);
-                PartDAO pd = new PartDAO();
-                boolean isAdded = pd.creatPart(newPart);
-                if(isAdded){
-                    response.sendRedirect("MainServlet?action=get-part-page");
-                }else{
-                    request.setAttribute("ERROR", "Failed to add part");
-                    request.getRequestDispatcher("AddPart.jsp");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+        } catch (NumberFormatException e) {
+            request.setAttribute("errorMessage", "Price fields must be numbers!");
+            request.getRequestDispatcher("AddPart.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "An unexpected error occurred!");
+            request.getRequestDispatcher("AddPart.jsp").forward(request, response);
         }
     }
+}
     boolean isEmpty(String str){
         return str.trim().isEmpty() || str==null;
     }

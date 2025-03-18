@@ -17,11 +17,11 @@ public class PartDAO {
             Connection cn = DBUtils.getConnection();
             if (cn != null) {
                 String query = "SELECT [partID]\n"
-                + "      ,[partName]\n"
-                + "      ,[purchasePrice]\n"
-                + "      ,[retailPrice]\n"
-                + "  FROM [Car_Dealership].[dbo].[Parts]"
-                + "where [Status] = 'Active'";
+                        + "      ,[partName]\n"
+                        + "      ,[purchasePrice]\n"
+                        + "      ,[retailPrice]\n"
+                        + "  FROM [Car_Dealership].[dbo].[Parts]"
+                        + "where [Status] = 'Active'";
                 PreparedStatement p = cn.prepareStatement(query);
                 ResultSet rs = p.executeQuery();
                 while (rs.next()) {
@@ -118,37 +118,39 @@ public class PartDAO {
 
     //delete
     public void deletePartByID(String partID) {
-    Connection cn = null;
-    PreparedStatement ps = null;
-    try {
-        cn = DBUtils.getConnection();
-        if (cn != null) {
-            String query="UPDATE Parts\n"
-                + "SET Status = 'Deactive'\n"
-                + "WHERE partID = ?";
-            ps=cn.prepareStatement(query);
-            ps.setString(1, partID);
-            ps.executeUpdate();
-        }
-    } catch (Exception e) {
+        Connection cn = null;
+        PreparedStatement ps = null;
         try {
-            if (cn != null) cn.rollback(); 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        e.printStackTrace();
-    } finally {
-        try {
-            if (ps != null) {
-                ps.close();
-            }
+            cn = DBUtils.getConnection();
             if (cn != null) {
-                cn.close();
+                String query = "UPDATE Parts\n"
+                        + "SET Status = 'Deactive'\n"
+                        + "WHERE partID = ?";
+                ps = cn.prepareStatement(query);
+                ps.setString(1, partID);
+                ps.executeUpdate();
             }
         } catch (Exception e) {
+            try {
+                if (cn != null) {
+                    cn.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
     }
 
     public Part getPartByID(String partID) {
@@ -240,6 +242,28 @@ public class PartDAO {
             }
         }
         return parts;
+    }
+
+    public boolean isDuplicatePartID(String partID) {
+        boolean isDuplicate = false;
+        String sql = "SELECT partID FROM Parts WHERE partID = ?";
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, partID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    isDuplicate = true;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return isDuplicate;
     }
 
 }

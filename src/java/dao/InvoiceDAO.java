@@ -69,7 +69,7 @@ public class InvoiceDAO {
         return rs;
     }
 
-    public boolean createInvoice(int invoiceID, Date invoiceDate, String salesID, String carID, String custID) {
+    public boolean createInvoice(int invoiceID, Date invoiceDate, String saleID, String carID, String custID) {
         String sql = "INSERT INTO SalesInvoice (invoiceID, invoiceDate, salesID, carID, custID) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtils.getConnection();
@@ -77,7 +77,7 @@ public class InvoiceDAO {
 
             ps.setInt(1, invoiceID);
             ps.setDate(2, invoiceDate);
-            ps.setString(3, salesID);
+            ps.setString(3, saleID);
             ps.setString(4, carID);
             ps.setString(5, custID);
 
