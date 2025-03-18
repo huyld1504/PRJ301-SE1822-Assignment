@@ -317,47 +317,42 @@ public class SalePersonDAO {
         return customerList;
     }
 
-    
-    
-    
     //
-    public SalesPerson getSaleByName(String salesName){
-        SalesPerson sale=null;
-        Connection cn=null;
-        PreparedStatement ps=null;
-        ResultSet rs=null;
+    public SalesPerson getSaleByName(String salesName) {
+        SalesPerson sale = null;
+        Connection cn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            cn=DBUtils.getConnection();
-            if(cn!=null){
-                String query="SELECT [salesID]\n" +
-                            "      ,[salesName]\n" +
-                            "      ,[birthday]\n" +
-                            "      ,[sex]\n" +
-                            "      ,[salesAddress]\n" +
-                            "  FROM [dbo].[SalesPerson] WHERE [salesName] = ?";
-                ps=cn.prepareStatement(query);
+            cn = DBUtils.getConnection();
+            if (cn != null) {
+                String query = "SELECT [salesID]\n"
+                        + "      ,[salesName]\n"
+                        + "      ,[birthday]\n"
+                        + "      ,[sex]\n"
+                        + "      ,[salesAddress]\n"
+                        + "  FROM [dbo].[SalesPerson] WHERE [salesName] = ?";
+                ps = cn.prepareStatement(query);
                 ps.setString(1, salesName);
-                rs=ps.executeQuery();
-                if(rs.next()){
-                    sale=new SalesPerson(rs.getString("salesID"),
+                rs = ps.executeQuery();
+                if (rs.next()) {
+                    sale = new SalesPerson(rs.getString("salesID"),
                             rs.getString("salesName"),
                             rs.getString("salesAddress"),
                             rs.getString("sex"),
-                            rs.getDate("birthday")); 
+                            rs.getDate("birthday"));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }return sale;
+        }
+        return sale;
     }
 
-
-    
     // xe bán ra theo năm
     public ArrayList<Map<String, Object>> getCarsSoldByYear() {
         ArrayList<Map<String, Object>> report = new ArrayList<>();
         Connection conn = null;
-
 
         try {
             conn = DBUtils.getConnection();
@@ -566,12 +561,44 @@ public class SalePersonDAO {
         }
         return isUpdated;
     }
-    
-    
-    
-    
-    
-    
-    
+
+    public ArrayList<Customer> getCustomersBySaleID(String saleID) {
+        ArrayList<Customer> list = new ArrayList<>();
+        Connection conn = null;
+
+        try {
+            conn = DBUtils.getConnection();
+            if (conn != null) {
+                String sql = "SELECT c.custID, c.custName, c.phone, c.cusAddress, c.sex "
+                        + "FROM Customer c "
+                        + "JOIN SalesInvoice s ON c.custID = s.custID "
+                        + "WHERE s.salesID = ?";
+                PreparedStatement p = conn.prepareStatement(sql);
+                p.setString(1, saleID);
+                ResultSet rs = p.executeQuery();
+
+                while (rs.next()) {
+                    String custID = rs.getString("custID");
+                    String custName = rs.getString("custName");
+                    String phone = rs.getString("phone");
+                    String cusAddress = rs.getString("cusAddress");
+                    String sex = rs.getString("sex");
+
+                    list.add(new Customer(custID, custName, phone, cusAddress, sex));
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
 
 }

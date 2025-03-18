@@ -203,7 +203,7 @@ public class PartDAO {
             if (cn != null) {
                 String query;
                 if (partName == null || partName.trim().isEmpty()) {
-                    query = "SELECT [partID], [partName], [purchasePrice], [retailPrice] FROM [dbo].[Parts]";
+                    query = "SELECT [partID], [partName], [purchasePrice], [retailPrice] FROM [dbo].[Parts]WHERE [Status] = 'Active'";
                     ps = cn.prepareStatement(query);
                 } else {
                     query = "SELECT [partID], [partName], [purchasePrice], [retailPrice] "

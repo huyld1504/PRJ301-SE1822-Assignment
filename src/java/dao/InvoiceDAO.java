@@ -9,7 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 import models.SalesInvoice;
 import utils.DBUtils;
 
@@ -68,22 +69,47 @@ public class InvoiceDAO {
         return rs;
     }
 
-    public boolean createInvoice(int invoiceID, String saleID, String carID, String custID) {
-        String sql = "INSERT INTO SalesInvoice (invoiceID, invoiceDate, saleID, carID, custID) VALUES (?, GETDATE(), ?, ?, ?)";
+    public boolean createInvoice(int invoiceID, Date invoiceDate, String salesID, String carID, String custID) {
+        String sql = "INSERT INTO SalesInvoice (invoiceID, invoiceDate, salesID, carID, custID) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtils.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, invoiceID);
-            ps.setString(2, saleID);
-            ps.setString(3, carID);
-            ps.setString(4, custID);
+            ps.setDate(2, invoiceDate);
+            ps.setString(3, salesID);
+            ps.setString(4, carID);
+            ps.setString(5, custID);
 
-            return ps.executeUpdate() > 0;
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
         } catch (Exception e) {
+            System.err.println("Lỗi khi tạo hóa đơn: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        InvoiceDAO dao = new InvoiceDAO();
+        // Giả lập dữ liệu test
+        int invoiceID = dao.getNextInvoiceID(); // Lấy ID tiếp theo
+        LocalDate localDate = LocalDate.now();  // Lấy ngày hôm nay
+        Date invoiceDate = Date.valueOf(localDate); // Chuyển sang java.sql.Date
+        String saleID = "30121050015";  // Giả sử có một nhân viên sales ID "S123"
+        String carID = "1122334456";   // Giả sử có một xe ID "C456"
+        String custID = "11051"; // Giả sử có một khách hàng ID "CU789"
+
+        // Gọi phương thức để test
+        boolean success = dao.createInvoice(invoiceID, invoiceDate, saleID, carID, custID);
+
+        // Kiểm tra kết quả
+        if (success) {
+            System.out.println("Tạo hóa đơn thành công! InvoiceID: " + invoiceID);
+        } else {
+            System.out.println("Tạo hóa đơn thất bại!");
+        }
     }
 
     public ArrayList<SalesInvoice> getInvoicesBySaleID(String saleID) {

@@ -61,38 +61,11 @@ public class InvoiceListServlet extends HttpServlet {
         request.getRequestDispatcher("MainServlet?action=invoice-list-page").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String saleID = (String) session.getAttribute("sale_ID");
-
-        if (saleID == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        String carID = request.getParameter("carID");
-        String custID = request.getParameter("custID");
-
-        InvoiceDAO invoiceDAO = new InvoiceDAO();
-        int newInvoiceID = invoiceDAO.getNextInvoiceID();
-        boolean success = invoiceDAO.createInvoice(newInvoiceID, saleID, carID, custID);
-
-        if (success) {
-            response.sendRedirect("invoiceList?success=true");
-        } else {
-            response.sendRedirect("invoiceList?error=true");
-        }
-        processRequest(request, response);
+        
     }
 
     /**

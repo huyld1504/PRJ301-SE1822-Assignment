@@ -59,9 +59,6 @@
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=view-service-ticket"><i class="fa-solid fa-eye"></i> View Service Ticket</a></li>
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=create-service-ticket"><i class="fa-solid fa-ticket"></i> Create Service Ticket</a></li>
 
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=create-customer-page"><i class="fa-solid fa-plus"></i> Create </a></li>
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=read-customer"><i class="fa-solid fa-eye"></i> Read </a></li>
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=search-customer-page"><i class="fa-solid fa-search"></i> Search by Name </a></li>
 
                             </ul>
                         </div>
@@ -117,27 +114,17 @@
 
 
                     <!-- The Part -->
-
-                    <div class="col-lg-5 col-md-6">
+                    <div class="col-lg-4 col-md-6 mb-3">
                         <a href="MainServlet?action=get-part-page" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
-
-                    <div class="col-lg-4 col-md-6 mb-3"> <!-- Add mb-3 here -->
-                        <a href="MainServlet?action=the-part" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
-
                             <i class="fa-solid fa-gears"></i> The Part
                         </a>
                     </div>
 
                     <!-- Create an Invoice -->
 
-                    <div class="col-lg-5 col-md-6">
+                    <div class="col-lg-4 col-md-6 mb-3"> 
                         <a href="MainServlet?action=get-invoice-list" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
                             <i class="fa-solid fa-file-invoice"></i> Invocie Customer
-
-                    <div class="col-lg-4 col-md-6 mb-3"> <!-- Add mb-3 here -->
-                        <a href="MainServlet?action=create-invoice" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
-                            <i class="fa-solid fa-file-invoice"></i> Create an Invoice
-
                         </a>
                     </div>
 
@@ -391,17 +378,8 @@
             <div class="alert alert-danger" role="alert">
                 You don't have any permission to access this resource. Please <a href="MainServlet?action=login-sale-page" class="alert-link fw-bold">login here</a>!
             </div>
-
-            <!-- Row 2: The Part - Create an Invoice -->
-            <div class="row justify-content-center g-4 mt-3">
-
-                <!-- The Part -->
-                <div class="col-lg-5 col-md-6">
-                    <a href="MainServlet?action=get-part-page" class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded">
-                        <i class="fa-solid fa-gears"></i> The Part
-                    </a>
-                </div>
-            </c:if>
+        </c:if>
+                
 
             <!-- Bootstrap JS -->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
