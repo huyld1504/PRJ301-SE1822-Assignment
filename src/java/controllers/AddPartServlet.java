@@ -5,22 +5,20 @@
  */
 package controllers;
 
-import dao.SalePersonDAO;
+import dao.PartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import models.Mechanic;
-import models.SalesPerson;
+import models.Part;
 
 /**
  *
- * @author Thanh Vinh
+ * @author ADMIN
  */
-public class LoginSaleServlet extends HttpServlet {
+public class AddPartServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,33 +31,40 @@ public class LoginSaleServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        
         try (PrintWriter out = response.getWriter()) {
+            response.setCharacterEncoding("UTF-8");
+            request.setCharacterEncoding("UTF-8");
+            String partID = request.getParameter("partID");
+            String partName = request.getParameter("partName");
+            String purchasePriceStr=request.getParameter("purchasePrice");
+            String retailPriceStr=request.getParameter("retailPrice");
             
-            
-            String sale_name = request.getParameter("sale_name");
-
-            SalePersonDAO sp = new SalePersonDAO();
-            SalesPerson sale = sp.checkLogin(sale_name);
-            SalesPerson saleID= sp.getSaleByName(sale_name);
-            if (sale != null) {
-                HttpSession s = request.getSession(true);
-                
-                s.setAttribute("SALE", sale);
-                s.setAttribute("sale_ID", sale.getSalesID());
-                response.sendRedirect("MainServlet?action=sale-dashboard");
-            } else {
-                request.setAttribute("ERROR", "Sale not found");
-                request.getRequestDispatcher("MainServlet?action=login-sale-page&sale_name" + sale_name).forward(request, response);
+            if (isEmpty(partID) || isEmpty(partName) || isEmpty(purchasePriceStr) || isEmpty(retailPriceStr)) {
+                request.setAttribute("errorMessage", "All fields are required!");
+                request.getRequestDispatcher("AddPart.jsp").forward(request, response);
+                return;
             }
-
+            try {
+                double purchasePrice = Double.parseDouble(purchasePriceStr);
+                double retailPrice=Double.parseDouble(retailPriceStr);
+                Part newPart = new Part(partID, partName, purchasePrice, retailPrice);
+                PartDAO pd = new PartDAO();
+                boolean isAdded = pd.creatPart(newPart);
+                if(isAdded){
+                    response.sendRedirect("MainServlet?action=get-part-page");
+                }else{
+                    request.setAttribute("ERROR", "Failed to add part");
+                    request.getRequestDispatcher("AddPart.jsp");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-
+    boolean isEmpty(String str){
+        return str.trim().isEmpty() || str==null;
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
