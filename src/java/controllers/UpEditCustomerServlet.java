@@ -74,7 +74,7 @@ public class UpEditCustomerServlet extends HttpServlet {
                 request.setAttribute("ERROR", "Error updating customer. Please try again.");
             }
 
-            request.getRequestDispatcher("MainServlet?action=edit-customer-page").forward(request, response);
+            request.getRequestDispatcher("MainServlet?action=read-customer").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -211,6 +211,20 @@ public class MainServlet extends HttpServlet {
                 case "search-service-ticket":
                     base_url = "SearchServiceTicketServlet";
                     break;
+                case "view-invoices-customer":
+                    base_url = "ViewInvoicesCustomerServlet";
+                    break;    
+                case "view-invoices-customer-page":
+                    base_url = "ViewInvoicesCustomer.jsp";
+                    break;
+                case "view-invoicesdetail-customer":
+                    base_url = "ViewInvoicesDetailCustomerServlet";
+                    break;
+                case "view-invoices-detail-customer-page":
+                    base_url = "ViewInvoicesDetailCustomer.jsp";
+                    break;    
+                    
+                    
                 default:
                     base_url = "index.html";
                     break;
