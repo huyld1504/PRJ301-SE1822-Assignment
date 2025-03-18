@@ -5,58 +5,31 @@
  */
 package controllers;
 
-import dao.SalePersonDAO;
+import dao.PartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Mechanic;
-import models.SalesPerson;
+import models.Part;
 
-/**
- *
- * @author Thanh Vinh
- */
-public class LoginSaleServlet extends HttpServlet {
+public class PartListServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        
         try (PrintWriter out = response.getWriter()) {
-            
-            
-            String sale_name = request.getParameter("sale_name");
-
-            SalePersonDAO sp = new SalePersonDAO();
-            SalesPerson sale = sp.checkLogin(sale_name);
-            SalesPerson saleID= sp.getSaleByName(sale_name);
-            if (sale != null) {
-                HttpSession s = request.getSession(true);
-                
-                s.setAttribute("SALE", sale);
-                s.setAttribute("sale_ID", sale.getSalesID());
-                response.sendRedirect("MainServlet?action=sale-dashboard");
-            } else {
-                request.setAttribute("ERROR", "Sale not found");
-                request.getRequestDispatcher("MainServlet?action=login-sale-page&sale_name" + sale_name).forward(request, response);
-            }
-
+            System.out.println("PartListServlet");
+            response.setCharacterEncoding("UTF-8");
+            PartDAO dao = new PartDAO();
+            ArrayList<Part> list = dao.getAllPart();
+            HttpSession session = request.getSession();
+            session.setAttribute("partList", list); 
+            request.getRequestDispatcher("MainServlet?action=get-all-listPart").forward(request, response);      
         }
     }
 

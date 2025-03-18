@@ -37,7 +37,7 @@ public class MainServlet extends HttpServlet {
             if (request.getParameter("action") != null) {
                 action = request.getParameter("action");
             }
-
+            System.out.println(action);
             switch (action) {
                 case "home":
                     //Write the page that you want to view
@@ -157,6 +157,32 @@ public class MainServlet extends HttpServlet {
                 case "get-customer-service-mechanic-detail":
                     base_url = "GetCustomerServiceMechanicDetailServlet";
                     break;
+                //getList
+                case "get-part-page":
+                    base_url = "PartListServlet";
+                    break;
+                case "get-all-listPart":
+                    base_url = "PartList.jsp";
+                    break;
+                //search
+                case "search-part":
+                    base_url = "SearchPartServlet";
+                    break;
+                //add part
+                case "add-part-page":
+                    base_url = "AddPartServlet";
+                    break;
+                //update-part
+                case "update-part":
+                    base_url = "UpdatePartServlet";
+                    break;
+                case "update-part-page":
+                    base_url = "UpdatePart.jsp";
+                    break;
+                //delete-part
+                case "delete-part":
+                    base_url = "DeletePartServlet";
+                    break;
                 case "read-car-page":
                     base_url = "ReadCar.jsp";
                     break;
@@ -216,6 +242,22 @@ public class MainServlet extends HttpServlet {
                     break;
                 case "mechanic-part-by-id": 
                     base_url = "GetMechanicPartByIDServlet";
+                    break;
+                case "get-invoice-list":
+                    base_url="InvoiceListServlet";
+                    break;
+                case "invoice-list-page":
+                    base_url="InvoiceList.jsp";
+                    break;
+                    //sv ticket
+                case "view-service-ticket":
+                    base_url="ViewServiceTicketServlet";
+                    break;
+                case "view-service-ticket-page":
+                    base_url="ServiceTicketList.jsp";
+                    break;
+                case "add-service-ticket-form":
+                    base_url="AddServiceTicketServlet";
                     break;
                 default:
                     base_url = "index.html";
