@@ -5,58 +5,29 @@
  */
 package controllers;
 
-import dao.MechanicDAO;
-import dao.ServiceDAO;
+import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.Mechanic;
-import models.Service;
+import javax.servlet.http.HttpSession;
+import models.SalesInvoice;
 
 /**
  *
- * @author Asus
+ * @author ADMIN
  */
-@WebServlet(name = "GetCustomerServiceMechanicDetailServlet", urlPatterns = {"/GetCustomerServiceMechanicDetailServlet"})
-public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
+public class InvoiceListServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceID = request.getParameter("serviceID");
-            String mechanicID = request.getParameter("mechanicID");
 
-            ServiceDAO serviceDAO = new ServiceDAO();
-            MechanicDAO mechanicDAO = new MechanicDAO();
-
-            Mechanic m = mechanicDAO.getMechanicByID(mechanicID);
-            Service s = serviceDAO.getServiceByID(serviceID);
-
-            if (s != null && m != null) {
-                request.setAttribute("mechanic", m);
-                request.setAttribute("service", s);
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
-            } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
-            }
         }
     }
 
@@ -72,7 +43,22 @@ public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        String saleID = (String) session.getAttribute("sale_ID");
+
+        if (saleID == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        InvoiceDAO dao = new InvoiceDAO();
+        ArrayList<SalesInvoice> list = dao.getInvoicesBySaleID(saleID);
+        
+        String saleName =dao.getSalesPersonNameByID(saleID);
+        session.setAttribute("saleName", saleName);
+        request.setAttribute("LIST", list);
+        request.setAttribute("sale_ID", session.getAttribute("sale_ID"));
+        request.getRequestDispatcher("MainServlet?action=invoice-list-page").forward(request, response);
     }
 
     /**
@@ -86,6 +72,26 @@ public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String saleID = (String) session.getAttribute("sale_ID");
+
+        if (saleID == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String carID = request.getParameter("carID");
+        String custID = request.getParameter("custID");
+
+        InvoiceDAO invoiceDAO = new InvoiceDAO();
+        int newInvoiceID = invoiceDAO.getNextInvoiceID();
+        boolean success = invoiceDAO.createInvoice(newInvoiceID, saleID, carID, custID);
+
+        if (success) {
+            response.sendRedirect("invoiceList?success=true");
+        } else {
+            response.sendRedirect("invoiceList?error=true");
+        }
         processRequest(request, response);
     }
 

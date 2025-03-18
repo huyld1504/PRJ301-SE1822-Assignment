@@ -15,12 +15,7 @@ import java.util.List;
 import models.SalesInvoice;
 import utils.DBUtils;
 
-/**
- *
- * @author Thanh Vinh
- */
 public class InvoiceDAO {
-
     public List<SalesInvoice> getSalesInvoicesByCustomerId(String customerId) {
         List<SalesInvoice> invoices = new ArrayList<>();
         Connection conn = null;

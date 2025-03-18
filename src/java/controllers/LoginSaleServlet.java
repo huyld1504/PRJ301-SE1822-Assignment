@@ -45,10 +45,12 @@ public class LoginSaleServlet extends HttpServlet {
 
             SalePersonDAO sp = new SalePersonDAO();
             SalesPerson sale = sp.checkLogin(sale_name);
-
+            SalesPerson saleID= sp.getSaleByName(sale_name);
             if (sale != null) {
                 HttpSession s = request.getSession(true);
+                
                 s.setAttribute("SALE", sale);
+                s.setAttribute("sale_ID", sale.getSalesID());
                 response.sendRedirect("MainServlet?action=sale-dashboard");
             } else {
                 request.setAttribute("ERROR", "Sale not found");

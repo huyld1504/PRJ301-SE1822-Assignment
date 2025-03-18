@@ -5,6 +5,7 @@
  */
 package filters;
 
+import dao.ServiceDAO;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -15,6 +16,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import models.Service;
 
 /**
  *
@@ -113,7 +115,12 @@ public class CreateServiceFilter implements Filter {
             String serviceName = request.getParameter("service_name");
             String hourlyRate = request.getParameter("hourly_rate");
             
-            if(!serviceID.matches("\\d+")) {
+            ServiceDAO ser = new ServiceDAO();
+            Service service = ser.getServiceByName(serviceName);
+            if(service != null) {
+                request.setAttribute("MESSAGE", "Service name cannot be duplicated.");
+                request.getRequestDispatcher("MainServlet?action=create-service-page&service_id="+serviceID+"&service_name="+serviceName+"&hourly_rate="+hourlyRate).forward(request, response);
+            } else if(!serviceID.matches("\\d+")) {
                 request.setAttribute("MESSAGE", "Service ID will be only number.");
                 request.getRequestDispatcher("MainServlet?action=create-service-page&service_id="+serviceID+"&service_name="+serviceName+"&hourly_rate="+hourlyRate).forward(request, response);
             } else if(!hourlyRate.matches("[0-9]{1,13}(.[0-9]*)?")) {

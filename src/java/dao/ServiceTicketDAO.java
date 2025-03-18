@@ -307,4 +307,73 @@ public class ServiceTicketDAO {
         }
         return result;
     }
+
+    //ticket list by saleid
+    public ArrayList<ServiceTicket> getServiceTicketBySalesID(String salesID) {
+        ArrayList<ServiceTicket> tickets = new ArrayList<>();
+        try {
+            Connection cn = DBUtils.getConnection();
+            if (cn != null) {
+                String query = "SELECT st.* FROM ServiceTicket st JOIN SalesInvoice si on st.custID=si.custID where si.salesID = ?";
+                PreparedStatement ps = cn.prepareStatement(query);
+                ps.setString(1, salesID);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    tickets.add(new ServiceTicket(
+                            rs.getString("serviceTicketID"),
+                            rs.getDate("dateReceived"),
+                            rs.getDate("dateReturned"),
+                            rs.getString("custID"),
+                            rs.getString("carID")));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+
+    public static String generateServiceTicketID() {
+        String newID = "10110001";
+        try {
+            Connection cn = DBUtils.getConnection();
+            if (cn != null) {
+                String query = "SELECT MAX(serviceTicketID) FROM ServiceTicket";
+                PreparedStatement ps = cn.prepareStatement(query);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    String lastID = rs.getString(1);
+                    if (lastID != null) {
+                        int num = Integer.parseInt(lastID) + 1;
+                        newID = String.valueOf(num);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newID;
+    }
+
+    public boolean AddServiceTicket(ServiceTicket ticket) {
+        boolean success = false;
+        try {
+            Connection cn = DBUtils.getConnection();
+            if (cn != null) {
+                String query = "INSERT INTO ServiceTicket (serviceTicketID, dateReceived, dateReaturned, custID, carID) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement ps = cn.prepareStatement(query);
+                ps.setString(1, ticket.getServiceTicketID());
+                ps.setDate(2, (java.sql.Date) ticket.getDateReceived());
+                ps.setDate(3, (java.sql.Date) ticket.getDateReaturned());
+                ps.setString(4, ticket.getCustID());
+                ps.setString(5, ticket.getCarID());
+                success = ps.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
 }

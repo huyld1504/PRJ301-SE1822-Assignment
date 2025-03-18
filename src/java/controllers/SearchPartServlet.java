@@ -5,58 +5,41 @@
  */
 package controllers;
 
-import dao.ServiceDAO;
+import dao.PartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import models.Part;
 
 /**
  *
- * @author Asus
+ * @author ADMIN
  */
-public class ServiceDeleteServlet extends HttpServlet {
+public class SearchPartServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceID = request.getParameter("serviceID");
-            
-            ServiceDAO s = new ServiceDAO();
-            boolean isDeleted = s.deleteServiceByID(serviceID);
-            
-            if(isDeleted) {
-                request.getSession().setAttribute("MESSAGE", "Delete service successfully.");
-                response.sendRedirect("MainServlet?action=get-service-list");
-            } else {
-                request.setAttribute("MESSAGE", "Failed to delete. Please try again.");
-                request.getRequestDispatcher("MainServlet?action=service-page").forward(request, response);
+            String partName = request.getParameter("partName");
+
+            PartDAO pd = new PartDAO();
+            ArrayList<Part> list;
+            try {
+                list = pd.searchPartByPartName(partName);
+                request.setAttribute("RESULT", list);
+                System.out.println("List: " + list.size());
+                request.getRequestDispatcher("MainServlet?action=get-part-page").forward(request, response);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

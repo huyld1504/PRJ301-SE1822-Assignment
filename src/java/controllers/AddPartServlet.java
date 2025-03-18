@@ -5,24 +5,20 @@
  */
 package controllers;
 
-import dao.MechanicDAO;
-import dao.ServiceDAO;
+import dao.PartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.Mechanic;
-import models.Service;
+import models.Part;
 
 /**
  *
- * @author Asus
+ * @author ADMIN
  */
-@WebServlet(name = "GetCustomerServiceMechanicDetailServlet", urlPatterns = {"/GetCustomerServiceMechanicDetailServlet"})
-public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
+public class AddPartServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,30 +32,39 @@ public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceID = request.getParameter("serviceID");
-            String mechanicID = request.getParameter("mechanicID");
-
-            ServiceDAO serviceDAO = new ServiceDAO();
-            MechanicDAO mechanicDAO = new MechanicDAO();
-
-            Mechanic m = mechanicDAO.getMechanicByID(mechanicID);
-            Service s = serviceDAO.getServiceByID(serviceID);
-
-            if (s != null && m != null) {
-                request.setAttribute("mechanic", m);
-                request.setAttribute("service", s);
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
-            } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
+            response.setCharacterEncoding("UTF-8");
+            request.setCharacterEncoding("UTF-8");
+            String partID = request.getParameter("partID");
+            String partName = request.getParameter("partName");
+            String purchasePriceStr=request.getParameter("purchasePrice");
+            String retailPriceStr=request.getParameter("retailPrice");
+            
+            if (isEmpty(partID) || isEmpty(partName) || isEmpty(purchasePriceStr) || isEmpty(retailPriceStr)) {
+                request.setAttribute("errorMessage", "All fields are required!");
+                request.getRequestDispatcher("AddPart.jsp").forward(request, response);
+                return;
+            }
+            try {
+                double purchasePrice = Double.parseDouble(purchasePriceStr);
+                double retailPrice=Double.parseDouble(retailPriceStr);
+                Part newPart = new Part(partID, partName, purchasePrice, retailPrice);
+                PartDAO pd = new PartDAO();
+                boolean isAdded = pd.creatPart(newPart);
+                if(isAdded){
+                    response.sendRedirect("MainServlet?action=get-part-page");
+                }else{
+                    request.setAttribute("ERROR", "Failed to add part");
+                    request.getRequestDispatcher("AddPart.jsp");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
-
+    boolean isEmpty(String str){
+        return str.trim().isEmpty() || str==null;
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

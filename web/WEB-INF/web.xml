@@ -81,6 +81,10 @@
         <servlet-class>controllers.UpdateCustomerProfileServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>PartListServlet</servlet-name>
+        <servlet-class>controllers.PartListServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LoginSaleServlet</servlet-name>
         <servlet-class>controllers.LoginSaleServlet</servlet-class>
     </servlet>
@@ -161,6 +165,22 @@
         <servlet-class>controllers.ServiceCreateServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>DeletePartServlet</servlet-name>
+        <servlet-class>controllers.DeletePartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddPartServlet</servlet-name>
+        <servlet-class>controllers.AddPartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdatePartServlet</servlet-name>
+        <servlet-class>controllers.UpdatePartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchPartServlet</servlet-name>
+        <servlet-class>controllers.SearchPartServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>ReadCarServlet</servlet-name>
         <servlet-class>controllers.ReadCarServlet</servlet-class>
     </servlet>
@@ -183,6 +203,22 @@
     <servlet>
         <servlet-name>SearchCarServlet</servlet-name>
         <servlet-class>controllers.SearchCarServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateInvoiceServlet</servlet-name>
+        <servlet-class>controllers.CreateInvoiceServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InvoiceListServlet</servlet-name>
+        <servlet-class>controllers.InvoiceListServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewServiceTicketServlet</servlet-name>
+        <servlet-class>controllers.ViewServiceTicketServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddServiceTicketServlet</servlet-name>
+        <servlet-class>controllers.AddServiceTicketServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CarSalesReportByYearServlet</servlet-name>
@@ -227,6 +263,10 @@
     <servlet-mapping>
         <servlet-name>UpdateCustomerProfileServlet</servlet-name>
         <url-pattern>/UpdateCustomerProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PartListServlet</servlet-name>
+        <url-pattern>/PartListServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>InvoiceServlet_Sale</servlet-name>
@@ -309,6 +349,22 @@
         <url-pattern>/ServiceCreateServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>DeletePartServlet</servlet-name>
+        <url-pattern>/DeletePartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddPartServlet</servlet-name>
+        <url-pattern>/AddPartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePartServlet</servlet-name>
+        <url-pattern>/UpdatePartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchPartServlet</servlet-name>
+        <url-pattern>/SearchPartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>ReadCarServlet</servlet-name>
         <url-pattern>/ReadCarServlet</url-pattern>
     </servlet-mapping>
@@ -331,6 +387,22 @@
     <servlet-mapping>
         <servlet-name>SearchCarServlet</servlet-name>
         <url-pattern>/SearchCarServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateInvoiceServlet</servlet-name>
+        <url-pattern>/CreateInvoiceServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InvoiceListServlet</servlet-name>
+        <url-pattern>/InvoiceListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewServiceTicketServlet</servlet-name>
+        <url-pattern>/ViewServiceTicketServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddServiceTicketServlet</servlet-name>
+        <url-pattern>/AddServiceTicketServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CarSalesReportByYearServlet</servlet-name>
