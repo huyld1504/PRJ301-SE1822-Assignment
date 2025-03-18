@@ -45,6 +45,7 @@ public class ServiceCreateServlet extends HttpServlet {
             boolean isCreated = sDao.createService(serviceID, serviceName, parsedHourlyRate);
 
             if (isCreated) {
+                request.getSession().setAttribute("MESSAGE", "Create service successfully.");
                 response.sendRedirect("MainServlet?action=get-service-list");
             } else {
                 request.setAttribute("MESSAGE", "Failed to create service. Please try again.");

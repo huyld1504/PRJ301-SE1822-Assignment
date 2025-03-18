@@ -71,9 +71,9 @@ public class ServiceDAO {
                         + "      ,[serviceName]\n"
                         + "      ,[hourlyRate]\n"
                         + "  FROM [dbo].[Service]\n"
-                        + " WHERE [serviceName] = ?";
+                        + " WHERE [serviceName] like ?";
                 ps = conn.prepareStatement(sql);
-                ps.setString(1, "%"+serviceName+"%");
+                ps.setString(1, "%" + serviceName + "%");
                 table = ps.executeQuery();
 
                 while (table.next()) {
@@ -138,8 +138,8 @@ public class ServiceDAO {
         boolean isUpdated = false;
         Connection conn = null;
         PreparedStatement ps;
-        int tableRows = 0;
-
+        int tableRows;
+        
         try {
             conn = DBUtils.getConnection();
 

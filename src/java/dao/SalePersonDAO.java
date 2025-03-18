@@ -340,6 +340,36 @@ public class SalePersonDAO {
         return customerList;
     }
 
+    //
+    public SalesPerson getSaleByName(String salesName){
+        SalesPerson sale=null;
+        Connection cn=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+        try {
+            cn=DBUtils.getConnection();
+            if(cn!=null){
+                String query="SELECT [salesID]\n" +
+                            "      ,[salesName]\n" +
+                            "      ,[birthday]\n" +
+                            "      ,[sex]\n" +
+                            "      ,[salesAddress]\n" +
+                            "  FROM [dbo].[SalesPerson] WHERE [salesName] = ?";
+                ps=cn.prepareStatement(query);
+                ps.setString(1, salesName);
+                rs=ps.executeQuery();
+                if(rs.next()){
+                    sale=new SalesPerson(rs.getString("salesID"),
+                            rs.getString("salesName"),
+                            rs.getString("salesAddress"),
+                            rs.getString("sex"),
+                            rs.getDate("birthday")); 
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }return sale;
+    }
     
     // xe bán ra theo năm
     public ArrayList<Map<String, Object>> getCarsSoldByYear() {
@@ -405,7 +435,6 @@ public class SalePersonDAO {
                 e.printStackTrace();
             }
         }
-
         return report;
     }
 

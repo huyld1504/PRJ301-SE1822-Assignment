@@ -92,6 +92,11 @@
                     <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.service.hourlyRate}" pattern="#,###" />VND</li>
                 </ul>
             </div>
+
+            <form action="MainServlet" class="mx-5 mt-0">
+                <input type="hidden" name="action" value="customer-dashboard"/>
+                <button type="submit" class="btn btn-lg btn-primary">Back to dashboard</button>
+            </form>
         </c:if>
 
         <c:if test="${sessionScope.CUSTOMER == null}">

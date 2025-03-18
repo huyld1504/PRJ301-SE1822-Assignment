@@ -8,10 +8,13 @@ package controllers;
 import dao.ServiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import models.Service;
 
 /**
  *
@@ -38,14 +41,14 @@ public class UpdateServiceServlet extends HttpServlet {
             String serviceID = request.getParameter("serviceID");
             String serviceName = request.getParameter("serviceName");
             double hourlyRate = (double) request.getAttribute("parsedHourlyFormat");
-            
+
             ServiceDAO s = new ServiceDAO();
             boolean result = s.updateServiceByID(serviceID, serviceName, hourlyRate);
-            
-            if(result) {
+
+            if (result) {
                 response.sendRedirect("MainServlet?action=get-service-list");
             } else {
-                request.setAttribute("MESSAGE", "Failed to update. Please try again!");
+                request.setAttribute("ERROR", "Failed to update. Please try again!");
                 request.getRequestDispatcher("MainServlet?action=service-page").forward(request, response);
             }
         }

@@ -5,58 +5,32 @@
  */
 package controllers;
 
-import dao.MechanicDAO;
-import dao.ServiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.Mechanic;
-import models.Service;
 
 /**
  *
- * @author Asus
+ * @author ADMIN
  */
-@WebServlet(name = "GetCustomerServiceMechanicDetailServlet", urlPatterns = {"/GetCustomerServiceMechanicDetailServlet"})
-public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+public class CreateInvoiceServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String serviceID = request.getParameter("serviceID");
-            String mechanicID = request.getParameter("mechanicID");
-
-            ServiceDAO serviceDAO = new ServiceDAO();
-            MechanicDAO mechanicDAO = new MechanicDAO();
-
-            Mechanic m = mechanicDAO.getMechanicByID(mechanicID);
-            Service s = serviceDAO.getServiceByID(serviceID);
-
-            if (s != null && m != null) {
-                request.setAttribute("mechanic", m);
-                request.setAttribute("service", s);
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
-            } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
-            }
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet CreateInvoiceServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet CreateInvoiceServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 

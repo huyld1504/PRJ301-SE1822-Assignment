@@ -90,43 +90,105 @@
                     <button type="submit" class="btn btn-primary fw-bold px-5 py-2">Search</button>
                 </div>
             </form>
+
+            <form action="MainServlet" class="mx-5 mt-5">
+                <input type="hidden" name="action" value="mechanic-dashboard"/>
+                <button type="submit" class="btn btn-lg btn-primary">Back to dashboard</button>
+            </form>
+
             <c:if test="${sessionScope.SERVICE_TICKET_LIST != null}">
-                <table class="table table-striped mt-5 w-75 mx-5">
-                    <tr class="fw-bold">
-                        <td>Service ID</td>
-                        <td>Hours</td>              
-                        <td>Rate</td>
-                        <td>Comment</td>
-                        <td>Tools</td>
-                    </tr>
-                    <c:forEach items="${sessionScope.SERVICE_MECHANIC_LIST}" var="ticket">
-                        <form action="MainServlet" accept-charset="UTF-8">
-                            <input value="update-ticket-detail" name="action" type="hidden"/>
-                            <input value="${ticket.serviceTicketID}" name="serviceTicketID" type="hidden"/>
-                            <input value="${ticket.mechanicID}" name="mechanicID" type="hidden"/>
-                            <input value="${ticket.serviceID}" name="serviceID" type="hidden"/>
-                            <tr>
+                <div class="w-75 m-5">
+                    <table class="table table-striped mt-5">
+                        <tr class="fw-bold">
+                            <td>Service ID</td>
+                            <td>Hours</td>              
+                            <td>Rate</td>
+                            <td>Comment</td>
+                            <td>Tools</td>
+                        </tr>
+                        <c:forEach items="${sessionScope.SERVICE_MECHANIC_LIST}" var="ticket">
+                            <form action="MainServlet" accept-charset="UTF-8">
+                                <input value="update-ticket-detail" name="action" type="hidden"/>
+                                <input value="${ticket.serviceTicketID}" name="serviceTicketID" type="hidden"/>
+                                <input value="${ticket.mechanicID}" name="mechanicID" type="hidden"/>
+                                <input value="${ticket.serviceID}" name="serviceID" type="hidden"/>
+                                <tr>
+                                    <td>
+                                        <a class="text-decoration-none text-dark" href="MainServlet?action=">${ticket.serviceID}</a>
+                                    </td>
+                                    <td>
+                                        <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.hour}" name="hours"/>
+                                    </td>
+                                    <td>
+                                        <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.rate}" name="rate"/>
+                                    </td>
+                                    <td class="w-50">
+                                        <input style="border: none" type="text" class="rounded-2 my-auto w-100" value="${ticket.comment}" placeholder="Add comment" name="comment"/>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="fa-solid fa-pen-to-square fs-5"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </form>
+                        </c:forEach>
+                    </table>
+
+                    <c:if test="${sessionScope.PARTS_USED_LIST != null and !sessionScope.PARTS_USED_LIST.isEmpty()}">
+                        <table class="table table-striped mt-5 w-50">
+                            <tr class="fw-bold">
                                 <td>
-                                    <a class="text-decoration-none text-dark" href="MainServlet?action=">${ticket.serviceID}</a>
+                                    Service ticket ID
                                 </td>
                                 <td>
-                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.hour}" name="hours"/>
+                                    Part ID
                                 </td>
                                 <td>
-                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.rate}" name="rate"/>
-                                </td>
-                                <td class="w-50">
-                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="${ticket.comment}" placeholder="Add comment" name="comment"/>
-                                </td>
-                                <td>
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        <i class="fa-solid fa-pen-to-square fs-5"></i>
-                                    </button>
+                                    See detail
                                 </td>
                             </tr>
-                        </form>
-                    </c:forEach>
-                </table>
+                            <c:forEach items="${sessionScope.PARTS_USED_LIST}" var="partsUsed">
+                                    <tr>
+                                        <td>
+                                            <a class="text-decoration-none text-dark" href="#">${partsUsed.serviceTicketID}</a>
+                                        </td>
+                                        <td>
+                                            ${partsUsed.partID}
+                                        </td>
+                                        <td>
+                                            <form action="MainServlet">
+                                                <input type="hidden" name="action" value="mechanic-part-by-id"/>
+                                                <input type="hidden" name="partID" value="${partsUsed.partID}"/>
+                                                <input type="hidden" name="serviceTicketID" value="${partsUsed.serviceTicketID}"/>
+                                                <button type="submit" class="btn btn-sm btn-primary">Detail</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </form>
+                            </c:forEach>
+                        </table>
+                    </c:if>
+                </div>
+
+                <c:if test="${requestScope.ERROR != null}">
+                    <div class="alert alert-danger alert-dismissible fade show mx-5 w-50 z-3" role="alert">
+                        ${requestScope.ERROR}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+                
+                <c:if test="${requestScope.part != null}">
+                    <div class="card mt-5 w-25 mx-5" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Part Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${requestScope.part.partID}</li>
+                            <li class="list-group-item">Part name: ${requestScope.part.partName}</li>
+                        </ul>
+                    </div>
+                </c:if>
 
                 <c:if test="${sessionScope.CUSTOMER_TICKET != null}">
                     <div class="card mt-5 w-25 mx-5" style="width: 18rem;">
@@ -154,13 +216,6 @@
                             <li class="list-group-item">Year: ${sessionScope.CAR_OF_CUSTOMER.year}</li>
                             <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.CAR_OF_CUSTOMER.price}" pattern="#,###" />VND</li>
                         </ul>
-                    </div>
-                </c:if>
-
-                <c:if test="${requestScope.ERROR != null}">
-                    <div class="alert alert-danger alert-dismissible fade show mx-auto z-3" role="alert">
-                        ${requestScope.MESSAGE}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </c:if>
             </c:if>
