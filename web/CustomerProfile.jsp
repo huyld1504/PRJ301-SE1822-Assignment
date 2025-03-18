@@ -110,7 +110,10 @@
                                 <p class="w-100 text-end">Sex:</p>
                             </td>
                             <td class="">
-                                <input class="w-100" style="border: none" type="text" name="customer_sex" value="${CUSTOMER.sex}"/>
+                                <select class="form-select form-select-sm" name="customer_sex" aria-label="Default select example">
+                                    <option value="F" ${(CUSTOMER.sex == 'F' or CUSTOMER.sex == 'f') ? 'selected' : ''}>Female</option>
+                                    <option value="M" ${(CUSTOMER.sex == 'M' or CUSTOMER.sex == 'm') ? 'selected' : ''}>Male</option>
+                                </select>
                             </td>
                         </tr>
                         <tr class="">
