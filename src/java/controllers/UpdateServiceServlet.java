@@ -46,6 +46,7 @@ public class UpdateServiceServlet extends HttpServlet {
             boolean result = s.updateServiceByID(serviceID, serviceName, hourlyRate);
 
             if (result) {
+                request.getSession().setAttribute("MESSAGE", "Updated successfully");
                 response.sendRedirect("MainServlet?action=get-service-list");
             } else {
                 request.setAttribute("ERROR", "Failed to update. Please try again!");
