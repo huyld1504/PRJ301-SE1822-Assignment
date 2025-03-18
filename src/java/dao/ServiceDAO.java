@@ -71,7 +71,7 @@ public class ServiceDAO {
                         + "      ,[serviceName]\n"
                         + "      ,[hourlyRate]\n"
                         + "  FROM [dbo].[Service]\n"
-                        + " WHERE [serviceName] = ?";
+                        + " WHERE [serviceName] like ?";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, "%" + serviceName + "%");
                 table = ps.executeQuery();

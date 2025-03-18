@@ -120,9 +120,7 @@ public class CreateServiceFilter implements Filter {
             if(service != null) {
                 request.setAttribute("MESSAGE", "Service name cannot be duplicated.");
                 request.getRequestDispatcher("MainServlet?action=create-service-page&service_id="+serviceID+"&service_name="+serviceName+"&hourly_rate="+hourlyRate).forward(request, response);
-            }
-            
-            if(!serviceID.matches("\\d+")) {
+            } else if(!serviceID.matches("\\d+")) {
                 request.setAttribute("MESSAGE", "Service ID will be only number.");
                 request.getRequestDispatcher("MainServlet?action=create-service-page&service_id="+serviceID+"&service_name="+serviceName+"&hourly_rate="+hourlyRate).forward(request, response);
             } else if(!hourlyRate.matches("[0-9]{1,13}(.[0-9]*)?")) {
