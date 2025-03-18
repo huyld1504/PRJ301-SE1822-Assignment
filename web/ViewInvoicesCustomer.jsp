@@ -25,7 +25,7 @@
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
                 <div class="container-fluid bg-info" style="height: 10vh;">
                     <a class="navbar-brand fs-2" href="#">Welcome ${CUSTOMER.custName}</a>
-                    <a href="MainServlet?action=customer-dashboard" class="btn btn-outline-light fw-bold">Back to Dashboard</a>
+                    <a href="MainServlet?action=customer-dashboard" class="btn btn-outline-light fw-bold">Back to Home</a>
                 </div>
             </nav>
 

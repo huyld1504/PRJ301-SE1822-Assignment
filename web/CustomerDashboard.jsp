@@ -16,7 +16,28 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
         <!--Font awesome-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/> 
+        
+        <style>
+            /* Căn giữa biểu tượng và chữ "View Invoices" trên cùng một hàng */
+.nav-item a {
+    display: flex;
+    flex-direction: row; /* Chắc chắn rằng chữ và biểu tượng nằm trên cùng một hàng */
+    align-items: center; /* Căn giữa biểu tượng và chữ */
+}
+
+.nav-item .icon-style {
+    font-size: 1.2rem;  /* Kích thước biểu tượng */
+    margin-right: 0.5rem;  /* Khoảng cách giữa biểu tượng và chữ */
+}
+
+.nav-item a div.text-center {
+    font-size: 1rem; /* Điều chỉnh kích thước chữ */
+    margin-top: 0; /* Loại bỏ khoảng cách nếu có */
+}
+
+
+        </style>
     </head>
     <body>
         <c:if test="${sessionScope.CUSTOMER != null}">
@@ -39,8 +60,8 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="MainServlet?action=view-invoices-customer">
-                                    <i class="fa-solid fa-car"></i>
-                                    View Invoices
+                                    <i class="fa-solid fa-car icon-style"></i> <!-- Biểu tượng -->
+                                    <div class="text-center">View Invoices</div> <!-- Chữ dưới biểu tượng -->
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
