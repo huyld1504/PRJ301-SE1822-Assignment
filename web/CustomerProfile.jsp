@@ -38,9 +38,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="MainServlet?action=view-invoices-customer">
                                     <i class="fa-solid fa-car"></i>
-                                    View Cars
+                                    View Invoices
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
