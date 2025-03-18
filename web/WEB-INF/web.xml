@@ -220,7 +220,7 @@
         <servlet-name>AddServiceTicketServlet</servlet-name>
         <servlet-class>controllers.AddServiceTicketServlet</servlet-class>
     </servlet>
-    <servlet/>
+    <servlet>
         <servlet-name>CarSalesReportByYearServlet</servlet-name>
         <servlet-class>controllers.CarSalesReportByYearServlet</servlet-class>
     </servlet>
