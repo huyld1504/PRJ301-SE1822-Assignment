@@ -23,7 +23,7 @@
             <nav class="navbar navbar-expand-lg bg-info text-white p-3 shadow-lg">
                 <div class="container-fluid">
                     <h2 class="text-white fw-bold m-0">Edit Customer</h2>
-                    <a href="MainServlet?action=sale-dashboard" class="btn btn-outline-light fw-bold">Back to Dashboard</a>
+                    <a href="MainServlet?action=sale-dashboard" class="btn btn-outline-light fw-bold">Back to Home</a>
                 </div>
             </nav>
 

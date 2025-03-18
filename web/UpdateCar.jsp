@@ -6,6 +6,7 @@
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <!-- chuyển định dạng số -->
 <%@ page import="models.Car" %>
 
 <!DOCTYPE html>
@@ -23,7 +24,7 @@
             <nav class="navbar navbar-expand-lg bg-info text-white p-3 shadow-lg">
                 <div class="container-fluid">
                     <h2 class="text-white fw-bold m-0">Edit Car</h2>
-                    <a href="MainServlet?action=sale-dashboard" class="btn btn-outline-light fw-bold">Back to Dashboard</a>
+                    <a href="MainServlet?action=sale-dashboard" class="btn btn-outline-light fw-bold">Back to Home</a>
                 </div>
             </nav>
 
@@ -59,7 +60,7 @@
                     <!-- Price -->
                     <div class="mb-3">
                         <label for="price" class="form-label">Price</label>
-                        <input type="number" step="0.1" class="form-control" name="price" value="${car.price}" required />
+                        <input type="number" step="0.1" class="form-control" name="price" value="<fmt:formatNumber value="${car.price}" pattern="####" />" required />
                     </div>
 
                     <button type="submit" class="btn btn-info">Update</button>

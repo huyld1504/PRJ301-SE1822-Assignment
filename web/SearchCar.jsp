@@ -6,6 +6,7 @@
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <!-- chuyển định dạng số -->
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +22,7 @@
         <nav class="navbar navbar-expand-lg bg-info text-white p-3 shadow-lg">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <h2 class="text-white fw-bold m-0">Search Car</h2>
-                <a href="MainServlet?action=sale-dashboard" class="btn btn-outline-light fw-bold">Back to Dashboard</a>
+                <a href="MainServlet?action=sale-dashboard" class="btn btn-outline-light fw-bold">Back to Home</a>
             </div>
         </nav>
 
@@ -71,7 +72,7 @@
                                     <td class="text-center">${car.model}</td>
                                     <td class="text-center">${car.colour}</td>
                                     <td class="text-center">${car.year}</td>
-                                    <td class="text-center">${car.price}</td> <!-- Hiển thị giá xe -->
+                                    <td class="text-center"><fmt:formatNumber value="${car.price}" pattern="#,###" /></td> <!-- Hiển thị giá xe -->
                                     <td class="text-center">
                                         <a href="MainServlet?action=edit-car&id=${car.carID}" class="btn btn-warning btn-sm">
                                             <i class="fa-solid fa-edit"></i> Edit

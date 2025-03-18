@@ -211,7 +211,7 @@
                                             <td>${car.model}</td>
                                             <td>${car.colour}</td>
                                             <td>${car.year}</td>
-                                            <td><fmt:formatNumber value="${car.price}" pattern="#,###.0" /></td>  
+                                            <td><fmt:formatNumber value="${car.price}" pattern="#,###" /></td>  
                                             <td>
                                                 <a href="MainServlet?action=edit-car&id=${car.carID}" class="btn btn-warning btn-sm">
                                                     <i class="fa-solid fa-pen"></i> Edit
