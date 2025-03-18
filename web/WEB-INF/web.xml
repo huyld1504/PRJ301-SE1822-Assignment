@@ -220,6 +220,30 @@
         <servlet-name>AddServiceTicketServlet</servlet-name>
         <servlet-class>controllers.AddServiceTicketServlet</servlet-class>
     </servlet>
+    <servlet/>
+        <servlet-name>CarSalesReportByYearServlet</servlet-name>
+        <servlet-class>controllers.CarSalesReportByYearServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CarSalesRevenueReportByYearServlet</servlet-name>
+        <servlet-class>controllers.CarSalesRevenueReportByYearServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BestSellingCarModelsServlet</servlet-name>
+        <servlet-class>controllers.BestSellingCarModelsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BestUsedPartsServlet</servlet-name>
+        <servlet-class>controllers.BestUsedPartsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TopMechanicsReportServlet</servlet-name>
+        <servlet-class>controllers.TopMechanicsReportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateSalesPersonProfileServlet</servlet-name>
+        <servlet-class>controllers.UpdateSalesPersonProfileServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -371,6 +395,30 @@
     <servlet-mapping>
         <servlet-name>AddServiceTicketServlet</servlet-name>
         <url-pattern>/AddServiceTicketServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CarSalesReportByYearServlet</servlet-name>
+        <url-pattern>/CarSalesReportByYearServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CarSalesRevenueReportByYearServlet</servlet-name>
+        <url-pattern>/CarSalesRevenueReportByYearServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BestSellingCarModelsServlet</servlet-name>
+        <url-pattern>/BestSellingCarModelsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BestUsedPartsServlet</servlet-name>
+        <url-pattern>/BestUsedPartsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TopMechanicsReportServlet</servlet-name>
+        <url-pattern>/TopMechanicsReportServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateSalesPersonProfileServlet</servlet-name>
+        <url-pattern>/UpdateSalesPersonProfileServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

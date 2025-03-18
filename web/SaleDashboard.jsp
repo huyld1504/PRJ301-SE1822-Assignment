@@ -6,6 +6,7 @@
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <!-- chuyển định dạng số -->
 
 <!DOCTYPE html>
 <html>
@@ -17,6 +18,9 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+
+
+
     </head>
     <body class="bg-light">
 
@@ -28,7 +32,7 @@
                     <h2 class="text-white fw-bold m-0">Welcome ${SALE.salesName}</h2>
                     <form class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-primary" type="submit">Search</button>
+                        <button class="btn btn-primary" type="submit"> Search </button>
                     </form>
                 </div>
             </nav>
@@ -37,11 +41,12 @@
 
             <!-- Dashboard Content -->
             <div class="container py-4">
+
                 <!-- Row 1: Customer - Car - Settings -->
                 <div class="row justify-content-center g-4">
 
                     <!-- Customer Dropdown -->
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 mb-3"> <!-- Add mb-3 here -->
                         <div class="dropdown">
                             <button class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded dropdown-toggle" data-bs-toggle="dropdown">
                                 <i class="fa-solid fa-users"></i> Customer
@@ -57,36 +62,53 @@
                     </div>
 
                     <!-- Car Dropdown -->
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 mb-3"> <!-- Add mb-3 here -->
                         <div class="dropdown">
                             <button class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded dropdown-toggle" data-bs-toggle="dropdown">
                                 <i class="fa-solid fa-car"></i> Car
                             </button>
-                            <ul class="dropdown-menu w-100" style="min-width: 250px;">
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=create-car-page"><i class="fa-solid fa-plus"></i> Create</a></li>
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=read-car"><i class="fa-solid fa-eye"></i> Read</a></li>
+                            <ul class="dropdown-menu w-100">
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=create-car-page"><i class="fa-solid fa-plus"></i> Create </a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=read-car"><i class="fa-solid fa-eye"></i> Read </a></li>
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=search-car"><i class="fa-solid fa-search"></i> Search </a></li>
                             </ul>
                         </div>
                     </div>
 
                     <!-- Settings Dropdown -->
-                    <div class="col-lg-4 col-md-6">
+                    <div class="col-lg-4 col-md-6 mb-3"> <!-- Add mb-3 here -->
                         <div class="dropdown">
                             <button class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded dropdown-toggle" data-bs-toggle="dropdown">
                                 <i class="fa-solid fa-gear"></i> Settings
                             </button>
                             <ul class="dropdown-menu w-100">
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=sale-profile"><i class="fa-solid fa-user"></i> Profile</a></li>
-                                <li><a class="dropdown-item fs-5" href="MainServlet?action=logout-sale"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=sale-profile"><i class="fa-solid fa-user"></i> Profile </a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=logout-sale"><i class="fa-solid fa-right-from-bracket"></i> Logout </a></li>
                             </ul>
                         </div>
                     </div>
 
                 </div>
 
-                <!-- Row 2: The Part - Create an Invoice -->
-                <div class="row justify-content-center g-4 mt-3">
+                <!-- Row 2: Statistics - The Part - Create an Invoice -->
+                <div class="row justify-content-center g-4 mb-3"> <!-- Add mb-3 here -->
+
+                    <!-- Statistics Dropdown -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="dropdown">
+                            <button class="btn btn-info w-100 py-4 fs-3 fw-bold text-white shadow-lg rounded dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fa-solid fa-chart-line"></i> Statistics
+                            </button>
+                            <ul class="dropdown-menu w-100" style="min-width: 300px; max-height: 400px; overflow-y: auto;">
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=statistics-cars"><i class="fa-solid fa-calendar"></i> Statistics of Cars Sold by Year</a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=statistics-revenue"><i class="fa-solid fa-dollar-sign"></i> Statistics of Car Sales Revenue by Year</a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=statistics-bestselling-models"><i class="fa-solid fa-trophy"></i> Statistics of Best-Selling Car Models</a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=statistics-bestused-parts"><i class="fa-solid fa-cogs"></i> Statistics of Best Used Parts</a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=statistics-top-mechanics"><i class="fa-solid fa-wrench"></i> Find the 3 Mechanics Assigned to the Most Repairs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
 
                     <!-- The Part -->
                     <div class="col-lg-5 col-md-6">
@@ -102,9 +124,12 @@
                         </a>
                     </div>
 
-                </div>               
+                </div>
+
+
+
                 <br/>
-                
+
                 <!-- Display Success/Error Message -->
                 <c:if test="${requestScope.MESSAGE != null}">
                     <div class="alert alert-success alert-dismissible fade show w-25 z-3 position-absolute" role="alert">
@@ -191,7 +216,7 @@
                                             <td>${car.model}</td>
                                             <td>${car.colour}</td>
                                             <td>${car.year}</td>
-                                            <td>${car.price}</td>  
+                                            <td><fmt:formatNumber value="${car.price}" pattern="#,###.0" /></td>  
                                             <td>
                                                 <a href="MainServlet?action=edit-car&id=${car.carID}" class="btn btn-warning btn-sm">
                                                     <i class="fa-solid fa-pen"></i> Edit
@@ -202,6 +227,137 @@
                                                     <i class="fa-solid fa-trash"></i> Delete
                                                 </a>
                                             </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </c:if>
+
+                <!-- các bảng thống kê -->
+                <c:if test="${not empty carsSoldByYear}">
+                    <div class="container mt-5">
+                        <h2 class="text-center text-primary fw-bold">Statistics of Cars Sold by Year</h2>
+
+                        <!-- Report Table for Cars Sold by Year -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center align-middle">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Cars Sold</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="report" items="${carsSoldByYear}">
+                                        <tr>
+                                            <td>${report.year}</td>
+                                            <td>${report.carsSold}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty carSalesRevenueByYear}">
+                    <div class="container mt-5">
+                        <h2 class="text-center text-primary fw-bold">Statistics of Car Sales Revenue by Year</h2>
+
+                        <!-- Report Table for Car Sales Revenue by Year -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center align-middle">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="report" items="${carSalesRevenueByYear}">
+                                        <tr>
+                                            <td>${report.year}</td>
+                                            <td><fmt:formatNumber value="${report.revenue}" pattern="#,###.0" /></td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty bestSellingCarModels}">
+                    <div class="container mt-5">
+                        <h2 class="text-center text-primary fw-bold">Statistics of Best-Selling Car Models</h2>
+
+                        <!-- Report Table for Best-Selling Car Models -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center align-middle">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th>Model</th>
+                                        <th>Sales Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="report" items="${bestSellingCarModels}">
+                                        <tr>
+                                            <td>${report.model}</td>
+                                            <td>${report.salesCount}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty bestUsedParts}">
+                    <div class="container mt-5">
+                        <h2 class="text-center text-primary fw-bold">Statistics of Best Used Parts</h2>
+
+                        <!-- Report Table for Best Used Parts -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center align-middle">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th>Part Name</th>
+                                        <th>Total Used</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="report" items="${bestUsedParts}">
+                                        <tr>
+                                            <td>${report.partName}</td>
+                                            <td>${report.totalUsed}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty top3Mechanics}">
+                    <div class="container mt-5">
+                        <h2 class="text-center text-primary fw-bold">Top 3 Mechanics with Most Repairs</h2>
+
+                        <!-- Report Table for Top 3 Mechanics -->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center align-middle">
+                                <thead class="table-info">
+                                    <tr>
+                                        <th>Mechanic Name</th>
+                                        <th>Repairs Handled</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="report" items="${top3Mechanics}">
+                                        <tr>
+                                            <td>${report.mechanicName}</td>
+                                            <td>${report.repairsHandled}</td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
