@@ -95,7 +95,7 @@
                 <input type="hidden" name="action" value="mechanic-dashboard"/>
                 <button type="submit" class="btn btn-lg btn-primary">Back to dashboard</button>
             </form>
-                
+
             <c:if test="${sessionScope.SERVICE_TICKET_LIST != null}">
                 <div class="w-75 m-5">
                     <table class="table table-striped mt-5">
@@ -134,8 +134,42 @@
                             </form>
                         </c:forEach>
                     </table>
+
+                    <c:if test="${sessionScope.PARTS_USED_LIST != null and !sessionScope.PARTS_USED_LIST.isEmpty()}">
+                        <table class="table table-striped mt-5 w-50">
+                            <tr class="fw-bold">
+                                <td>
+                                    Service ticket ID
+                                </td>
+                                <td>
+                                    Part ID
+                                </td>
+                                <td>
+                                    See detail
+                                </td>
+                            </tr>
+                            <c:forEach items="${sessionScope.PARTS_USED_LIST}" var="partsUsed">
+                                    <tr>
+                                        <td>
+                                            <a class="text-decoration-none text-dark" href="#">${partsUsed.serviceTicketID}</a>
+                                        </td>
+                                        <td>
+                                            ${partsUsed.partID}
+                                        </td>
+                                        <td>
+                                            <form action="MainServlet">
+                                                <input type="hidden" name="action" value="mechanic-part-by-id"/>
+                                                <input type="hidden" name="partID" value="${partsUsed.partID}"/>
+                                                <button type="submit" class="btn btn-sm btn-primary">Detail</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </form>
+                            </c:forEach>
+                        </table>
+                    </c:if>
                 </div>
-                
+
                 <c:if test="${requestScope.ERROR != null}">
                     <div class="alert alert-danger alert-dismissible fade show mx-5 w-50 z-3" role="alert">
                         ${requestScope.ERROR}

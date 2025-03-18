@@ -7,6 +7,7 @@ package controllers;
 
 import dao.CarDAO;
 import dao.CustomerDAO;
+import dao.PartUsedDAO;
 import dao.ServiceMechanicDAO;
 import dao.ServiceTicketDAO;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import models.Car;
 import models.Customer;
+import models.PartsUsed;
 import models.ServiceMeChanic;
 import models.ServiceTicket;
 
@@ -45,7 +47,7 @@ public class ServiceTicketDetailServlet extends HttpServlet {
             String carID = request.getParameter("carID");
 
             ServiceMechanicDAO s = new ServiceMechanicDAO();
-            ArrayList<ServiceMeChanic> list = s.getServiceMechanicByServiceTicketID(serviceTicketID);
+            ArrayList<ServiceMeChanic> serviceMechaniclist = s.getServiceMechanicByServiceTicketID(serviceTicketID);
 
             ServiceTicketDAO serviceTicketDao = new ServiceTicketDAO();
             ServiceTicket ser = serviceTicketDao.getServiceTicketByID(serviceTicketID);
@@ -55,6 +57,8 @@ public class ServiceTicketDetailServlet extends HttpServlet {
                 Customer cus = customerDao.getCustomerById(ser.getCustID());
                 CarDAO carDao = new CarDAO();
                 Car c = carDao.getCarById(carID);
+                PartUsedDAO partUsedDAO = new PartUsedDAO();
+                ArrayList<PartsUsed> partsUsedList = partUsedDAO.getPartsUsedByServiceTicketID(serviceTicketID);
                 if (cus != null) {
                     session.setAttribute("CUSTOMER_TICKET", cus);
                     session.setAttribute("CAR_OF_CUSTOMER", c);
@@ -62,13 +66,14 @@ public class ServiceTicketDetailServlet extends HttpServlet {
                     request.setAttribute("MESSAGE", "Customer not found.");
                     request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID).forward(request, response);
                 }
+                session.setAttribute("PARTS_USED_LIST", partsUsedList);
             } else {
                 request.setAttribute("MESSAGE", "Service ticket not found.");
                 request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID).forward(request, response);
             }
 
-            if (list != null && !list.isEmpty()) {
-                session.setAttribute("SERVICE_MECHANIC_LIST", list);
+            if (serviceMechaniclist != null && !serviceMechaniclist.isEmpty()) {
+                session.setAttribute("SERVICE_MECHANIC_LIST", serviceMechaniclist);
                 response.sendRedirect("MainServlet?action=ticket-detail-page&serviceTicketID=" + serviceTicketID);
             } else {
                 request.setAttribute("MESSAGE", "The ticket ID = " + serviceTicketID + " are no services here");

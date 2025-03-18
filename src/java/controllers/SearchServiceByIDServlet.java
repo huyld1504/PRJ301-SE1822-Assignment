@@ -10,17 +10,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import models.Service;
+import utils.StringUtils;
 
 /**
  *
  * @author Asus
  */
-public class UpdateServiceServlet extends HttpServlet {
+@WebServlet(name = "SearchServiceByIDServlet", urlPatterns = {"/SearchServiceByIDServlet"})
+public class SearchServiceByIDServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,23 +36,22 @@ public class UpdateServiceServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceID = request.getParameter("serviceID");
-            String serviceName = request.getParameter("serviceName");
-            double hourlyRate = (double) request.getAttribute("parsedHourlyFormat");
-
-            ServiceDAO s = new ServiceDAO();
-            boolean result = s.updateServiceByID(serviceID, serviceName, hourlyRate);
-
-            if (result) {
+            String serviceInformation = request.getParameter("service_information");
+            ServiceDAO ser = new ServiceDAO();
+            ArrayList<Service> list = new ArrayList<>();
+            HttpSession session = request.getSession();
+            if (StringUtils.checkEmpty(serviceInformation)) {
                 response.sendRedirect("MainServlet?action=get-service-list");
             } else {
-                request.setAttribute("ERROR", "Failed to update. Please try again!");
-                request.getRequestDispatcher("MainServlet?action=service-page").forward(request, response);
+                Service s;
+                if (ser.getServiceByID(serviceInformation) != null) {
+                    s = ser.getServiceByID(serviceInformation);
+                    list.add(s);
+                }
+                session.setAttribute("SERVICE_LIST", list);
+                response.sendRedirect("MainServlet?action=service-page");
             }
         }
     }

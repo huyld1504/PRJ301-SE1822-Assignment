@@ -51,7 +51,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item my-2" href="MainServlet?action=service-page">
+                                        <a class="dropdown-item my-2" href="MainServlet?action=get-service-list">
                                             <i class="fa-solid fa-border-all"></i>
                                             View all services
                                         </a>
@@ -65,8 +65,9 @@
                                 </ul>
                             </li>
                         </ul>
-                        <form class="d-flex" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <form action="MainServlet" class="d-flex" role="search" method="get">
+                            <input type="hidden" name="action" value="search-service"/>
+                            <input name="service_information" class="form-control me-2" placeholder="Search service ID" aria-label="Search service ID">
                             <button class="btn btn-primary" type="submit">Search</button>
                         </form>
                     </div>
@@ -83,13 +84,6 @@
                             Create
                         </button>
                     </form> 
-
-                    <c:if test="${sessionScope.MESSAGE != null}">
-                        <div class="alert alert-sm alert-success w-50 col-8 d-flex justify-content-between" role="alert">
-                            ${sessionScope.MESSAGE}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    </c:if>
                 </div>
                 <div class="w-100">
                     <table class="table table-striped mx-5 fw-bold" style="max-width: 90%;">
@@ -131,12 +125,24 @@
                             </tr>
                         </c:forEach>
                     </table>
+                    <c:if test="${requestScope.ERROR != null}">
+                        <div class="alert mx-5 alert-sm alert-danger w-50 col-8 d-flex justify-content-between" role="alert">
+                            ${requestScope.ERROR}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
+                    <c:if test="${sessionScope.MESSAGE != null}">
+                        <div class="alert alert-sm alert-success mx-5 w-50 col-8 d-flex justify-content-between" role="alert">
+                            ${sessionScope.MESSAGE}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </c:if>
                 </div>
             </c:if>
 
-            <c:if test="${sessionScope.SERVICE_LIST == null and sessionScope.SERVICE_LIST.isEmpty()}">
+            <c:if test="${sessionScope.SERVICE_LIST.isEmpty()}">
                 <div class="alert alert-danger" role="alert">
-                    ${requestScope.MESSAGE}
+                    Service not found
                 </div>
             </c:if>
         </c:if>
