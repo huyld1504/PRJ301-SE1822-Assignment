@@ -5,22 +5,19 @@
  */
 package controllers;
 
-import dao.SalePersonDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import models.Mechanic;
-import models.SalesPerson;
 
 /**
  *
- * @author Thanh Vinh
+ * @author ADMIN
  */
-public class LoginSaleServlet extends HttpServlet {
+public class AddServiceTicketServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,33 +30,18 @@ public class LoginSaleServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        
         try (PrintWriter out = response.getWriter()) {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
             
-            
-            String sale_name = request.getParameter("sale_name");
-
-            SalePersonDAO sp = new SalePersonDAO();
-            SalesPerson sale = sp.checkLogin(sale_name);
-            SalesPerson saleID= sp.getSaleByName(sale_name);
-            if (sale != null) {
-                HttpSession s = request.getSession(true);
-                
-                s.setAttribute("SALE", sale);
-                s.setAttribute("sale_ID", sale.getSalesID());
-                response.sendRedirect("MainServlet?action=sale-dashboard");
-            } else {
-                request.setAttribute("ERROR", "Sale not found");
-                request.getRequestDispatcher("MainServlet?action=login-sale-page&sale_name" + sale_name).forward(request, response);
-            }
-
         }
     }
-
+    
+    public boolean isEmpty(String str){
+        return str.trim().isEmpty() || str==null;
+        
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

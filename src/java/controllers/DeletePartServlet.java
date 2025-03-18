@@ -35,15 +35,10 @@ public class DeletePartServlet extends HttpServlet {
             String partID = request.getParameter("partID");
             
             try {
-                if(partID!=null || partID.isEmpty()){
+                if(partID!=null || !partID.isEmpty()){
                   PartDAO pd = new PartDAO();
-                  boolean isDelete = pd.deletePartByID(partID);
-                  if(isDelete){
-                      response.sendRedirect("MainServlet?action=get-part-page");
-                  }else{
-                      request.setAttribute("ERROR", "Fail to delete part");
-                      request.getRequestDispatcher("ERROR.jsp").forward(request, response);
-                  }
+                  pd.deletePartByID(partID);
+                  response.sendRedirect("MainServlet?action=get-part-page");
                 }else{
                     request.setAttribute("ERROR", "OPPS!!!Somethings was wrong....");
                 }

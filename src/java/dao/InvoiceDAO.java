@@ -68,32 +68,83 @@ public class InvoiceDAO {
         return rs;
     }
 
-    public boolean createInvoice(String saleID, String carID, String custID) {
-        Connection cn = null;
-        try {
-            cn = DBUtils.getConnection();
-            if (cn != null) {
-                String sql = "INSERT INTO SalesInvoice (invoiceDate, salesID, carID, custID) VALUES (GETDATE(), ?, ?, ?)";
-                PreparedStatement st = cn.prepareStatement(sql);
-                st.setString(1, saleID);
-                st.setString(2, carID);
-                st.setString(3, custID);
+    public boolean createInvoice(int invoiceID, String saleID, String carID, String custID) {
+        String sql = "INSERT INTO SalesInvoice (invoiceID, invoiceDate, saleID, carID, custID) VALUES (?, GETDATE(), ?, ?, ?)";
 
-                int rows = st.executeUpdate();
-                return rows > 0;
-            }
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, invoiceID);
+            ps.setString(2, saleID);
+            ps.setString(3, carID);
+            ps.setString(4, custID);
+
+            return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (cn != null) {
-                    cn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         return false;
     }
 
+    public ArrayList<SalesInvoice> getInvoicesBySaleID(String saleID) {
+        ArrayList<SalesInvoice> invoices = new ArrayList<>();
+        String query = "SELECT si.invoiceID,si.invoiceDate,si.salesID, si.carID,si.custID FROM [dbo].[SalesInvoice] si join SalesPerson sp ON si.salesID=sp.salesID WHERE si.salesID = ?";
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, saleID);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int invid = rs.getInt("invoiceID");
+                Date createdate = rs.getDate("invoiceDate");
+                String saleid = rs.getString("salesID");
+                String carid = rs.getString("carID");
+                String custid = rs.getString("custID");
+
+                invoices.add(new SalesInvoice(invid, createdate, saleid, carid, custid));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return invoices;
+    }
+
+    public String getSalesPersonNameByID(String saleID) {
+        String saleName = null;
+        String sql = "SELECT salesName FROM SalesPerson WHERE salesID = ?";
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, saleID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                saleName = rs.getString("salesName");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return saleName;
+    }
+
+    public int getNextInvoiceID() {
+        int nextID = 1;
+        String sql = "SELECT MAX(invoiceID) FROM SalesInvoice";
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                nextID = rs.getInt(1) + 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nextID;
+    }
 }

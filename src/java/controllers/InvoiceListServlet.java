@@ -8,6 +8,7 @@ package controllers;
 import dao.InvoiceDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,11 +22,12 @@ import models.SalesInvoice;
  * @author ADMIN
  */
 public class InvoiceListServlet extends HttpServlet {
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
+
         }
     }
 
@@ -41,11 +43,22 @@ public class InvoiceListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            InvoiceDAO dao=new InvoiceDAO();
-            ArrayList<SalesInvoice> list = dao.getInvoices("", 0);
-            
-            request.setAttribute("LIST", list);
-            request.getRequestDispatcher("MainServlet?action=invoice-list-page").forward(request, response);
+        HttpSession session = request.getSession();
+        String saleID = (String) session.getAttribute("sale_ID");
+
+        if (saleID == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        InvoiceDAO dao = new InvoiceDAO();
+        ArrayList<SalesInvoice> list = dao.getInvoicesBySaleID(saleID);
+        
+        String saleName =dao.getSalesPersonNameByID(saleID);
+        session.setAttribute("saleName", saleName);
+        request.setAttribute("LIST", list);
+        request.setAttribute("sale_ID", session.getAttribute("sale_ID"));
+        request.getRequestDispatcher("MainServlet?action=invoice-list-page").forward(request, response);
     }
 
     /**
@@ -59,8 +72,8 @@ public class InvoiceListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            HttpSession session=request.getSession();
-            String saleID = (String) session.getAttribute("saleID"); // Lấy saleID từ session
+        HttpSession session = request.getSession();
+        String saleID = (String) session.getAttribute("sale_ID");
 
         if (saleID == null) {
             response.sendRedirect("login.jsp");
@@ -71,13 +84,15 @@ public class InvoiceListServlet extends HttpServlet {
         String custID = request.getParameter("custID");
 
         InvoiceDAO invoiceDAO = new InvoiceDAO();
-        boolean success = invoiceDAO.createInvoice(saleID, carID, custID);
+        int newInvoiceID = invoiceDAO.getNextInvoiceID();
+        boolean success = invoiceDAO.createInvoice(newInvoiceID, saleID, carID, custID);
 
         if (success) {
             response.sendRedirect("invoiceList?success=true");
         } else {
             response.sendRedirect("invoiceList?error=true");
-        }processRequest(request, response);
+        }
+        processRequest(request, response);
     }
 
     /**

@@ -16,7 +16,12 @@ public class PartDAO {
         try {
             Connection cn = DBUtils.getConnection();
             if (cn != null) {
-                String query = "SELECT * FROM [dbo].[Parts] ";
+                String query = "SELECT [partID]\n"
+                + "      ,[partName]\n"
+                + "      ,[purchasePrice]\n"
+                + "      ,[retailPrice]\n"
+                + "  FROM [Car_Dealership].[dbo].[Parts]"
+                + "where [Status] = 'Active'";
                 PreparedStatement p = cn.prepareStatement(query);
                 ResultSet rs = p.executeQuery();
                 while (rs.next()) {
@@ -25,10 +30,7 @@ public class PartDAO {
                     Double purchasePrice = rs.getDouble("purchasePrice");
                     Double retailPrice = rs.getDouble("retailPrice");
                     list.add(new Part(partID, partName, purchasePrice, retailPrice));
-//                    System.out.println(partID);
-//                    System.out.println(partName);
-//                    System.out.println(purchasePrice);
-//                    System.out.println(retailPrice);
+
                 }
             } else {
                 System.out.println("ERROR");
@@ -115,41 +117,38 @@ public class PartDAO {
     }
 
     //delete
-    public boolean deletePartByID(String partID) {
-        boolean isDelete = false;
-        Connection cn = null;
-        PreparedStatement ps = null;
+    public void deletePartByID(String partID) {
+    Connection cn = null;
+    PreparedStatement ps = null;
+    try {
+        cn = DBUtils.getConnection();
+        if (cn != null) {
+            String query="UPDATE Parts\n"
+                + "SET Status = 'Deactive'\n"
+                + "WHERE partID = ?";
+            ps=cn.prepareStatement(query);
+            ps.setString(1, partID);
+            ps.executeUpdate();
+        }
+    } catch (Exception e) {
         try {
-            cn = DBUtils.getConnection();
-            if (cn != null) {
-                String deletePartsUsedQuery = "DELETE FROM [dbo].[PartsUsed] WHERE [partID] = ?";
-                ps = cn.prepareStatement(deletePartsUsedQuery);
-                ps.setString(1, partID);
-                ps.executeUpdate();
+            if (cn != null) cn.rollback(); 
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        e.printStackTrace();
+    } finally {
+        try {
+            if (ps != null) {
                 ps.close();
-                
-                String deletePartQuery = "DELETE FROM [dbo].[Parts] WHERE [partID] = ?";
-                ps = cn.prepareStatement(deletePartQuery);
-                ps.setString(1, partID);
-                isDelete = ps.executeUpdate() > 0;
             }
-
+            if (cn != null) {
+                cn.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (cn != null) {
-                    cn.close();
-                }
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
-        return isDelete;
-
+    }
     }
 
     public Part getPartByID(String partID) {
@@ -161,7 +160,7 @@ public class PartDAO {
                 + "      ,[purchasePrice]\n"
                 + "      ,[retailPrice]\n"
                 + "  FROM [dbo].[Parts]\n"
-                + "  WHERE [partID] like ?";
+                + "  WHERE [Status] = 'Active' and [partID] like ?";
         try {
             cn = DBUtils.getConnection();
             ps = cn.prepareStatement(query);
@@ -208,7 +207,7 @@ public class PartDAO {
                     ps = cn.prepareStatement(query);
                 } else {
                     query = "SELECT [partID], [partName], [purchasePrice], [retailPrice] "
-                            + "FROM [dbo].[Parts] WHERE [partName] LIKE ?";
+                            + "FROM [dbo].[Parts] WHERE [Status] = 'Active'and [partName] LIKE ?";
                     ps = cn.prepareStatement(query);
                     ps.setString(1, "%" + partName + "%");
                 }

@@ -50,6 +50,8 @@
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=create-customer-page"><i class="fa-solid fa-plus"></i> Create</a></li>
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=read-customer"><i class="fa-solid fa-eye"></i> Read</a></li>
                                 <li><a class="dropdown-item fs-5" href="MainServlet?action=search-customer-page"><i class="fa-solid fa-search"></i> Search by Name</a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=view-service-ticket"><i class="fa-solid fa-eye"></i> View Service Ticket</a></li>
+                                <li><a class="dropdown-item fs-5" href="MainServlet?action=create-service-ticket"><i class="fa-solid fa-ticket"></i> Create Service Ticket</a></li>
                             </ul>
                         </div>
                     </div>

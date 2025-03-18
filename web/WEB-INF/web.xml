@@ -212,6 +212,14 @@
         <servlet-name>InvoiceListServlet</servlet-name>
         <servlet-class>controllers.InvoiceListServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewServiceTicketServlet</servlet-name>
+        <servlet-class>controllers.ViewServiceTicketServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddServiceTicketServlet</servlet-name>
+        <servlet-class>controllers.AddServiceTicketServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -355,6 +363,14 @@
     <servlet-mapping>
         <servlet-name>InvoiceListServlet</servlet-name>
         <url-pattern>/InvoiceListServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewServiceTicketServlet</servlet-name>
+        <url-pattern>/ViewServiceTicketServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddServiceTicketServlet</servlet-name>
+        <url-pattern>/AddServiceTicketServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
