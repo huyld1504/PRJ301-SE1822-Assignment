@@ -5,22 +5,25 @@
  */
 package controllers;
 
-import dao.CarDAO;
-import dao.SalePersonDAO;
+import dao.CustomerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.SalesPerson;
+import models.Customer;
+import models.SalesInvoice;
+import models.SalesInvoiceDetail;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class DeleteCustomerServlet extends HttpServlet {
+public class ViewInvoicesCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,43 +39,39 @@ public class DeleteCustomerServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            // Kiểm tra session để xác định khách hàng đã đăng nhập chưa
             HttpSession session = request.getSession(false);
-            SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
-
-            if (salesPerson == null) {
-                request.setAttribute("ERROR", "Access not allowed! Please log in again.");
-                request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
+            if (session == null || session.getAttribute("CUSTOMER") == null) {
+                request.setAttribute("ERROR", "Please log in first.");
+                request.getRequestDispatcher("MainServlet?action=home").forward(request, response);
                 return;
             }
 
-            String custID = request.getParameter("id");
-            SalePersonDAO customerDAO = new SalePersonDAO();
+            // Lấy thông tin khách hàng từ session
+            Customer customer = (Customer) session.getAttribute("CUSTOMER");
+            String custID = customer.getCustID();
 
-            // Lấy tên khách hàng từ cơ sở dữ liệu trước khi xóa
-            String customerName = customerDAO.getCustomerNameById(custID);
+            // Lấy danh sách hóa đơn từ CustomerDAO
+            CustomerDAO customerDAO = new CustomerDAO();
+            List<SalesInvoice> invoices = customerDAO.getSalesInvoicesByCustomerId(custID);
 
-            // Xóa khách hàng
-            boolean isDeleted = customerDAO.deleteCustomer(custID);
-
-            if (isDeleted) {
-                // Nếu xóa thành công, chuyển thông báo thành công với tên khách hàng
-                request.setAttribute("MESSAGE", "Customer " + customerName + " deleted successfully!");
-            } else {
-                // Nếu xóa thất bại, chuyển thông báo lỗi
-                request.setAttribute("ERROR", "Customer deletion failed. Please try again!");
+            // Nếu không có hóa đơn, trả về thông báo lỗi
+            if (invoices == null || invoices.isEmpty()) {
+                request.setAttribute("ERROR", "No invoices found for the customer.");
+                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+                return;
             }
 
-            // Trả lại danh sách khách hàng và thông báo đến trang SaleDashboard.jsp
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
-        
+            // Lưu danh sách hóa đơn vào request và forward đến trang hiển thị
+            request.setAttribute("invoices", invoices);
+            request.getRequestDispatcher("MainServlet?action=view-invoices-customer-page").forward(request, response);
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("ERROR", "An error occurred while deleting the customer. Please try again.");
-            request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
+            request.setAttribute("ERROR", "An error occurred while retrieving the invoices. Please try again.");
+            request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
         }
     }
-
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

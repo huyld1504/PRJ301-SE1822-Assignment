@@ -190,36 +190,57 @@ public class CarDAO {
 
     // xóa car
     public boolean deleteCar(String carID) {
-        boolean isDeleted = false;
         Connection conn = null;
-
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // SQL để xóa xe theo carID
-                String sql = "DELETE FROM dbo.Cars WHERE carID=?";
-                PreparedStatement p = conn.prepareStatement(sql);
-                p.setString(1, carID);
+                String sql1 = "DELETE FROM SalesInvoice WHERE carID =  ?";
+                PreparedStatement ps1 = conn.prepareStatement(sql1);
+                ps1.setString(1, carID);
+                ps1.executeUpdate();
 
-                int result = p.executeUpdate();
-                isDeleted = result > 0;
+                String sql2 = "DELETE FROM PartsUsed WHERE serviceTicketID IN \n"
+                        + "    (SELECT serviceTicketID FROM ServiceTicket WHERE carID = ?);";
+                PreparedStatement ps2 = conn.prepareStatement(sql2);
+                ps2.setString(1, carID);
+                ps2.executeUpdate();
+
+                String sql3 = "DELETE FROM ServiceMechanic WHERE serviceTicketID IN \n"
+                        + "    (SELECT serviceTicketID FROM ServiceTicket WHERE carID = ?)";
+                PreparedStatement ps3 = conn.prepareStatement(sql3);
+                ps3.setString(1, carID);
+                ps3.executeUpdate();
+
+                String sql4 = "DELETE FROM ServiceTicket WHERE carID = ?";
+                PreparedStatement ps4 = conn.prepareStatement(sql4);
+                ps4.setString(1, carID);
+                ps4.executeUpdate();
+
+                String sql5 = "DELETE FROM Cars WHERE carID = ?";
+                PreparedStatement ps5 = conn.prepareStatement(sql5);
+                ps5.setString(1, carID);
+
+                int deleted = ps5.executeUpdate();
+                return deleted > 0;
             }
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        return isDeleted;
+        return false;
     }
 
-    // Phương thức trong CarDAO để lấy model của xe từ carID
+
+
+
+    // lấy model của xe từ carID
     public String getCarModelById(String carID) {
         String model = null;
         Connection conn = null;

@@ -221,35 +221,57 @@ public class SalePersonDAO {
         return customer;
     }
 
-    // xóa khách hàng
+    
     public boolean deleteCustomer(String custID) {
-        boolean isDeleted = false;
         Connection conn = null;
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                String sql = "DELETE FROM dbo.Customer WHERE custID=?";
-                PreparedStatement p = conn.prepareStatement(sql);
-                p.setString(1, custID);
+                String sql1 = "DELETE FROM SalesInvoice WHERE custID = ?";
+                PreparedStatement ps1 = conn.prepareStatement(sql1);
+                ps1.setString(1, custID);
+                ps1.executeUpdate();
+                
+                String sql2 = "DELETE FROM PartsUsed WHERE serviceTicketID IN \n"
+                        + "    (SELECT serviceTicketID FROM ServiceTicket WHERE custID = ?)";
+                PreparedStatement ps2 = conn.prepareStatement(sql2);
+                ps2.setString(1, custID);
+                ps2.executeUpdate();
 
-                int result = p.executeUpdate();
-                isDeleted = result > 0;
+                String sql3 = "DELETE FROM ServiceMechanic WHERE serviceTicketID IN \n"
+                        + "    (SELECT serviceTicketID FROM ServiceTicket WHERE custID = ?)";
+                PreparedStatement ps3 = conn.prepareStatement(sql3);
+                ps3.setString(1, custID);
+                ps3.executeUpdate();
+
+                String sql4 = "DELETE FROM ServiceTicket WHERE custID = ?";
+                PreparedStatement ps4 = conn.prepareStatement(sql4);
+                ps4.setString(1, custID);
+                ps4.executeUpdate();
+                
+                String sql5 = "DELETE FROM Customer WHERE custID = ?";
+                PreparedStatement ps5 = conn.prepareStatement(sql5);
+                ps5.setString(1, custID);
+
+                int deleted = ps5.executeUpdate();
+
+                return deleted > 0;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return isDeleted;
+        return false;
     }
 
-    // lấy tên để thông báo xóa 
     public String getCustomerNameById(String custID) {
         String customerName = null;
         Connection conn = null;
@@ -279,6 +301,7 @@ public class SalePersonDAO {
         return customerName;
     }
 
+
     // tìm theo tên khách hàng
     public ArrayList<Customer> searchCustomerByName(String name) {
         ArrayList<Customer> customerList = new ArrayList<>();
@@ -287,7 +310,7 @@ public class SalePersonDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Truy vấn tìm kiếm khách hàng theo tên, với COLLATE để xử lý không phân biệt dấu
+       
                 String sql = "SELECT custID, custName, phone, sex, cusAddress FROM dbo.Customer WHERE custName COLLATE Latin1_General_CI_AS LIKE ?";
                 PreparedStatement p = conn.prepareStatement(sql);
                 p.setString(1, "%" + name + "%");  // Tìm kiếm theo tên với ký tự đại diện

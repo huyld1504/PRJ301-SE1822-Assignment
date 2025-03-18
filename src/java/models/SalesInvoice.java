@@ -12,24 +12,28 @@ import java.util.Date;
  *
  * @author Asus
  */
-public class SalesInvoice implements Serializable{
+
+public class SalesInvoice implements Serializable {
     private int invoiceID;
     private Date invoiceDate;
-    private String saleID;
+    private String salesID;
     private String carID;
     private String custID;
 
+    // Constructor mặc định
     public SalesInvoice() {
     }
 
-    public SalesInvoice(int invoiceID, Date invoiceDate, String saleID, String carID, String custID) {
+    // Constructor có tham số
+    public SalesInvoice(int invoiceID, Date invoiceDate, String salesID, String carID, String custID) {
         this.invoiceID = invoiceID;
         this.invoiceDate = invoiceDate;
-        this.saleID = saleID;
+        this.salesID = salesID;
         this.carID = carID;
         this.custID = custID;
     }
 
+    // Getter và Setter
     public int getInvoiceID() {
         return invoiceID;
     }
@@ -46,12 +50,12 @@ public class SalesInvoice implements Serializable{
         this.invoiceDate = invoiceDate;
     }
 
-    public String getSaleID() {
-        return saleID;
+    public String getSalesID() {
+        return salesID;
     }
 
-    public void setSaleID(String saleID) {
-        this.saleID = saleID;
+    public void setSalesID(String salesID) {
+        this.salesID = salesID;
     }
 
     public String getCarID() {
@@ -70,3 +74,4 @@ public class SalesInvoice implements Serializable{
         this.custID = custID;
     }
 }
+

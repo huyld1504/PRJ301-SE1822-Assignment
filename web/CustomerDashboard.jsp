@@ -38,9 +38,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="MainServlet?action=view-invoices-customer">
                                     <i class="fa-solid fa-car"></i>
-                                    View Cars
+                                    View Invoices
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
@@ -70,7 +70,7 @@
                         </form>
                     </div>
                 </div>
-            </nav>
+            </nav>        
 
             <c:if test="${sessionScope.CUSTOMER_SERVICE_TICKET_LIST != null and !sessionScope.CUSTOMER_SERVICE_TICKET_LIST.isEmpty()}">
                 <p class="fs-4 fw-bold w-100 text-center mt-5">Your Service ticket</p>
@@ -151,6 +151,7 @@
                         </ul>
                     </div>
                 </c:if>
+              
             </c:if>
             <c:if test="${requestScope.MESSAGE != null}">
                 <div class="alert alert-danger w-75" role="alert">
