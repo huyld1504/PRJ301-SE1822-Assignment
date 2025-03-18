@@ -160,6 +160,7 @@
                                             <form action="MainServlet">
                                                 <input type="hidden" name="action" value="mechanic-part-by-id"/>
                                                 <input type="hidden" name="partID" value="${partsUsed.partID}"/>
+                                                <input type="hidden" name="serviceTicketID" value="${partsUsed.serviceTicketID}"/>
                                                 <button type="submit" class="btn btn-sm btn-primary">Detail</button>
                                             </form>
                                         </td>
@@ -174,6 +175,18 @@
                     <div class="alert alert-danger alert-dismissible fade show mx-5 w-50 z-3" role="alert">
                         ${requestScope.ERROR}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </c:if>
+                
+                <c:if test="${requestScope.part != null}">
+                    <div class="card mt-5 w-25 mx-5" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Part Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${requestScope.part.partID}</li>
+                            <li class="list-group-item">Customer name: ${requestScope.part.partName}</li>
+                        </ul>
                     </div>
                 </c:if>
 

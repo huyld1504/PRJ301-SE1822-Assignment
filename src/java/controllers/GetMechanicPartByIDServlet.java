@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.PartDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import models.Part;
 
 /**
  *
@@ -34,6 +36,12 @@ public class GetMechanicPartByIDServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String partID = request.getParameter("partID");
+            String serviceTicketID = request.getParameter("serviceTicketID");
+            
+            PartDAO partDAO = new PartDAO();
+            Part p = partDAO.getPartByID(partID);
+            request.setAttribute("part", p);
+            request.getRequestDispatcher("MainServlet?action=ticket-detail-page&serviceticketID=" + serviceTicketID).forward(request, response);
         }
     }
 
