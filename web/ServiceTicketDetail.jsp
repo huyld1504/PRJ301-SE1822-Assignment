@@ -185,7 +185,7 @@
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">ID: ${requestScope.part.partID}</li>
-                            <li class="list-group-item">Customer name: ${requestScope.part.partName}</li>
+                            <li class="list-group-item">Part name: ${requestScope.part.partName}</li>
                         </ul>
                     </div>
                 </c:if>
