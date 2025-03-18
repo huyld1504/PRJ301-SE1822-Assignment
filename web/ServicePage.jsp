@@ -84,9 +84,9 @@
                         </button>
                     </form> 
 
-                    <c:if test="${requestScope.MESSAGE != null}">
-                        <div class="alert alert-sm alert-danger w-50 col-8 d-flex justify-content-between" role="alert">
-                            ${requestScope.MESSAGE}
+                    <c:if test="${sessionScope.MESSAGE != null}">
+                        <div class="alert alert-sm alert-success w-50 col-8 d-flex justify-content-between" role="alert">
+                            ${sessionScope.MESSAGE}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </c:if>

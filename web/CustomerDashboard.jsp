@@ -100,22 +100,6 @@
                     </c:forEach>
                 </table>
 
-                <c:if test="${sessionScope.car != null}">
-                    <div class="card mx-auto mt-5 w-25" style="width: 18rem;">
-                        <div class="card-header fw-bold text-center">
-                            Car Information
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">ID: ${sessionScope.car.carID}</li>
-                            <li class="list-group-item">Serial number: ${sessionScope.car.serialNumber}</li>
-                            <li class="list-group-item">Model: ${sessionScope.car.model}</li>
-                            <li class="list-group-item">Colour: ${sessionScope.car.colour}</li>
-                            <li class="list-group-item">Year: ${sessionScope.car.year}</li>
-                            <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.car.price}" pattern="#,###" />VND</li>
-                        </ul>
-                    </div>
-                </c:if>
-
                 <c:if test="${sessionScope.SERVICE_MECHANIC_CUS_LIST != null and !sessionScope.SERVICE_MECHANIC_CUS_LIST.isEmpty()}">
                     <p class="fs-4 fw-bold w-100 text-center mt-5">Your Service ticket detail</p>
                     <table class="table table-striped w-75 mx-auto mt-3">
@@ -137,7 +121,7 @@
                                 <td>${ticket.rate}</td>
                                 <td>${ticket.comment}</td>
                                 <td>
-                                    <form action="MainServlet" method="post">    
+                                    <form action="MainServlet" method="get">    
                                         <input type="hidden" name="action" value="get-customer-service-mechanic-detail">
                                         <input type="hidden" name="serviceID" value="${ticket.serviceID}">
                                         <input type="hidden" name="mechanicID" value="${ticket.mechanicID}">
@@ -150,6 +134,22 @@
                             </tr>
                         </c:forEach>
                     </table>
+                </c:if>
+
+                <c:if test="${sessionScope.car != null}">
+                    <div class="card mx-auto mb-5 w-25" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Car Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${sessionScope.car.carID}</li>
+                            <li class="list-group-item">Serial number: ${sessionScope.car.serialNumber}</li>
+                            <li class="list-group-item">Model: ${sessionScope.car.model}</li>
+                            <li class="list-group-item">Colour: ${sessionScope.car.colour}</li>
+                            <li class="list-group-item">Year: ${sessionScope.car.year}</li>
+                            <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.car.price}" pattern="#,###" />VND</li>
+                        </ul>
+                    </div>
                 </c:if>
             </c:if>
             <c:if test="${requestScope.MESSAGE != null}">

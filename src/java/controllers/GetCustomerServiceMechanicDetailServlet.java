@@ -5,7 +5,6 @@
  */
 package controllers;
 
-import dao.CarDAO;
 import dao.MechanicDAO;
 import dao.ServiceDAO;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.Car;
 import models.Mechanic;
 import models.Service;
 
@@ -44,7 +42,6 @@ public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             String serviceID = request.getParameter("serviceID");
             String mechanicID = request.getParameter("mechanicID");
-            String carID = request.getParameter("carID");
 
             ServiceDAO serviceDAO = new ServiceDAO();
             MechanicDAO mechanicDAO = new MechanicDAO();
