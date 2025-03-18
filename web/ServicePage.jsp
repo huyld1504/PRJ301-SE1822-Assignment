@@ -105,7 +105,7 @@
                                     <input style="border: none" type="text" class="rounded-2 my-auto w-100" value="${service.serviceName}" name="serviceName"/>
                                 </td>
                                 <td>
-                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="<fmt:formatNumber value="${service.hourlyRate}" pattern="#,###" />" name="hourlyRate"/>
+                                    <input style="border: none" type="text" class="rounded-2 my-auto" value="<fmt:formatNumber value="${service.hourlyRate}" pattern="#,###.###" />" name="hourlyRate"/>
                                 </td>
                                 <td class="d-flex justify-content-start gap-2">
                                     <button type="submit" class="btn btn-primary btn-sm">

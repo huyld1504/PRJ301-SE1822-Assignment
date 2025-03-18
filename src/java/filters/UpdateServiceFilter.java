@@ -118,7 +118,7 @@ public class UpdateServiceFilter implements Filter {
             if(StringUtils.checkEmpty(serviceName) || StringUtils.checkEmpty(hourlyRate)) {
                 request.setAttribute("ERROR", "service name or hourly rate cannot be empty.");
                 request.getRequestDispatcher("MainServlet?action=service-page").forward(request, response);
-            } else if(!hourlyRate.matches("^(\\d{1,3}(,\\d{3})*\\.\\d{2}|\\d+)$")) {
+            } else if(!hourlyRate.matches("^\\d+(\\.\\d+)?$")) {
                 request.setAttribute("ERROR", "hourly rate is invalid format(the format can be: XXX,XXX or XXXXXX)");
                 request.getRequestDispatcher("MainServlet?action=service-page").forward(request, response);
             } else {

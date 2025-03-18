@@ -41,6 +41,7 @@ public class UpdateServiceServlet extends HttpServlet {
             String serviceID = request.getParameter("serviceID");
             String serviceName = request.getParameter("serviceName");
             double hourlyRate = (double) request.getAttribute("parsedHourlyFormat");
+            System.out.println("hourrate" + hourlyRate);
 
             ServiceDAO s = new ServiceDAO();
             boolean result = s.updateServiceByID(serviceID, serviceName, hourlyRate);
