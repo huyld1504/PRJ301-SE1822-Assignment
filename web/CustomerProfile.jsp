@@ -107,13 +107,10 @@
                         </tr>
                         <tr class="">
                             <td class="fw-bold">
-                                <p class="w-100 text-end">Sex:</p>
+                                <p class="w-100 text-end">Sex (F for female and M for male):</p>
                             </td>
                             <td class="">
-                                <select class="form-select form-select-sm" name="customer_sex" aria-label="Default select example">
-                                    <option value="F" ${(CUSTOMER.sex == 'F' or CUSTOMER.sex == 'f') ? 'selected' : ''}>Female</option>
-                                    <option value="M" ${(CUSTOMER.sex == 'M' or CUSTOMER.sex == 'm') ? 'selected' : ''}>Male</option>
-                                </select>
+                                <input class="w-100" style="border: none" type="text" name="customer_sex" value="${CUSTOMER.sex.trim()}"/>
                             </td>
                         </tr>
                         <tr class="">
