@@ -37,7 +37,7 @@ public class SearchCarServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            // kiểm tra session để xác định người dùng đã đăng nhập hay chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -47,20 +47,20 @@ public class SearchCarServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy thông tin tìm kiếm từ form
+            // lấy thông tin tìm kiếm từ form
             String serialNumber = request.getParameter("serialNumber");
             String model = request.getParameter("model");
             String yearString = request.getParameter("year");
             Integer year = (yearString != null && !yearString.isEmpty()) ? Integer.parseInt(yearString) : null;
 
-            // Gọi DAO để tìm kiếm xe theo Serial Number, Model và Year
+            // gọi DAO để tìm kiếm xe theo Serial Number, Model và Year
             CarDAO carDAO = new CarDAO();
             List<Car> carList = carDAO.searchCar(serialNumber, model, year);
 
-            // Truyền kết quả tìm kiếm vào request
+            // truyền kết quả tìm kiếm vào request
             request.setAttribute("carList", carList);
 
-            // Chuyển hướng đến trang search-car.jsp để hiển thị kết quả
+            // chuyển đến trang search-car.jsp để hiển thị kết quả
             request.getRequestDispatcher("MainServlet?action=search-car-page").forward(request, response);
 
         } catch (Exception e) {

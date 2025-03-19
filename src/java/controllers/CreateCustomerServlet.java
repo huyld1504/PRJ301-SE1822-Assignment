@@ -41,7 +41,7 @@ public class CreateCustomerServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
 
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            // kiểm tra session để xác định người dùng đã đăng nhập hay chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -51,13 +51,13 @@ public class CreateCustomerServlet extends HttpServlet {
                 return;
             }
             
-            // Lấy thông tin từ form
+            // lấy thông tin từ form
             String custName = request.getParameter("custName");
             String phone = request.getParameter("phone");
             String sex = request.getParameter("sex");
             String cusAddress = request.getParameter("cusAddress");
 
-            // Kiểm tra nếu có trường nào bị null hoặc rỗng
+            // kiểm tra nếu có trường nào bị null hoặc rỗng
             if (custName == null || phone == null || sex == null || cusAddress == null
                     || custName.isEmpty() || phone.isEmpty() || sex.isEmpty() || cusAddress.isEmpty()) {
                 request.setAttribute("ERROR", "All fields are required!");
@@ -65,21 +65,21 @@ public class CreateCustomerServlet extends HttpServlet {
                 return;
             }
 
-            // Tạo đối tượng Customer
+            // tạo đối tượng Customer
             Customer newCustomer = new Customer(null, custName, phone, cusAddress, sex);
 
-            // Gọi DAO để thêm khách hàng
+            // gọi DAO để thêm khách hàng
             SalePersonDAO saleDAO = new SalePersonDAO();
             boolean isAdded = saleDAO.addCustomer(newCustomer);
 
-            // Kiểm tra kết quả từ DAO
+            // kiểm tra kết quả từ DAO
             if (isAdded) {
                 request.setAttribute("SUCCESS", "Customer created successfully!");
             } else {
                 request.setAttribute("ERROR", "Customer creation failed. Please try again!");
             }
 
-            // Quay lại trang CreateCustomer.jsp với thông báo thành công hoặc lỗi
+            // quay lại CreateCustomer.jsp với thông báo thành công hoặc lỗi
             request.getRequestDispatcher("MainServlet?action=create-customer-page").forward(request, response);
 
         } catch (Exception e) {

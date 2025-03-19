@@ -36,7 +36,7 @@ public class DeleteCustomerServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            // kiểm tra session để xác định người dùng đã đăng nhập hay chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -49,21 +49,20 @@ public class DeleteCustomerServlet extends HttpServlet {
             String custID = request.getParameter("id");
             SalePersonDAO customerDAO = new SalePersonDAO();
 
-            // Lấy tên khách hàng từ cơ sở dữ liệu trước khi xóa
+            // lấy tên khách hàng từ cơ sở dữ liệu trước khi xóa
             String customerName = customerDAO.getCustomerNameById(custID);
-
-            // Xóa khách hàng
             boolean isDeleted = customerDAO.deleteCustomer(custID);
-
+            
+            // kiểm tra xóa thành công hay không
             if (isDeleted) {
-                // Nếu xóa thành công, chuyển thông báo thành công với tên khách hàng
+                // nếu xóa thành công, thông báo thành công với tên khách hàng
                 request.setAttribute("MESSAGE", "Customer " + customerName + " deleted successfully!");
             } else {
-                // Nếu xóa thất bại, chuyển thông báo lỗi
+                // nếu xóa thất bại, thông báo lỗi
                 request.setAttribute("ERROR", "Customer deletion failed. Please try again!");
             }
 
-            // Trả lại danh sách khách hàng và thông báo đến trang SaleDashboard.jsp
+            // trả lại danh sách khách hàng và thông báo đến trang saledashboard thông qua readcustomerservlet
             request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
         
         } catch (Exception e) {

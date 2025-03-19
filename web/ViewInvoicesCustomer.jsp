@@ -61,6 +61,8 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- c:forEach để tạo vòng lặp hiển thị thông tin từng invoice ra bảng -->
+                            <!-- var: đặt tên đối tượng sẽ dùng trong vòng lặp -- items: đối tượng đã lưu trong request lấy ra dùng -->
                             <c:forEach var="invoice" items="${invoices}">
                                 <tr>
                                     <td>${invoice.invoiceID}</td>

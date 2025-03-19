@@ -40,7 +40,7 @@ public class UpdateCarServlet extends HttpServlet {
         
         try (PrintWriter out = response.getWriter()) {
             
-            // Kiểm tra session và lấy thông tin SalesPerson
+            // kiểm tra session và lấy thông tin SalesPerson
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -50,7 +50,7 @@ public class UpdateCarServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy carID từ URL
+            // lấy carID từ URL
             String carId = request.getParameter("id");
 
             if (carId == null || carId.isEmpty()) {
@@ -59,7 +59,7 @@ public class UpdateCarServlet extends HttpServlet {
                 return;
             }
 
-            // Gọi DAO để lấy thông tin xe
+            // gọi DAO để lấy thông tin xe
             CarDAO carDAO = new CarDAO();
             Car car = carDAO.getCarById(carId);
 

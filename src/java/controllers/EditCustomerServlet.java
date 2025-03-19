@@ -40,42 +40,42 @@ public class EditCustomerServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
 
-            // Kiểm tra session và lấy thông tin SalesPerson
+            // kiểm tra session và lấy thông tin SalesPerson
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
             if (salesPerson == null) {
-                // Nếu không có session, thông báo lỗi và quay về login
+                // nếu không có session, thông báo lỗi và quay về login
                 request.setAttribute("ERROR", "Access not allowed! Please log in again.");
                 request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
                 return;
             }
 
-            // Lấy customerId từ URL
+            // lấy customerId từ request
             String customerId = request.getParameter("id");
 
-            // Kiểm tra nếu customerId là hợp lệ
+            // kiểm tra nếu customerId là hợp lệ
             if (customerId == null || customerId.isEmpty()) {
                 request.setAttribute("ERROR", "Customer ID is missing.");
                 request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
                 return;
             }
 
-            // Gọi DAO để lấy thông tin khách hàng
+            // gọi DAO để lấy thông tin khách hàng
             SalePersonDAO salePersonDAO = new SalePersonDAO();
             Customer customer = salePersonDAO.getCustomerById(customerId);
 
-            // Kiểm tra nếu không tìm thấy khách hàng
+            // kiểm tra nếu không tìm thấy khách hàng
             if (customer == null) {
                 request.setAttribute("ERROR", "Customer not found.");
                 request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
                 return;
             }
 
-            // Truyền đối tượng customer vào request
+            // truyền đối tượng customer vào request
             request.setAttribute("customer", customer);
 
-            // Chuyển hướng tới trang EditCustomer.jsp để hiển thị dữ liệu
+            // chuyển tới trang EditCustomer.jsp để hiển thị dữ liệu
             request.getRequestDispatcher("MainServlet?action=edit-customer-page").forward(request, response);
 
         } catch (Exception e) {

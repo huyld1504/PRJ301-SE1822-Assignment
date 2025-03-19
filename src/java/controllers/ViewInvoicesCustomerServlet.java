@@ -39,7 +39,7 @@ public class ViewInvoicesCustomerServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            // Kiểm tra session để xác định khách hàng đã đăng nhập chưa
+            // kiểm tra session để xác định khách hàng đã đăng nhập chưa
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("CUSTOMER") == null) {
                 request.setAttribute("ERROR", "Please log in first.");
@@ -47,22 +47,22 @@ public class ViewInvoicesCustomerServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy thông tin khách hàng từ session
+            // lấy thông tin khách hàng từ session
             Customer customer = (Customer) session.getAttribute("CUSTOMER");
             String custID = customer.getCustID();
 
-            // Lấy danh sách hóa đơn từ CustomerDAO
+            // lấy danh sách hóa đơn từ CustomerDAO
             CustomerDAO customerDAO = new CustomerDAO();
             List<SalesInvoice> invoices = customerDAO.getSalesInvoicesByCustomerId(custID);
 
-            // Nếu không có hóa đơn, trả về thông báo lỗi
+            // nếu không có hóa đơn, trả về thông báo lỗi
             if (invoices == null || invoices.isEmpty()) {
                 request.setAttribute("ERROR", "No invoices found for the customer.");
                 request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
                 return;
             }
 
-            // Lưu danh sách hóa đơn vào request và forward đến trang hiển thị
+            // lưu danh sách hóa đơn vào request và chuyển đến trang hiển thị
             request.setAttribute("invoices", invoices);
             request.getRequestDispatcher("MainServlet?action=view-invoices-customer-page").forward(request, response);
 

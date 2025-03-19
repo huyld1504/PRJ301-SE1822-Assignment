@@ -37,23 +37,23 @@ public class ReadCarServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             
-            // Lấy SalesPerson từ session
+            // lấy SalesPerson từ session
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
             if (salesPerson == null) {
-                // Nếu không có session, báo lỗi và quay về login
+                // nếu không có session, báo lỗi và quay về login
                 request.setAttribute("ERROR", "Access not allowed! Please log in again.");
                 request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
                 return;
             }
 
-            // Lấy danh sách xe theo salesID
+            // lấy danh sách xe theo salesID
             String salesID = salesPerson.getSalesID();
             CarDAO carDAO = new CarDAO();
-            ArrayList<Car> cars = carDAO.getAllCars(); // Gọi phương thức để lấy danh sách xe
+            ArrayList<Car> cars = carDAO.getAllCars(); // gọi phương thức để lấy danh sách xe
 
-            // Gửi danh sách xe sang trang JSP
+            // gửi danh sách xe sang trang JSP
             request.setAttribute("CAR_LIST", cars);
             request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
 

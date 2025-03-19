@@ -39,12 +39,12 @@ public class UpEditCustomerServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
 
-            // Kiểm tra session và lấy thông tin SalesPerson
+            // kiểm tra session và lấy thông tin SalesPerson
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
             if (salesPerson == null) {
-                // Nếu không có session, thông báo lỗi và quay về login
+                //nếu không có session, thông báo lỗi và quay về login
                 request.setAttribute("ERROR", "Access not allowed! Please log in again.");
                 request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
                 return;
@@ -56,18 +56,19 @@ public class UpEditCustomerServlet extends HttpServlet {
             String customerSex = request.getParameter("customer_sex");
             String customerAddress = request.getParameter("customer_address");
 
-            // Kiểm tra nếu customerId rỗng
+            // kiểm tra nếu customerId rỗng
             if (customerId == null || customerId.isEmpty()) {
                 request.setAttribute("ERROR", "Customer ID cannot be empty.");
                 request.getRequestDispatcher("MainServlet?action=edit-customer-page").forward(request, response);
                 return;
             }
 
-            // Tạo đối tượng Customer mới để cập nhật
+            //tạo đối tượng Customer mới và gọi DAO để cập nhật
             Customer updatedCustomer = new Customer(customerId, customerName, customerPhone, customerAddress, customerSex);
             SalePersonDAO salePersonDAO = new SalePersonDAO();
-            boolean isUpdated = salePersonDAO.updateCustomer(customerId, updatedCustomer); // Gọi phương thức updateCustomer trong SalePersonDAO
+            boolean isUpdated = salePersonDAO.updateCustomer(customerId, updatedCustomer);
 
+            //kiểm tra cập nhật đc chưa
             if (isUpdated) {
                 request.setAttribute("MESSAGE", "Customer updated successfully!");
             } else {

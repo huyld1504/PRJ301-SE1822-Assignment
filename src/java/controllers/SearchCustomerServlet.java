@@ -41,7 +41,7 @@ public class SearchCustomerServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            // kiểm tra session để xác định người dùng đã đăng nhập hay chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -51,23 +51,23 @@ public class SearchCustomerServlet extends HttpServlet {
                 return;
             }
             
-            // Lấy thông tin tìm kiếm từ form
+            // lấy thông tin tìm kiếm từ form
             String searchName = request.getParameter("search_name");
 
-            // Nếu không nhập tên tìm kiếm, lấy tất cả khách hàng
+            // gọi DAO để thực hiện tìm
             SalePersonDAO salePersonDAO = new SalePersonDAO();
             ArrayList<Customer> customerList;
 
             if (searchName == null || searchName.trim().isEmpty()) {
-                customerList = salePersonDAO.getAllCustomers();  // Lấy tất cả khách hàng nếu không có tên tìm kiếm
+                customerList = salePersonDAO.getAllCustomers();  // lấy tất cả khách hàng nếu không có tên tìm kiếm
             } else {
-                customerList = salePersonDAO.searchCustomerByName(searchName);  // Tìm khách hàng theo tên
+                customerList = salePersonDAO.searchCustomerByName(searchName);  // tìm khách hàng theo tên
             }
 
-            // Đưa danh sách khách hàng vào request
+            // đưa danh sách khách hàng vào request
             request.setAttribute("CUSTOMER_LIST", customerList);
 
-            // Chuyển hướng đến trang SearchCustomer.jsp để hiển thị kết quả
+            // chuyển đến trang SearchCustomer.jsp để hiển thị kết quả
             request.getRequestDispatcher("MainServlet?action=search-customer-page").forward(request, response);
 
         } catch (Exception e) {
