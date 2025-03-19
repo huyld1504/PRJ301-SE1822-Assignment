@@ -37,7 +37,7 @@ public class MainServlet extends HttpServlet {
             if (request.getParameter("action") != null) {
                 action = request.getParameter("action");
             }
-            System.out.println(action);
+//            System.out.println(action);
             switch (action) {
                 case "home":
                     //Write the page that you want to view
@@ -258,6 +258,12 @@ public class MainServlet extends HttpServlet {
                 case "get-invoice-list":
                     base_url="InvoiceListServlet";
                     break;
+                case "create-invoice-page":
+                    base_url="CreateInvoice.jsp";
+                    break;
+                case "create-invoice":
+                    base_url="CreateInvoiceServlet";
+                    break;
                 case "invoice-list-page":
                     base_url="InvoiceList.jsp";
                     break;
@@ -269,6 +275,9 @@ public class MainServlet extends HttpServlet {
                     base_url="ServiceTicketList.jsp";
                     break;
                 case "add-service-ticket-form":
+                    base_url="AddServiceTicket.jsp";
+                    break;
+                case "add-service-ticket":
                     base_url="AddServiceTicketServlet";
                     break;
                 default:

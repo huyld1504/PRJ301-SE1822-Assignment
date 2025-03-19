@@ -403,7 +403,7 @@
     <servlet-mapping>
         <servlet-name>AddServiceTicketServlet</servlet-name>
         <url-pattern>/AddServiceTicketServlet</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>    
     <servlet-mapping>
         <servlet-name>CarSalesReportByYearServlet</servlet-name>
         <url-pattern>/CarSalesReportByYearServlet</url-pattern>
