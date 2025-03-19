@@ -69,4 +69,10 @@ public class ServiceTicket implements Serializable{
     public void setCarID(String carID) {
         this.carID = carID;
     }
+
+    @Override
+    public String toString() {
+        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

@@ -43,7 +43,7 @@
                         <label for="partID" class="form-label">Part ID</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa-solid fa-cogs"></i></span>
-                            <input type="text" class="form-control" id="partID" name="partID" placeholder="Enter the part id" required
+                            <input type="number" class="form-control" id="partID" name="partID" placeholder="Enter the part id" required
                                    value="${param.partID}">
                         </div>
                     </div>

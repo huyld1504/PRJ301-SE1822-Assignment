@@ -314,7 +314,13 @@ public class ServiceTicketDAO {
         try {
             Connection cn = DBUtils.getConnection();
             if (cn != null) {
-                String query = "SELECT st.* FROM ServiceTicket st JOIN SalesInvoice si on st.custID=si.custID where si.salesID = ?";
+                String query = "SELECT st.*\n"
+                        + "FROM ServiceTicket st\n"
+                        + "WHERE st.custID IN (\n"
+                        + "    SELECT DISTINCT si.custID \n"
+                        + "    FROM SalesInvoice si \n"
+                        + "    WHERE si.salesID = ?\n"
+                        + ")";
                 PreparedStatement ps = cn.prepareStatement(query);
                 ps.setString(1, salesID);
                 ResultSet rs = ps.executeQuery();
@@ -361,7 +367,7 @@ public class ServiceTicketDAO {
         try {
             Connection cn = DBUtils.getConnection();
             if (cn != null) {
-                String query = "INSERT INTO ServiceTicket (serviceTicketID, dateReceived, dateReaturned, custID, carID) VALUES (?, ?, ?, ?, ?)";
+                String query = "INSERT INTO ServiceTicket (serviceTicketID, dateReceived, dateReturned, custID, carID) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement ps = cn.prepareStatement(query);
                 ps.setString(1, ticket.getServiceTicketID());
                 ps.setDate(2, (java.sql.Date) ticket.getDateReceived());
@@ -375,5 +381,58 @@ public class ServiceTicketDAO {
         }
         return success;
     }
+
+    public boolean isTicketIDExist(String ticketID) {
+        boolean exists = false;
+        String sql = "SELECT 1 FROM ServiceTicket WHERE TicketID = ?";
+
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, ticketID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                exists = true;
+            }
+
+            rs.close();
+            ps.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return exists;
+    }
+
+    public ArrayList<ServiceTicket> getAllServiceTickets() {
+        ArrayList<ServiceTicket> tickets = new ArrayList<>();
+        String sql = "SELECT [serviceTicketID], [dateReceived], [dateReturned], [custID], [carID] FROM [dbo].[ServiceTicket]";
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String serviceTicketID = rs.getString("serviceTicketID");
+                Date dateReceived = rs.getDate("dateReceived");
+                Date dateReturned = rs.getDate("dateReturned");
+                String custID = rs.getString("custID");
+                String carID = rs.getString("carID");
+
+                ServiceTicket ticket = new ServiceTicket(serviceTicketID, dateReceived, dateReturned, custID, carID);
+                tickets.add(ticket);
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tickets;
+    }
+
+   
 
 }
