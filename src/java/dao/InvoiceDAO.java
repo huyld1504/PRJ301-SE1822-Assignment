@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import models.SalesInvoice;
 import utils.DBUtils;
@@ -54,7 +53,44 @@ public class InvoiceDAO {
             }
         }
 
-        return rs;
+        return invoices;
+    }
+    
+    public int getNextInvoiceID() {
+        int nextID = 1;
+        String sql = "SELECT MAX(invoiceID) FROM SalesInvoice";
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                nextID = rs.getInt(1) + 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nextID;
+    }
+    
+    public String getSalesPersonNameByID(String saleID) {
+        String saleName = null;
+        String sql = "SELECT salesName FROM SalesPerson WHERE salesID = ?";
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, saleID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                saleName = rs.getString("salesName");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return saleName;
     }
 
     public boolean createInvoice(int invoiceID, Date invoiceDate, String saleID, String carID, String custID) {

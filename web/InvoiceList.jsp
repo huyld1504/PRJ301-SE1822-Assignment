@@ -48,7 +48,7 @@
                     <tr>
                         <td>${invoice.invoiceID}</td>
                         <td>${invoice.invoiceDate}</td>
-                        <td>${invoice.saleID}</td>
+                        <td>${invoice.salesID}</td>
                         <td>${invoice.carID}</td>
                         <td>${invoice.custID}</td>
                     </tr>
