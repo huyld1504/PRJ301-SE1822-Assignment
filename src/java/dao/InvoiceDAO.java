@@ -21,24 +21,23 @@ public class InvoiceDAO {
         Connection conn = null;
 
         try {
-            conn = DBUtils.getConnection(); // Lấy kết nối từ DBUtils
+            conn = DBUtils.getConnection(); // lấy kết nối từ DBUtils
             if (conn != null) {
                 String query = "SELECT si.invoiceID, si.invoiceDate, si.salesID, sp.salesName, si.custID "
                         + "FROM SalesInvoice si "
                         + "JOIN SalesPerson sp ON si.salesID = sp.salesID "
                         + "WHERE si.custID = ?";
                 PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setString(1, customerId); // Sử dụng custID là String thay vì int
+                stmt.setString(1, customerId); 
 
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     SalesInvoice invoice = new SalesInvoice();
                     invoice.setInvoiceID(rs.getInt("invoiceID"));
                     invoice.setInvoiceDate(rs.getDate("invoiceDate"));
-                    invoice.setSalesID(rs.getString("salesID")); // salesID là String
-                    //               invoice.setSalesPersonName(rs.getString("salesName"));
-                    invoice.setCustID(rs.getString("custID")); // custID là String
-                    invoices.add(invoice); // Thêm hóa đơn vào danh sách
+                    invoice.setSalesID(rs.getString("salesID")); 
+                    invoice.setCustID(rs.getString("custID")); 
+                    invoices.add(invoice); // thêm hóa đơn vào danh sách
                 }
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -46,13 +45,13 @@ public class InvoiceDAO {
         } finally {
             try {
                 if (conn != null) {
-                    conn.close(); // Đảm bảo đóng kết nối sau khi sử dụng
+                    conn.close(); // đóng kết nối sau khi sử dụng
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-        return invoices; // Trả về danh sách hóa đơn
+        return invoices; // trả về danh sách hóa đơn
     }
 }

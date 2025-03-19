@@ -151,13 +151,13 @@ public class CustomerDAO {
         return customer;
     }
 
-    // Lấy tất cả hóa đơn của khách hàng
+    // lấy tất cả hóa đơn của khách hàng theo id khách
     public List<SalesInvoice> getSalesInvoicesByCustomerId(String custID) {
         List<SalesInvoice> invoices = new ArrayList<>();
         Connection conn = null;
 
         try {
-            // Kết nối đến cơ sở dữ liệu
+            // kết nối đến cơ sở dữ liệu
             conn = DBUtils.getConnection();
             if (conn != null) {
                 String query = "SELECT invoiceID, invoiceDate, salesID, carID, custID "
@@ -195,15 +195,14 @@ public class CustomerDAO {
     
     
     
-    // Phương thức để lấy thông tin hóa đơn theo invoiceID
+    // lấy thông tin hóa đơn theo invoiceID
     public SalesInvoice getSalesInvoiceById(int invoiceID) {
         SalesInvoice invoice = null;
         Connection conn = null;
         try {
-            // Kết nối đến cơ sở dữ liệu
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Truy vấn dữ liệu từ bảng SalesInvoice theo invoiceID
+                
                 String query = "SELECT invoiceID, invoiceDate, salesID, carID, custID FROM SalesInvoice WHERE invoiceID = ?";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 stmt.setInt(1, invoiceID);
@@ -239,26 +238,26 @@ public class CustomerDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Query lấy thông tin hóa đơn
+                // query lấy thông tin hóa đơn
                 String query = "SELECT * FROM SalesInvoice WHERE invoiceID = ?";
                 PreparedStatement stmt = conn.prepareStatement(query);
                 stmt.setInt(1, invoiceID);
                 ResultSet rs = stmt.executeQuery();
 
                 if (rs.next()) {
-                    // Lấy thông tin từ hóa đơn
+                    // lấy thông tin từ hóa đơn
                     int invoiceIDFromDB = rs.getInt("invoiceID");
                     Date invoiceDate = rs.getDate("invoiceDate");
                     String salesID = rs.getString("salesID");
                     String carID = rs.getString("carID");
                     String custID = rs.getString("custID");
 
-                    // Lấy thông tin khách hàng, xe, nhân viên bán hàng
+                    // lấy thông tin khách hàng, xe, nhân viên bán hàng
                     Customer customer = getCustomerInvoiceById(custID);
                     Car car = getCarById(carID);
                     SalesPerson salesPerson = getSalesPersonById(salesID);
 
-                    // Tạo đối tượng SalesInvoiceDetail
+                    // tạo đối tượng SalesInvoiceDetail từ thông tin lấy ở trên
                     detail = new SalesInvoiceDetail(invoiceIDFromDB, invoiceDate, salesID, carID, custID, customer, car, salesPerson);
                 }
             }
@@ -276,7 +275,7 @@ public class CustomerDAO {
         return detail;
     }
 
-    // Lấy thông tin khách hàng theo custID
+    // lấy thông tin khách hàng theo custID
     public Customer getCustomerInvoiceById(String custID) {
         Customer customer = null;
         Connection conn = null;
@@ -309,7 +308,7 @@ public class CustomerDAO {
         return customer;
     }
 
-    // Lấy thông tin xe theo carID
+    // lấy thông tin xe theo carID
     public Car getCarById(String carID) {
         Car car = null;
         Connection conn = null;
@@ -344,7 +343,7 @@ public class CustomerDAO {
         return car;
     }
 
-    // Lấy thông tin nhân viên bán hàng theo salesID
+    // lấy thông tin nhân viên bán hàng theo salesID
     public SalesPerson getSalesPersonById(String salesID) {
         SalesPerson salesPerson = null;
         Connection conn = null;

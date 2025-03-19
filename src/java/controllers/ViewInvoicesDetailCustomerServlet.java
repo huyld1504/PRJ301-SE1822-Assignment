@@ -40,7 +40,7 @@ public class ViewInvoicesDetailCustomerServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            // Kiểm tra session để xác định khách hàng đã đăng nhập chưa
+            // kiểm tra session để xác định khách hàng đã đăng nhập chưa
             HttpSession session = request.getSession(false);
             if (session == null || session.getAttribute("CUSTOMER") == null) {
                 request.setAttribute("ERROR", "Please log in first.");
@@ -48,13 +48,13 @@ public class ViewInvoicesDetailCustomerServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy invoiceID từ request
+            // lấy invoiceID từ request
             int invoiceID = Integer.parseInt(request.getParameter("invoiceID"));
 
-            // Khởi tạo CustomerDAO để lấy thông tin liên quan
+            // gọi DAO để lấy thông tin
             CustomerDAO customerDAO = new CustomerDAO();
 
-            // Lấy thông tin hóa đơn từ database
+            // lấy thông tin hóa đơn từ DAO
             SalesInvoice invoice = customerDAO.getSalesInvoiceById(invoiceID);
             if (invoice == null) {
                 request.setAttribute("ERROR", "Invoice not found.");
@@ -62,16 +62,12 @@ public class ViewInvoicesDetailCustomerServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy thông tin khách hàng
+            // lấy thông tin khách hàng, xe, nhân viên bán hàng
             Customer customer = customerDAO.getCustomerInvoiceById(invoice.getCustID());
-
-            // Lấy thông tin xe
             Car car = customerDAO.getCarById(invoice.getCarID());
-
-            // Lấy thông tin nhân viên bán hàng
             SalesPerson salesPerson = customerDAO.getSalesPersonById(invoice.getSalesID());
 
-            // Lưu dữ liệu vào request để hiển thị trong JSP
+            // lưu dữ liệu vào request để hiển thị trong JSP
             request.setAttribute("invoice", invoice);
             request.setAttribute("customer", customer);
             request.setAttribute("car", car);

@@ -17,7 +17,7 @@ public class EncodingFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Mặc định không cần cấu hình gì thêm
+        
     }
 
     @Override
@@ -25,12 +25,12 @@ public class EncodingFilter implements Filter {
             throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        chain.doFilter(request, response); // Tiến hành tiếp chuỗi lọc
+        chain.doFilter(request, response); // tiến hành tiếp chuỗi lọc
     }
 
     @Override
     public void destroy() {
-        // Mặc định không cần dọn dẹp gì
+        
     }
 }
 

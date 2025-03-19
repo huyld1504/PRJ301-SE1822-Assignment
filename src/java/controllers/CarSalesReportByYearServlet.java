@@ -37,25 +37,25 @@ public class CarSalesReportByYearServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            // Lấy SalesPerson từ session
+            // lấy SalesPerson từ session
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
             if (salesPerson == null) {
-                // Nếu không có session, báo lỗi và quay về login
+                // nếu không có session, báo lỗi và quay về login
                 request.setAttribute("ERROR", "Access not allowed! Please log in again.");
                 request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
                 return;
             }
 
-            // Lấy báo cáo số lượng xe bán theo năm
+            // lấy báo cáo số lượng xe bán theo năm từ DAO
             SalePersonDAO salePersonDAO = new SalePersonDAO();
             ArrayList<Map<String, Object>> carsSoldByYear = salePersonDAO.getCarsSoldByYear();
 
-            // Lưu báo cáo vào request
+            // lưu báo cáo vào request
             request.setAttribute("carsSoldByYear", carsSoldByYear);
 
-            // Chuyển tiếp đến trang JSP hiển thị báo cáo
+            // chuyển đến trang JSP hiển thị báo cáo
             request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
 
         } catch (Exception e) {

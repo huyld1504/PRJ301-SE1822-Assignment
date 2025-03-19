@@ -40,7 +40,7 @@ public class LogoutSalesServlet extends HttpServlet {
             HttpSession s = request.getSession(false);
 
             if (s != null) {
-                s.invalidate(); // Xóa session hoàn toàn
+                s.invalidate(); // xóa session hoàn toàn
             }
 
             response.sendRedirect("MainServlet?action=login-sale-page");

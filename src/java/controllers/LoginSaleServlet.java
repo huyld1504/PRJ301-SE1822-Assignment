@@ -40,12 +40,15 @@ public class LoginSaleServlet extends HttpServlet {
         
         try (PrintWriter out = response.getWriter()) {
             
-            
+            // lấy thông tin từ form login
             String sale_name = request.getParameter("sale_name");
 
+            // gọi DAO để check login
             SalePersonDAO sp = new SalePersonDAO();
             SalesPerson sale = sp.checkLogin(sale_name);
-            SalesPerson saleID= sp.getSaleByName(sale_name);
+            
+            // lấy thông tin của sale thông qua tên sale
+            SalesPerson saleID = sp.getSaleByName(sale_name);
             if (sale != null) {
                 HttpSession s = request.getSession(true);
                 

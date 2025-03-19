@@ -37,12 +37,12 @@ public class BestUsedPartsServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
 
-            // Lấy SalesPerson từ session
+            // lấy SalesPerson từ session
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
             if (salesPerson == null) {
-                // Nếu không có session, báo lỗi và quay về login
+                // không có session, báo lỗi và quay về login
                 request.setAttribute("ERROR", "Access not allowed! Please log in again.");
                 request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
                 return;

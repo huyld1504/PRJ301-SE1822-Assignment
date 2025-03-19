@@ -35,7 +35,7 @@ public class DeleteCarServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             
-            // Kiểm tra session để xác định người dùng đã đăng nhập hay chưa
+            // kiểm tra session để xác định người dùng đã đăng nhập hay chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -48,21 +48,20 @@ public class DeleteCarServlet extends HttpServlet {
             String carID = request.getParameter("id");
             CarDAO carDAO = new CarDAO();
 
-            // Lấy thông tin xe trước khi xóa (model và carID)
+            // lấy thông tin xe trước khi xóa (model và carID)
             String carModel = carDAO.getCarModelById(carID);
-
-            // Xóa xe
             boolean isDeleted = carDAO.deleteCar(carID);
 
+            // kiểm tra xóa thành công không
             if (isDeleted) {
-                // Nếu xóa thành công, chuyển thông báo thành công với model và carID của xe
+                // nếu xóa thành công, thông báo thành công với model và carID của xe
                 request.setAttribute("MESSAGE", "Car with Model: " + carModel + " and Car ID: " + carID + " deleted successfully!");
             } else {
-                // Nếu xóa thất bại, chuyển thông báo lỗi
+                // nếu xóa thất bại, thông báo lỗi
                 request.setAttribute("ERROR", "Car deletion failed. Please try again!");
             }
 
-            // Trả lại danh sách xe và thông báo đến trang đọc xe
+            // trả lại danh sách xe và thông báo đến saledasshboard thông qua readcarservlet
             request.getRequestDispatcher("MainServlet?action=read-car").forward(request, response);
 
         } catch (Exception e) {
