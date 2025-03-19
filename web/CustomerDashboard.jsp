@@ -16,7 +16,28 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
         <!--Font awesome-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/> 
+        
+        <style>
+            /* Căn giữa biểu tượng và chữ "View Invoices" trên cùng một hàng */
+.nav-item a {
+    display: flex;
+    flex-direction: row; /* Chắc chắn rằng chữ và biểu tượng nằm trên cùng một hàng */
+    align-items: center; /* Căn giữa biểu tượng và chữ */
+}
+
+.nav-item .icon-style {
+    font-size: 1.2rem;  /* Kích thước biểu tượng */
+    margin-right: 0.5rem;  /* Khoảng cách giữa biểu tượng và chữ */
+}
+
+.nav-item a div.text-center {
+    font-size: 1rem; /* Điều chỉnh kích thước chữ */
+    margin-top: 0; /* Loại bỏ khoảng cách nếu có */
+}
+
+
+        </style>
     </head>
     <body>
         <c:if test="${sessionScope.CUSTOMER != null}">
@@ -38,9 +59,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="fa-solid fa-car"></i>
-                                    View Cars
+                                <a class="nav-link" href="MainServlet?action=view-invoices-customer">
+                                    <i class="fa-solid fa-car icon-style"></i> <!-- Biểu tượng -->
+                                    <div class="text-center">View Invoices</div> <!-- Chữ dưới biểu tượng -->
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
@@ -70,7 +91,7 @@
                         </form>
                     </div>
                 </div>
-            </nav>
+            </nav>        
 
             <c:if test="${sessionScope.CUSTOMER_SERVICE_TICKET_LIST != null and !sessionScope.CUSTOMER_SERVICE_TICKET_LIST.isEmpty()}">
                 <p class="fs-4 fw-bold w-100 text-center mt-5">Your Service ticket</p>
@@ -100,22 +121,6 @@
                     </c:forEach>
                 </table>
 
-                <c:if test="${sessionScope.car != null}">
-                    <div class="card mx-auto mt-5 w-25" style="width: 18rem;">
-                        <div class="card-header fw-bold text-center">
-                            Car Information
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">ID: ${sessionScope.car.carID}</li>
-                            <li class="list-group-item">Serial number: ${sessionScope.car.serialNumber}</li>
-                            <li class="list-group-item">Model: ${sessionScope.car.model}</li>
-                            <li class="list-group-item">Colour: ${sessionScope.car.colour}</li>
-                            <li class="list-group-item">Year: ${sessionScope.car.year}</li>
-                            <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.car.price}" pattern="#,###" />VND</li>
-                        </ul>
-                    </div>
-                </c:if>
-
                 <c:if test="${sessionScope.SERVICE_MECHANIC_CUS_LIST != null and !sessionScope.SERVICE_MECHANIC_CUS_LIST.isEmpty()}">
                     <p class="fs-4 fw-bold w-100 text-center mt-5">Your Service ticket detail</p>
                     <table class="table table-striped w-75 mx-auto mt-3">
@@ -137,7 +142,7 @@
                                 <td>${ticket.rate}</td>
                                 <td>${ticket.comment}</td>
                                 <td>
-                                    <form action="MainServlet" method="post">    
+                                    <form action="MainServlet" method="get">    
                                         <input type="hidden" name="action" value="get-customer-service-mechanic-detail">
                                         <input type="hidden" name="serviceID" value="${ticket.serviceID}">
                                         <input type="hidden" name="mechanicID" value="${ticket.mechanicID}">
@@ -151,6 +156,23 @@
                         </c:forEach>
                     </table>
                 </c:if>
+
+                <c:if test="${sessionScope.car != null}">
+                    <div class="card mx-auto mb-5 w-25" style="width: 18rem;">
+                        <div class="card-header fw-bold text-center">
+                            Car Information
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">ID: ${sessionScope.car.carID}</li>
+                            <li class="list-group-item">Serial number: ${sessionScope.car.serialNumber}</li>
+                            <li class="list-group-item">Model: ${sessionScope.car.model}</li>
+                            <li class="list-group-item">Colour: ${sessionScope.car.colour}</li>
+                            <li class="list-group-item">Year: ${sessionScope.car.year}</li>
+                            <li class="list-group-item">Price: <fmt:formatNumber value="${requestScope.car.price}" pattern="#,###" />VND</li>
+                        </ul>
+                    </div>
+                </c:if>
+              
             </c:if>
             <c:if test="${requestScope.MESSAGE != null}">
                 <div class="alert alert-danger w-75" role="alert">

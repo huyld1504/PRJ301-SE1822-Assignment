@@ -40,7 +40,7 @@ public class UpdateSalesPersonProfileServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
 
-            // Kiểm tra session để xác thực người bán đã đăng nhập chưa
+            // kiểm tra session để xác thực người bán đã đăng nhập chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -50,37 +50,37 @@ public class UpdateSalesPersonProfileServlet extends HttpServlet {
                 return;
             }
             
-            // Lấy thông tin mới từ form cập nhật
+            //lấy thông tin mới từ form cập nhật
             String salespersonID = request.getParameter("salesperson_id");
             String salespersonName = request.getParameter("salesperson_name");
             String salespersonSex = request.getParameter("salesperson_sex");
             String salespersonAddress = request.getParameter("salesperson_address");
 
             String salespersonBirthdayStr = request.getParameter("salesperson_birthday");
-            Date salespersonBirthday = null; // Khai báo biến trước khi kiểm tra
+            Date salespersonBirthday = null; // khai báo biến trước khi kiểm tra
 
             if (salespersonBirthdayStr != null && !salespersonBirthdayStr.isEmpty()) {
                 try {
-                    salespersonBirthday = Date.valueOf(salespersonBirthdayStr);  // Chuyển đổi từ String thành Date
+                    salespersonBirthday = Date.valueOf(salespersonBirthdayStr);  // chuyển từ String thành Date
                 } catch (IllegalArgumentException e) {
                     request.setAttribute("ERROR", "Invalid date format. Please use yyyy-MM-dd.");
                     request.getRequestDispatcher("MainServlet?action=sale-profile").forward(request, response);
-                    return; // Dừng lại nếu gặp lỗi
+                    return; // dừng lại nếu gặp lỗi
                 }
             }
 
-            // Tạo đối tượng SalesPerson mới với thông tin đã được cập nhật
+            // tạo đối tượng SalesPerson mới với thông tin đã được cập nhật
             SalesPerson newProfile = new SalesPerson(salespersonID, salespersonName, salespersonAddress, salespersonSex, salespersonBirthday);
 
-            System.out.println("Birthday: " + newProfile.getBirthday());
+        //    System.out.println("Birthday: " + newProfile.getBirthday());
 
-            // Gọi DAO để cập nhật thông tin SalesPerson trong cơ sở dữ liệu
+            // gọi DAO để cập nhật thông tin SalesPerson trong cơ sở dữ liệu
             SalePersonDAO salesPersonDAO = new SalePersonDAO();
             boolean isUpdated = salesPersonDAO.update(salespersonID, newProfile);
 
-            // Kiểm tra kết quả cập nhật
+            // kiểm tra kết quả cập nhật
             if (isUpdated) {
-                // Cập nhật thông tin SalesPerson trong session
+                // cập nhật thông tin SalesPerson trong session
                 session = request.getSession(true);
                 session.setAttribute("SALE", newProfile);
                 request.setAttribute("MESSAGE", "Profile updated successfully!");
@@ -88,7 +88,7 @@ public class UpdateSalesPersonProfileServlet extends HttpServlet {
                 request.setAttribute("ERROR", "Failed to update profile!");
             }
 
-            // Chuyển hướng lại trang Profile
+            // quay lại trang Profile
             request.getRequestDispatcher("MainServlet?action=sale-profile").forward(request, response);
         }
     }

@@ -244,6 +244,14 @@
         <servlet-name>UpdateSalesPersonProfileServlet</servlet-name>
         <servlet-class>controllers.UpdateSalesPersonProfileServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewInvoicesCustomerServlet</servlet-name>
+        <servlet-class>controllers.ViewInvoicesCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewInvoicesDetailCustomerServlet</servlet-name>
+        <servlet-class>controllers.ViewInvoicesDetailCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
         <url-pattern>/MainServlet</url-pattern>
@@ -419,6 +427,14 @@
     <servlet-mapping>
         <servlet-name>UpdateSalesPersonProfileServlet</servlet-name>
         <url-pattern>/UpdateSalesPersonProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewInvoicesCustomerServlet</servlet-name>
+        <url-pattern>/ViewInvoicesCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewInvoicesDetailCustomerServlet</servlet-name>
+        <url-pattern>/ViewInvoicesDetailCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

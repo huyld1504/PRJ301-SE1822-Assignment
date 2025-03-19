@@ -29,7 +29,7 @@ public class CarDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Truy vấn để lấy tất cả các xe, bao gồm cả cột 'price'
+                
                 String sql = "SELECT carID, serialNumber, model, colour, year, price FROM dbo.Cars";
                 PreparedStatement p = conn.prepareStatement(sql);
 
@@ -40,9 +40,9 @@ public class CarDAO {
                     String model = rs.getString("model");
                     String colour = rs.getString("colour");
                     int year = rs.getInt("year");
-                    double price = rs.getDouble("price");  // Lấy giá trị price (kiểu double)
+                    double price = rs.getDouble("price");  
 
-                    // Thêm đối tượng Car vào danh sách với giá trị price là kiểu double
+                    // thêm đối tượng Car vào danh sách
                     carList.add(new Car(carID, serialNumber, model, colour, year, price));
                 }
             }
@@ -70,29 +70,29 @@ public class CarDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Lấy carID lớn nhất hiện có trong bảng Cars
+                // lấy carID lớn nhất hiện có trong bảng Cars
                 String getMaxCarIDSQL = "SELECT MAX(CAST(carID AS INT)) FROM dbo.Cars";
                 PreparedStatement getMaxCarIDStmt = conn.prepareStatement(getMaxCarIDSQL);
                 ResultSet rs = getMaxCarIDStmt.executeQuery();
 
-                int newCarID = 1122334400; // Giá trị mặc định từ 1122334400 nếu bảng trống
+                int newCarID = 1122334400; // giá trị mặc định từ 1122334400 nếu bảng trống
 
                 if (rs.next() && rs.getObject(1) != null) {
-                    newCarID = rs.getInt(1) + 1; // Tăng carID nếu đã có bản ghi
+                    newCarID = rs.getInt(1) + 1; // tăng carID nếu đã có bản ghi
                 }
 
-                // Chèn xe mới vào bảng
+                // chèn xe mới vào bảng
                 String sql = "INSERT INTO dbo.Cars (carID, serialNumber, model, colour, year, price) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement p = conn.prepareStatement(sql);
-                p.setInt(1, newCarID); // Gán carID tự động tạo
+                p.setInt(1, newCarID); // gán carID tự động tạo
                 p.setString(2, car.getSerialNumber());
                 p.setString(3, car.getModel());
                 p.setString(4, car.getColour());
                 p.setInt(5, car.getYear());
                 p.setDouble(6, car.getPrice());
                 
-                int result = p.executeUpdate();  // Chèn xe mới vào bảng
-                isAdded = result > 0; // Kiểm tra việc thêm xe vào cơ sở dữ liệu
+                int result = p.executeUpdate();  // chèn xe mới vào bảng
+                isAdded = result > 0; // kiểm tra việc thêm xe vào cơ sở dữ liệu
 
             }
         } catch (SQLException | ClassNotFoundException e) {
@@ -118,19 +118,19 @@ public class CarDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Cập nhật câu lệnh SQL để bao gồm cột 'price'
+                
                 String sql = "UPDATE dbo.Cars SET serialNumber=?, model=?, colour=?, year=?, price=? WHERE carID=?";
                 PreparedStatement p = conn.prepareStatement(sql);
                 p.setString(1, car.getSerialNumber());
                 p.setString(2, car.getModel());
                 p.setString(3, car.getColour());
                 p.setInt(4, car.getYear());
-                p.setDouble(5, car.getPrice());  // Cập nhật giá trị price
-                p.setString(6, car.getCarID());  // Cập nhật carID để xác định xe cần cập nhật
+                p.setDouble(5, car.getPrice());  
+                p.setString(6, car.getCarID());  
 
-                // Thực thi câu lệnh cập nhật
+                // thực thi câu lệnh cập nhật
                 int result = p.executeUpdate();
-                isUpdated = result > 0;  // Nếu có ít nhất 1 dòng bị ảnh hưởng thì trả về true
+                isUpdated = result > 0;  // nếu có ít nhất 1 dòng bị ảnh hưởng thì trả về true
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -147,7 +147,7 @@ public class CarDAO {
         return isUpdated;
     }
 
-    // Lấy xe ra từ id (có thêm price)
+    // lấy xe ra từ id 
     public Car getCarById(String carId) {
         Car car = null;
         Connection conn = null;
@@ -155,21 +155,21 @@ public class CarDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // SQL để lấy thông tin xe theo carID (bao gồm cột price)
+                
                 String sql = "SELECT carID, serialNumber, model, colour, year, price FROM dbo.Cars WHERE carID = ?";
                 PreparedStatement p = conn.prepareStatement(sql);
-                p.setString(1, carId);  // Gán carId vào câu lệnh SQL
+                p.setString(1, carId);  // gán carId vào câu lệnh SQL
 
                 ResultSet rs = p.executeQuery();
                 if (rs.next()) {
-                    // Lấy thông tin từ ResultSet và tạo đối tượng Car
+                    // lấy thông tin từ ResultSet và tạo đối tượng Car
                     car = new Car(
                             rs.getString("carID"),
                             rs.getString("serialNumber"),
                             rs.getString("model"),
                             rs.getString("colour"),
                             rs.getInt("year"),
-                            rs.getDouble("price") // Lấy giá trị price từ ResultSet
+                            rs.getDouble("price") 
                     );
                 }
             }
@@ -188,38 +188,59 @@ public class CarDAO {
         return car;
     }
 
-    // xóa car
+    // xóa từng bảng để tránh lỗi
     public boolean deleteCar(String carID) {
-        boolean isDeleted = false;
         Connection conn = null;
-
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // SQL để xóa xe theo carID
-                String sql = "DELETE FROM dbo.Cars WHERE carID=?";
-                PreparedStatement p = conn.prepareStatement(sql);
-                p.setString(1, carID);
+                String sql1 = "DELETE FROM SalesInvoice WHERE carID =  ?";
+                PreparedStatement ps1 = conn.prepareStatement(sql1);
+                ps1.setString(1, carID);
+                ps1.executeUpdate();
 
-                int result = p.executeUpdate();
-                isDeleted = result > 0;
+                String sql2 = "DELETE FROM PartsUsed WHERE serviceTicketID IN \n"
+                        + "    (SELECT serviceTicketID FROM ServiceTicket WHERE carID = ?);";
+                PreparedStatement ps2 = conn.prepareStatement(sql2);
+                ps2.setString(1, carID);
+                ps2.executeUpdate();
+
+                String sql3 = "DELETE FROM ServiceMechanic WHERE serviceTicketID IN \n"
+                        + "    (SELECT serviceTicketID FROM ServiceTicket WHERE carID = ?)";
+                PreparedStatement ps3 = conn.prepareStatement(sql3);
+                ps3.setString(1, carID);
+                ps3.executeUpdate();
+
+                String sql4 = "DELETE FROM ServiceTicket WHERE carID = ?";
+                PreparedStatement ps4 = conn.prepareStatement(sql4);
+                ps4.setString(1, carID);
+                ps4.executeUpdate();
+
+                String sql5 = "DELETE FROM Cars WHERE carID = ?";
+                PreparedStatement ps5 = conn.prepareStatement(sql5);
+                ps5.setString(1, carID);
+
+                int deleted = ps5.executeUpdate();
+                return deleted > 0;
             }
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        return isDeleted;
+        return false;
     }
 
-    // Phương thức trong CarDAO để lấy model của xe từ carID
+
+
+
+    // lấy model của xe từ carID
     public String getCarModelById(String carID) {
         String model = null;
         Connection conn = null;
@@ -259,10 +280,10 @@ public class CarDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Cập nhật câu lệnh SQL để lấy thêm cột price
+                
                 String sql = "SELECT carID, serialNumber, model, colour, year, price FROM dbo.Cars WHERE 1=1";
 
-                // Build query based on provided parameters
+                // xây dựng truy vấn dựa trên các tham số được cung cấp
                 if (serialNumber != null && !serialNumber.isEmpty()) {
                     sql += " AND serialNumber LIKE ?";
                 }
@@ -276,6 +297,7 @@ public class CarDAO {
                 PreparedStatement p = conn.prepareStatement(sql);
 
                 int paramIndex = 1;
+                // paramIndex++ bắt đầu tìm từ dấu chấm hỏi đầu tiên rồi tăng dần lên
                 if (serialNumber != null && !serialNumber.isEmpty()) {
                     p.setString(paramIndex++, "%" + serialNumber + "%");
                 }
@@ -288,14 +310,14 @@ public class CarDAO {
 
                 ResultSet rs = p.executeQuery();
                 while (rs.next()) {
-                    // Cập nhật constructor Car để thêm price
+                    // cập nhật constructor Car để thêm price
                     Car car = new Car(
                             rs.getString("carID"),
                             rs.getString("serialNumber"),
                             rs.getString("model"),
                             rs.getString("colour"),
                             rs.getInt("year"),
-                            rs.getDouble("price") // Thêm price vào đối tượng Car
+                            rs.getDouble("price") // thêm price vào đối tượng Car
                     );
                     carList.add(car);
                 }

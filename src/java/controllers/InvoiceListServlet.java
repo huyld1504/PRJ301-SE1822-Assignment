@@ -43,29 +43,29 @@ public class InvoiceListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String saleID = (String) session.getAttribute("sale_ID");
-
-        if (saleID == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        InvoiceDAO dao = new InvoiceDAO();
-        ArrayList<SalesInvoice> list = dao.getInvoicesBySaleID(saleID);
-        
-        String saleName =dao.getSalesPersonNameByID(saleID);
-        session.setAttribute("saleName", saleName);
-        request.setAttribute("LIST", list);
-        request.setAttribute("sale_ID", session.getAttribute("sale_ID"));
-        request.getRequestDispatcher("MainServlet?action=invoice-list-page").forward(request, response);
+//        HttpSession session = request.getSession();
+//        String saleID = (String) session.getAttribute("sale_ID");
+//
+//        if (saleID == null) {
+//            response.sendRedirect("login.jsp");
+//            return;
+//        }
+//
+//        InvoiceDAO dao = new InvoiceDAO();
+//        ArrayList<SalesInvoice> list = dao.getInvoicesBySaleID(saleID);
+//        tạo 
+//        String saleName =dao.getSalesPersonNameByID(saleID);
+//        session.setAttribute("saleName", saleName);
+//        request.setAttribute("LIST", list);
+//        request.setAttribute("sale_ID", session.getAttribute("sale_ID"));
+//        request.getRequestDispatcher("MainServlet?action=invoice-list-page").forward(request, response);
     }
 
     
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+          processRequest(request, response);
     }
 
     /**

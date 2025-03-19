@@ -42,23 +42,23 @@ public class ReadCustomerServlet extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
 
-            // Lấy SalesPerson từ session
+            // lấy SalesPerson từ session
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
             if (salesPerson == null) {
-                // Nếu không có session, báo lỗi và quay về login
+                // nếu không có session, báo lỗi và quay về login
                 request.setAttribute("ERROR", "Access not allowed! Please log in again.");
                 request.getRequestDispatcher("MainServlet?action=login-sale-page").forward(request, response);
                 return;
             }
 
-            // Lấy danh sách khách hàng theo salesID
+            // lấy danh sách khách hàng theo salesID
             String salesID = salesPerson.getSalesID();
             SalePersonDAO saleDAO = new SalePersonDAO();
             ArrayList<Customer> customers = saleDAO.getAllCustomers();
 
-            // Gửi danh sách khách hàng sang trang JSP
+            // gửi danh sách khách hàng sang trang JSP
             request.setAttribute("CUSTOMER_LIST", customers);
             request.getRequestDispatcher("MainServlet?action=sale-dashboard").forward(request, response);
 

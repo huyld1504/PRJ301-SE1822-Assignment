@@ -39,6 +39,7 @@ public class ServiceDeleteServlet extends HttpServlet {
             boolean isDeleted = s.deleteServiceByID(serviceID);
             
             if(isDeleted) {
+                request.getSession().setAttribute("MESSAGE", "Delete service successfully.");
                 response.sendRedirect("MainServlet?action=get-service-list");
             } else {
                 request.setAttribute("MESSAGE", "Failed to delete. Please try again.");

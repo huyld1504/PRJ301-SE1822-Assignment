@@ -5,6 +5,7 @@
  */
 package filters;
 
+import dao.ServiceDAO;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -15,6 +16,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import models.Service;
 import utils.StringUtils;
 
 /**
@@ -114,10 +116,10 @@ public class UpdateServiceFilter implements Filter {
             String hourlyRate = request.getParameter("hourlyRate").replace(",", "");
             
             if(StringUtils.checkEmpty(serviceName) || StringUtils.checkEmpty(hourlyRate)) {
-                request.setAttribute("MESSAGE", "service name or hourly rate cannot be empty.");
+                request.setAttribute("ERROR", "service name or hourly rate cannot be empty.");
                 request.getRequestDispatcher("MainServlet?action=service-page").forward(request, response);
-            } else if(!hourlyRate.matches("^(\\d{1,3}(,\\d{3})*\\.\\d{2}|\\d+)$")) {
-                request.setAttribute("MESSAGE", "hourly rate is invalid format(the format can be: XXX,XXX or XXXXXX)");
+            } else if(!hourlyRate.matches("^\\d+(\\.\\d+)?$")) {
+                request.setAttribute("ERROR", "hourly rate is invalid format(the format can be: XXX,XXX or XXXXXX)");
                 request.getRequestDispatcher("MainServlet?action=service-page").forward(request, response);
             } else {
                 double parsedHourlyRate = Double.parseDouble(hourlyRate);

@@ -35,6 +35,8 @@ public class SalePersonDAO {
                 String sql = "select salesID,salesName,birthday,sex,salesAddress\n"
                         + "from dbo.SalesPerson\n"
                         + "where salesName=?";
+                
+                // kết nối với database để thực hiện câu lệnh slq
                 PreparedStatement p = conn.prepareStatement(sql);
                 p.setString(1, name);
                 ResultSet table = p.executeQuery();
@@ -73,7 +75,7 @@ public class SalePersonDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Lấy tất cả khách hàng
+                // lấy tất cả khách hàng
                 String sql = "SELECT custID, custName, phone, sex, cusAddress FROM dbo.Customer";
                 PreparedStatement p = conn.prepareStatement(sql);
 
@@ -102,7 +104,7 @@ public class SalePersonDAO {
         return customerList;
     }
 
-    //  Thêm khách hàng mới 
+    //  thêm khách hàng mới 
     public boolean addCustomer(Customer customer) {
         boolean isAdded = false;
         Connection conn = null;
@@ -110,24 +112,24 @@ public class SalePersonDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Lấy `custID` lớn nhất và tăng lên 1
+                // lấy `custID` lớn nhất và tăng lên 1
                 String getMaxIdSQL = "SELECT MAX(CAST(custID AS INT)) FROM dbo.Customer";
                 PreparedStatement getMaxIdStmt = conn.prepareStatement(getMaxIdSQL);
                 ResultSet rs = getMaxIdStmt.executeQuery();
-                int newCustID = 11000; // Giá trị mặc định nếu bảng trống
+                int newCustID = 11000; // giá trị mặc định nếu bảng trống
 
                 if (rs.next() && rs.getObject(1) != null) {
                     newCustID = rs.getInt(1) + 1;
                 }
 
-                // Chèn khách hàng mới với `custID` vừa tạo
+                // chèn khách hàng mới với `custID` vừa tạo
                 String sql = "INSERT INTO dbo.Customer (custID, custName, phone, sex, cusAddress) VALUES (?, ?, ?, ?, ?)";
                 PreparedStatement p = conn.prepareStatement(sql);
                 p.setInt(1, newCustID);
-                p.setNString(2, customer.getCustName());  // Dùng setNString để đảm bảo Tiếng Việt
+                p.setNString(2, customer.getCustName());  // dùng setNString để đảm bảo Tiếng Việt
                 p.setString(3, customer.getPhone());
                 p.setString(4, customer.getSex());
-                p.setNString(5, customer.getCusAddress());  // Dùng setNString để đảm bảo Tiếng Việt
+                p.setNString(5, customer.getCusAddress());  // dùng setNString để đảm bảo Tiếng Việt
 
                 int result = p.executeUpdate();
                 isAdded = result > 0;
@@ -154,7 +156,7 @@ public class SalePersonDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // SQL để cập nhật thông tin khách hàng
+                
                 String sql = "UPDATE dbo.Customer SET custName=?, phone=?, sex=?, cusAddress=? WHERE custID=?";
                 PreparedStatement p = conn.prepareStatement(sql);
                 p.setString(1, updatedCustomer.getCustName());
@@ -164,7 +166,7 @@ public class SalePersonDAO {
                 p.setString(5, custID);
 
                 int result = p.executeUpdate();
-                isUpdated = result > 0; // Kiểm tra có dòng nào bị ảnh hưởng không
+                isUpdated = result > 0; // kiểm tra có dòng nào bị ảnh hưởng không
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -181,7 +183,7 @@ public class SalePersonDAO {
         return isUpdated;
     }
 
-    // SalePersonDAO.java
+    // lấy thông tin khách thông qua id
     public Customer getCustomerById(String custID) {
         Customer customer = null;
         Connection conn = null;
@@ -189,20 +191,20 @@ public class SalePersonDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Truy vấn thông tin khách hàng theo custID
+                
                 String sql = "SELECT custID, custName, phone, sex, cusAddress FROM dbo.Customer WHERE custID = ?";
                 PreparedStatement p = conn.prepareStatement(sql);
-                p.setString(1, custID); // Gán giá trị custID vào câu truy vấn
+                p.setString(1, custID); // gán giá trị custID vào câu truy vấn
 
                 ResultSet rs = p.executeQuery();
                 if (rs.next()) {
-                    // Nếu tìm thấy khách hàng
+                    // trả ra thông tin nếu tìm thấy khách hàng
                     String custName = rs.getString("custName");
                     String phone = rs.getString("phone");
                     String sex = rs.getString("sex");
                     String cusAddress = rs.getString("cusAddress");
 
-                    // Khởi tạo đối tượng Customer với thông tin lấy từ cơ sở dữ liệu
+                    // khởi tạo đối tượng Customer với thông tin lấy đc ở trên
                     customer = new Customer(custID, custName, phone, cusAddress, sex);
                 }
             }
@@ -221,35 +223,58 @@ public class SalePersonDAO {
         return customer;
     }
 
-    // xóa khách hàng
+    // xóa từng bảng có liên quan đến khách để tránh lỗi
     public boolean deleteCustomer(String custID) {
-        boolean isDeleted = false;
         Connection conn = null;
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                String sql = "DELETE FROM dbo.Customer WHERE custID=?";
-                PreparedStatement p = conn.prepareStatement(sql);
-                p.setString(1, custID);
+                String sql1 = "DELETE FROM SalesInvoice WHERE custID = ?";
+                PreparedStatement ps1 = conn.prepareStatement(sql1);
+                ps1.setString(1, custID);
+                ps1.executeUpdate();
+                
+                String sql2 = "DELETE FROM PartsUsed WHERE serviceTicketID IN \n"
+                        + "    (SELECT serviceTicketID FROM ServiceTicket WHERE custID = ?)";
+                PreparedStatement ps2 = conn.prepareStatement(sql2);
+                ps2.setString(1, custID);
+                ps2.executeUpdate();
 
-                int result = p.executeUpdate();
-                isDeleted = result > 0;
+                String sql3 = "DELETE FROM ServiceMechanic WHERE serviceTicketID IN \n"
+                        + "    (SELECT serviceTicketID FROM ServiceTicket WHERE custID = ?)";
+                PreparedStatement ps3 = conn.prepareStatement(sql3);
+                ps3.setString(1, custID);
+                ps3.executeUpdate();
+
+                String sql4 = "DELETE FROM ServiceTicket WHERE custID = ?";
+                PreparedStatement ps4 = conn.prepareStatement(sql4);
+                ps4.setString(1, custID);
+                ps4.executeUpdate();
+                
+                String sql5 = "DELETE FROM Customer WHERE custID = ?";
+                PreparedStatement ps5 = conn.prepareStatement(sql5);
+                ps5.setString(1, custID);
+
+                int deleted = ps5.executeUpdate();
+
+                return deleted > 0;
             }
-        } catch (ClassNotFoundException | SQLException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return isDeleted;
+        return false;
     }
 
-    // lấy tên để thông báo xóa 
+    // lấy tên khách hàng thông qua id 
     public String getCustomerNameById(String custID) {
         String customerName = null;
         Connection conn = null;
@@ -279,6 +304,7 @@ public class SalePersonDAO {
         return customerName;
     }
 
+
     // tìm theo tên khách hàng
     public ArrayList<Customer> searchCustomerByName(String name) {
         ArrayList<Customer> customerList = new ArrayList<>();
@@ -287,10 +313,10 @@ public class SalePersonDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Truy vấn tìm kiếm khách hàng theo tên, với COLLATE để xử lý không phân biệt dấu
+                                                           // dùng COLLATE Latin1_General_CI_AS tránh lỗi khi nhập tiếng việt có dấu
                 String sql = "SELECT custID, custName, phone, sex, cusAddress FROM dbo.Customer WHERE custName COLLATE Latin1_General_CI_AS LIKE ?";
                 PreparedStatement p = conn.prepareStatement(sql);
-                p.setString(1, "%" + name + "%");  // Tìm kiếm theo tên với ký tự đại diện
+                p.setString(1, "%" + name + "%");  // tìm kiếm theo tên với ký tự đại diện
 
                 ResultSet table = p.executeQuery();
                 while (table.next()) {
@@ -317,12 +343,12 @@ public class SalePersonDAO {
         return customerList;
     }
 
-    //
-    public SalesPerson getSaleByName(String salesName) {
-        SalesPerson sale = null;
-        Connection cn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    // lấy thông tin sale thông qua tên sale
+    public SalesPerson getSaleByName(String salesName){
+        SalesPerson sale=null;
+        Connection cn=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
         try {
             cn = DBUtils.getConnection();
             if (cn != null) {
@@ -452,6 +478,7 @@ public class SalePersonDAO {
     }
 
     // top 10 các phụ tùng được sử dụng nhiều nhất
+    // dùng <Map<String, Object> để lưu dưới dạng key: partName - value: totalUsed
     public ArrayList<Map<String, Object>> getBestUsedParts() {
         ArrayList<Map<String, Object>> report = new ArrayList<>();
         Connection conn = null;
@@ -531,7 +558,7 @@ public class SalePersonDAO {
         try {
             conn = DBUtils.getConnection();
             if (conn != null) {
-                // Cập nhật thông tin SalesPerson bao gồm cả ngày sinh
+                // cập nhật thông tin SalesPerson bao gồm cả ngày sinh
                 String sql = "UPDATE dbo.SalesPerson SET salesName=?, sex=?, salesAddress=?, birthday=? WHERE salesID=?";
                 PreparedStatement p = conn.prepareStatement(sql);
 
@@ -539,14 +566,14 @@ public class SalePersonDAO {
                 p.setString(2, newProfile.getSex());        // sex
                 p.setString(3, newProfile.getSalesAddress()); // salesAddress
 
-                // Chuyển đổi java.util.Date thành java.sql.Date
+                // chuyển đổi java.util.Date thành java.sql.Date để tránh lỗi kiểu
                 java.sql.Date sqlDate = new java.sql.Date(newProfile.getBirthday().getTime());
                 p.setDate(4, sqlDate);  // birthday
 
-                p.setString(5, salespersonID);              // salesID (để xác định bản ghi cần cập nhật)
+                p.setString(5, salespersonID);              // salesID để xác định bản ghi cần cập nhật
 
-                int result = p.executeUpdate(); // Thực thi câu lệnh SQL
-                isUpdated = result > 0;  // Nếu có ít nhất một dòng bị ảnh hưởng, nghĩa là cập nhật thành công
+                int result = p.executeUpdate(); // thực thi câu lệnh SQL
+                isUpdated = result > 0;  // nếu có ít nhất một dòng bị ảnh hưởng, nghĩa là cập nhật thành công
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

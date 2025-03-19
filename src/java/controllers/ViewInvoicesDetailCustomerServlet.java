@@ -5,22 +5,26 @@
  */
 package controllers;
 
-import dao.SalePersonDAO;
+import dao.CustomerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.Mechanic;
+import models.Car;
+import models.Customer;
+import models.SalesInvoice;
+import models.SalesInvoiceDetail;
 import models.SalesPerson;
 
 /**
  *
  * @author Thanh Vinh
  */
-public class LoginSaleServlet extends HttpServlet {
+public class ViewInvoicesDetailCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,33 +37,48 @@ public class LoginSaleServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        
         try (PrintWriter out = response.getWriter()) {
-            
-            // lấy thông tin từ form login
-            String sale_name = request.getParameter("sale_name");
 
-            // gọi DAO để check login
-            SalePersonDAO sp = new SalePersonDAO();
-            SalesPerson sale = sp.checkLogin(sale_name);
-            
-            // lấy thông tin của sale thông qua tên sale
-            SalesPerson saleID = sp.getSaleByName(sale_name);
-            if (sale != null) {
-                HttpSession s = request.getSession(true);
-                
-                s.setAttribute("SALE", sale);
-                s.setAttribute("sale_ID", sale.getSalesID());
-                response.sendRedirect("MainServlet?action=sale-dashboard");
-            } else {
-                request.setAttribute("ERROR", "Sale not found");
-                request.getRequestDispatcher("MainServlet?action=login-sale-page&sale_name" + sale_name).forward(request, response);
+            // kiểm tra session để xác định khách hàng đã đăng nhập chưa
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("CUSTOMER") == null) {
+                request.setAttribute("ERROR", "Please log in first.");
+                request.getRequestDispatcher("MainServlet?action=home").forward(request, response);
+                return;
             }
 
+            // lấy invoiceID từ request
+            int invoiceID = Integer.parseInt(request.getParameter("invoiceID"));
+
+            // gọi DAO để lấy thông tin
+            CustomerDAO customerDAO = new CustomerDAO();
+
+            // lấy thông tin hóa đơn từ DAO
+            SalesInvoice invoice = customerDAO.getSalesInvoiceById(invoiceID);
+            if (invoice == null) {
+                request.setAttribute("ERROR", "Invoice not found.");
+                request.getRequestDispatcher("MainServlet?action=view-invoices-customer-page").forward(request, response);
+                return;
+            }
+
+            // lấy thông tin khách hàng, xe, nhân viên bán hàng
+            Customer customer = customerDAO.getCustomerInvoiceById(invoice.getCustID());
+            Car car = customerDAO.getCarById(invoice.getCarID());
+            SalesPerson salesPerson = customerDAO.getSalesPersonById(invoice.getSalesID());
+
+            // lưu dữ liệu vào request để hiển thị trong JSP
+            request.setAttribute("invoice", invoice);
+            request.setAttribute("customer", customer);
+            request.setAttribute("car", car);
+            request.setAttribute("salesPerson", salesPerson);
+
+            request.getRequestDispatcher("MainServlet?action=view-invoices-detail-customer-page").forward(request, response);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "An error occurred while retrieving invoice details.");
+            request.getRequestDispatcher("MainServlet?action=view-invoices-customer-page").forward(request, response);
         }
     }
 

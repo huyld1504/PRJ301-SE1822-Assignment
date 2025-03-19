@@ -40,7 +40,7 @@ public class UpEditCarServlet extends HttpServlet {
         
         try (PrintWriter out = response.getWriter()) {
             
-            // Kiểm tra session và lấy thông tin SalesPerson
+            // kiểm tra session và lấy thông tin SalesPerson
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -50,7 +50,7 @@ public class UpEditCarServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy carID và các tham số từ form
+            // lấy carID và các tham số từ form
             String carId = request.getParameter("carID");
             String serialNumber = request.getParameter("serialNumber");
             String model = request.getParameter("model");
@@ -64,11 +64,12 @@ public class UpEditCarServlet extends HttpServlet {
                 return;
             }
 
-            // Tạo đối tượng Car mới để cập nhật
+            // tạo đối tượng Car mới và gọi DAO để cập nhật
             Car updatedCar = new Car(carId, serialNumber, model, colour, year, price);
             CarDAO carDAO = new CarDAO();
             boolean isUpdated = carDAO.updateCar(updatedCar);
 
+            // kiểm tra cập nhật được hay không
             if (isUpdated) {
                 request.setAttribute("MESSAGE", "Car updated successfully!");
             } else {

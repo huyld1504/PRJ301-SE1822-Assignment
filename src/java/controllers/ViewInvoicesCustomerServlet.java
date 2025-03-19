@@ -5,24 +5,25 @@
  */
 package controllers;
 
-import dao.MechanicDAO;
-import dao.ServiceDAO;
+import dao.CustomerDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import models.Mechanic;
-import models.Service;
+import javax.servlet.http.HttpSession;
+import models.Customer;
+import models.SalesInvoice;
+import models.SalesInvoiceDetail;
 
 /**
  *
- * @author Asus
+ * @author Thanh Vinh
  */
-@WebServlet(name = "GetCustomerServiceMechanicDetailServlet", urlPatterns = {"/GetCustomerServiceMechanicDetailServlet"})
-public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
+public class ViewInvoicesCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,27 +37,39 @@ public class GetCustomerServiceMechanicDetailServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String serviceID = request.getParameter("serviceID");
-            String mechanicID = request.getParameter("mechanicID");
 
-            ServiceDAO serviceDAO = new ServiceDAO();
-            MechanicDAO mechanicDAO = new MechanicDAO();
-
-            Mechanic m = mechanicDAO.getMechanicByID(mechanicID);
-            Service s = serviceDAO.getServiceByID(serviceID);
-
-            if (s != null && m != null) {
-                request.setAttribute("mechanic", m);
-                request.setAttribute("service", s);
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
-            } else {
-                request.setAttribute("MESSAGE", "Opps! Something went wrong.");
-                request.getRequestDispatcher("MainServlet?action=customer-service-mechanic-detail-page").forward(request, response);
+            // kiểm tra session để xác định khách hàng đã đăng nhập chưa
+            HttpSession session = request.getSession(false);
+            if (session == null || session.getAttribute("CUSTOMER") == null) {
+                request.setAttribute("ERROR", "Please log in first.");
+                request.getRequestDispatcher("MainServlet?action=home").forward(request, response);
+                return;
             }
+
+            // lấy thông tin khách hàng từ session
+            Customer customer = (Customer) session.getAttribute("CUSTOMER");
+            String custID = customer.getCustID();
+
+            // lấy danh sách hóa đơn từ CustomerDAO
+            CustomerDAO customerDAO = new CustomerDAO();
+            List<SalesInvoice> invoices = customerDAO.getSalesInvoicesByCustomerId(custID);
+
+            // nếu không có hóa đơn, trả về thông báo lỗi
+            if (invoices == null || invoices.isEmpty()) {
+                request.setAttribute("ERROR", "No invoices found for the customer.");
+                request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
+                return;
+            }
+
+            // lưu danh sách hóa đơn vào request và chuyển đến trang hiển thị
+            request.setAttribute("invoices", invoices);
+            request.getRequestDispatcher("MainServlet?action=view-invoices-customer-page").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("ERROR", "An error occurred while retrieving the invoices. Please try again.");
+            request.getRequestDispatcher("MainServlet?action=customer-dashboard").forward(request, response);
         }
     }
 

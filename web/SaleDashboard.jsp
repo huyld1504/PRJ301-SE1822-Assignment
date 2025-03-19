@@ -29,14 +29,9 @@
             <jsp:useBean id="SALE" scope="session" class="models.SalesPerson"/>
             <nav class="navbar navbar-expand-lg bg-info text-white p-3 shadow-lg">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
-                    <h2 class="text-white fw-bold m-0">Welcome ${SALE.salesName}</h2>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-primary" type="submit"> Search </button>
-                    </form>
+                    <h2 class="text-white fw-bold m-0 mx-auto">Welcome ${SALE.salesName}</h2>
                 </div>
             </nav>
-
 
 
             <!-- Dashboard Content -->
@@ -220,7 +215,7 @@
                                             <td>${car.model}</td>
                                             <td>${car.colour}</td>
                                             <td>${car.year}</td>
-                                            <td><fmt:formatNumber value="${car.price}" pattern="#,###.0" /></td>  
+                                            <td><fmt:formatNumber value="${car.price}" pattern="#,###" /></td>  
                                             <td>
                                                 <a href="MainServlet?action=edit-car&id=${car.carID}" class="btn btn-warning btn-sm">
                                                     <i class="fa-solid fa-pen"></i> Edit

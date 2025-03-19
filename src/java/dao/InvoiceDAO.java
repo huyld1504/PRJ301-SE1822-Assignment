@@ -8,64 +8,52 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 import models.SalesInvoice;
 import utils.DBUtils;
 
 public class InvoiceDAO {
+    public List<SalesInvoice> getSalesInvoicesByCustomerId(String customerId) {
+        List<SalesInvoice> invoices = new ArrayList<>();
+        Connection conn = null;
 
-    public ArrayList<SalesInvoice> getInvoices(String id, int flag) {
-        ArrayList<SalesInvoice> rs = new ArrayList<>();
-        Connection cn = null;
         try {
-            cn = DBUtils.getConnection();
+            conn = DBUtils.getConnection(); // lấy kết nối từ DBUtils
+            if (conn != null) {
+                String query = "SELECT si.invoiceID, si.invoiceDate, si.salesID, sp.salesName, si.custID "
+                        + "FROM SalesInvoice si "
+                        + "JOIN SalesPerson sp ON si.salesID = sp.salesID "
+                        + "WHERE si.custID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setString(1, customerId); 
 
-            if (cn != null) {
-                String sql = "SELECT [invoiceID]\n"
-                        + "      ,[invoiceDate]\n"
-                        + "      ,[salesID]\n"
-                        + "      ,[carID]\n"
-                        + "      ,[custID]\n"
-                        + "  FROM [Car_Dealership].[dbo].[SalesInvoice]\n";
-
-                if (flag == 1) {
-                    sql = sql + "  WHERE [custID] = ?";
-                } else if (flag == 2) {
-                    sql = sql + " WHERE [salesID] = ?";
-                }
-
-                PreparedStatement st = cn.prepareStatement(sql);
-                if (flag == 1 || flag == 2) {
-                    st.setString(1, id);
-                }
-                ResultSet table = st.executeQuery();
-                if (table != null) {
-                    while (table.next()) {
-                        int invid = table.getInt("invoiceID");
-                        Date createdate = table.getDate("invoiceDate");
-                        String saleid = table.getString("salesID");
-                        String carid = table.getString("carID");
-                        String custid = table.getString("custid");
-
-                        SalesInvoice i = new SalesInvoice(invid, createdate, saleid, carid, custid);
-                        rs.add(i);
-                    }
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    SalesInvoice invoice = new SalesInvoice();
+                    invoice.setInvoiceID(rs.getInt("invoiceID"));
+                    invoice.setInvoiceDate(rs.getDate("invoiceDate"));
+                    invoice.setSalesID(rs.getString("salesID")); 
+                    invoice.setCustID(rs.getString("custID")); 
+                    invoices.add(invoice); // thêm hóa đơn vào danh sách
                 }
             }
-
-        } catch (Exception e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (cn != null) {
-                    cn.close();
+                if (conn != null) {
+                    conn.close(); // đóng kết nối sau khi sử dụng
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+
         return rs;
     }
 
@@ -134,43 +122,6 @@ public class InvoiceDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return invoices;
-    }
-
-    public String getSalesPersonNameByID(String saleID) {
-        String saleName = null;
-        String sql = "SELECT salesName FROM SalesPerson WHERE salesID = ?";
-
-        try (Connection conn = DBUtils.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, saleID);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                saleName = rs.getString("salesName");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return saleName;
-    }
-
-    public int getNextInvoiceID() {
-        int nextID = 1;
-        String sql = "SELECT MAX(invoiceID) FROM SalesInvoice";
-
-        try (Connection conn = DBUtils.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
-
-            if (rs.next()) {
-                nextID = rs.getInt(1) + 1;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return nextID;
+        return invoices; // trả về danh sách hóa đơn
     }
 }

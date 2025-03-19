@@ -40,7 +40,7 @@ public class CreateCarServlet extends HttpServlet {
         
         try (PrintWriter out = response.getWriter()) {
             
-            // Kiểm tra session để xác thực người bán đã đăng nhập chưa
+            // kiểm tra session để xác thực sale đã đăng nhập chưa
             HttpSession session = request.getSession(false);
             SalesPerson salesPerson = (SalesPerson) session.getAttribute("SALE");
 
@@ -50,33 +50,33 @@ public class CreateCarServlet extends HttpServlet {
                 return;
             }
 
-            // Lấy dữ liệu từ form
+            // lấy dữ liệu từ form
             String serialNumber = request.getParameter("serialNumber");
             String model = request.getParameter("model");
             String colour = request.getParameter("colour");
             int year = Integer.parseInt(request.getParameter("year"));
-            double price = Double.parseDouble(request.getParameter("price"));  // Lấy giá trị price
+            double price = Double.parseDouble(request.getParameter("price"));  
 
-            // Kiểm tra nếu có trường nào bị null hoặc rỗng
+            // kiểm tra nếu có trường nào bị null hoặc rỗng
             if (serialNumber == null || model == null || colour == null || year == 0) {
                 session.setAttribute("ERROR", "All fields are required!");
                 response.sendRedirect("MainServlet?action=create-car-page");
                 return;
             }
 
-            // Tạo đối tượng Car và gọi DAO để thêm xe vào cơ sở dữ liệu
+            // tạo đối tượng Car và gọi DAO để thêm xe vào cơ sở dữ liệu
             Car newCar = new Car(colour, serialNumber, model, colour, year, price);
             CarDAO carDAO = new CarDAO();
             boolean isCreated = carDAO.addCar(newCar);
 
-            // Kiểm tra kết quả từ DAO
+            // kiểm tra kết quả từ DAO
             if (isCreated) {
                 session.setAttribute("MESSAGE", "Car created successfully!");
             } else {
                 session.setAttribute("ERROR", "Car creation failed. Please try again.");
             }
 
-            // Chuyển hướng đến trang CreateCar.jsp để hiển thị thông báo
+            // quay lại trang CreateCar.jsp để hiển thị thông báo
             response.sendRedirect("MainServlet?action=create-car-page");
 
         } catch (Exception e) {
